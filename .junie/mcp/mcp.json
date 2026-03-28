@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "C:\\Users\\Blaze\\.config\\herd\\bin\\php83\\php.exe",
+            "args": [
+                "D:\\Projects\\Work\\upwork\\zocdoc-replica\\artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
