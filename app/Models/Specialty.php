@@ -25,4 +25,9 @@ class Specialty extends Model
     {
         return $this->belongsToMany(DoctorProfile::class, 'doctor_specialty');
     }
+
+    public function symptoms(): BelongsToMany
+    {
+        return $this->belongsToMany(Symptom::class);
+    }
 }

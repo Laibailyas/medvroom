@@ -23,9 +23,9 @@ class User extends Authenticatable
     /**
      * Role Constants
      */
-    const ROLE_PATIENT = 'patient';
-    const ROLE_DOCTOR = 'doctor';
-    const ROLE_ADMIN = 'admin';
+    public const ROLE_PATIENT = 'patient';
+    public const ROLE_DOCTOR = 'doctor';
+    public const ROLE_ADMIN = 'admin';
 
     /**
      * Role Helpers
