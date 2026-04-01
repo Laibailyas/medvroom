@@ -103,13 +103,13 @@
                     <!-- Password -->
                     <div>
                         <x-input-label for="password" value="Password" class="mb-2" />
-                        <x-text-input id="password" type="password" name="password" required autocomplete="new-password" :value="old('password')" />
+                        <x-password-input id="password" name="password" required autocomplete="new-password" :value="old('password')" />
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
                     <!-- Password Confirmation -->
                     <div>
                         <x-input-label for="password_confirmation" value="Confirm password" class="mb-2" />
-                        <x-text-input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" :value="old('password_confirmation')" />
+                        <x-password-input id="password_confirmation" name="password_confirmation" required autocomplete="new-password" :value="old('password_confirmation')" />
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
                 </div>

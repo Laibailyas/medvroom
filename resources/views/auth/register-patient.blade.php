@@ -222,9 +222,8 @@
             <!-- Password -->
             <div>
                 <x-input-label for="password" value="Password" class="mb-2" />
-                <x-text-input 
+                <x-password-input 
                     id="password" 
-                    type="password" 
                     name="password" 
                     required 
                     autocomplete="new-password" 
@@ -236,9 +235,8 @@
             <!-- Confirm Password -->
             <div>
                 <x-input-label for="password_confirmation" value="Confirm Password" class="mb-2" />
-                <x-text-input 
+                <x-password-input 
                     id="password_confirmation" 
-                    type="password" 
                     name="password_confirmation" 
                     required 
                     autocomplete="new-password"

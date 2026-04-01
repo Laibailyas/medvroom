@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\InsuranceProvider;
 use Illuminate\Database\Seeder;
 
 class InsuranceProviderSeeder extends Seeder
@@ -46,7 +46,7 @@ class InsuranceProviderSeeder extends Seeder
         ];
 
         foreach ($providers as $provider) {
-            \App\Models\InsuranceProvider::updateOrCreate(
+            InsuranceProvider::updateOrCreate(
                 ['name' => $provider['name']],
                 $provider
             );

@@ -2,7 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\DoctorProfile;
+use App\Models\InsurancePlan;
+use App\Models\Review;
+use App\Models\Specialty;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DoctorSeeder extends Seeder
@@ -12,8 +16,8 @@ class DoctorSeeder extends Seeder
      */
     public function run(): void
     {
-        $specialties = \App\Models\Specialty::all();
-        $plans = \App\Models\InsurancePlan::all();
+        $specialties = Specialty::all();
+        $plans = InsurancePlan::all();
 
         $doctors = [
             ['name' => 'Dr. Sarah Smith', 'gender' => 'female', 'specialty' => 'Primary Care'],
@@ -29,18 +33,18 @@ class DoctorSeeder extends Seeder
         ];
 
         foreach ($doctors as $docData) {
-            $user = \App\Models\User::factory()->doctor()->create([
+            $user = User::factory()->doctor()->create([
                 'name' => $docData['name'],
-                'email' => strtolower(str_replace([' ', '.'], ['', ''], $docData['name'])) . '@medvroom.com',
+                'email' => strtolower(str_replace([' ', '.'], ['', ''], $docData['name'])).'@medvroom.com',
             ]);
 
-            $profile = \App\Models\DoctorProfile::create([
+            $profile = DoctorProfile::create([
                 'user_id' => $user->id,
-                'bio' => "Experienced specialist dedicated to providing top-quality care in " . $docData['specialty'] . ".",
+                'bio' => 'Experienced specialist dedicated to providing top-quality care in '.$docData['specialty'].'.',
                 'experience_years' => rand(5, 25),
                 'consultation_fee' => rand(100, 300),
-                'clinic_name' => "MedVroom " . $docData['specialty'] . " Center",
-                'clinic_address' => rand(100, 999) . " Healthcare Ave, Suite " . rand(10, 99),
+                'clinic_name' => 'MedVroom '.$docData['specialty'].' Center',
+                'clinic_address' => rand(100, 999).' Healthcare Ave, Suite '.rand(10, 99),
                 'gender' => $docData['gender'],
                 'is_verified' => true,
                 'practice_zip_code' => '10001',
@@ -59,10 +63,10 @@ class DoctorSeeder extends Seeder
 
             // Add some reviews
             for ($i = 0; $i < rand(3, 8); $i++) {
-                \App\Models\Review::create([
+                Review::create([
                     'doctor_profile_id' => $profile->id,
                     'rating' => rand(4, 5),
-                    'comment' => "Excellent doctor! Very professional and caring.",
+                    'comment' => 'Excellent doctor! Very professional and caring.',
                 ]);
             }
         }

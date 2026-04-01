@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\InsurancePlan;
+use App\Models\InsuranceProvider;
 use Illuminate\Database\Seeder;
 
 class InsurancePlanSeeder extends Seeder
@@ -12,7 +13,7 @@ class InsurancePlanSeeder extends Seeder
      */
     public function run(): void
     {
-        $providers = \App\Models\InsuranceProvider::all();
+        $providers = InsuranceProvider::all();
 
         foreach ($providers as $provider) {
             $plans = [
@@ -22,7 +23,7 @@ class InsurancePlanSeeder extends Seeder
             ];
 
             foreach ($plans as $plan) {
-                \App\Models\InsurancePlan::updateOrCreate(
+                InsurancePlan::updateOrCreate(
                     [
                         'provider_id' => $provider->id,
                         'name' => $plan['name'],

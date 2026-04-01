@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Specialty;
 use Illuminate\Database\Seeder;
 
 class SpecialtySeeder extends Seeder
@@ -46,7 +46,7 @@ class SpecialtySeeder extends Seeder
         ];
 
         foreach ($specialties as $specialty) {
-            \App\Models\Specialty::updateOrCreate(
+            Specialty::updateOrCreate(
                 ['slug' => $specialty['slug']],
                 $specialty
             );

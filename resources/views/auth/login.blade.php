@@ -35,9 +35,8 @@
                             </a>
                         @endif
                     </div>
-                    <x-text-input 
+                    <x-password-input 
                         id="password" 
-                        type="password" 
                         name="password" 
                         required 
                         :value="old('password')"

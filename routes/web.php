@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Models\InsuranceProvider;
+use App\Models\Specialty;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $specialties = \App\Models\Specialty::all();
-    $featuredInsurances = \App\Models\InsuranceProvider::where('is_featured', true)->get();
-    
+    $specialties = Specialty::all();
+    $featuredInsurances = InsuranceProvider::where('is_featured', true)->get();
+
     return view('welcome', compact('specialties', 'featuredInsurances'));
 });
 
@@ -31,7 +33,6 @@ use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\SymptomController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\UserController;
-
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -50,4 +51,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::patch('settings/{setting}', [SystemSettingController::class, 'update'])->name('settings.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
