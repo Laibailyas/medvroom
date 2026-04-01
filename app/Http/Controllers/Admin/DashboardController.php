@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Appointment;
 use App\Models\DoctorProfile;
 use App\Models\Payment;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\View\View;
 
 class DashboardController extends Controller

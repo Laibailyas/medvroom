@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('plan_type', ['HMO', 'PPO', 'EPO', 'POS', 'OTHER'])->default('OTHER');
             $table->timestamps();
-            
+
             $table->index(['provider_id', 'name']);
         });
     }

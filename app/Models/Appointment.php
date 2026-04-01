@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -15,11 +14,11 @@ class Appointment extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'doctor_profile_id', 
-        'patient_profile_id', 
-        'insurance_plan_id', 
-        'appointment_datetime', 
-        'notes'
+        'doctor_profile_id',
+        'patient_profile_id',
+        'insurance_plan_id',
+        'appointment_datetime',
+        'notes',
     ];
 
     protected $casts = [

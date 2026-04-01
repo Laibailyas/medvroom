@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade');
             $table->timestamp('last_message_at')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['patient_id', 'doctor_id'], 'conv_unique');
         });
     }

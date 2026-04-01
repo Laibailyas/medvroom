@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,16 +14,22 @@ class DoctorProfile extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 
-        'bio', 
-        'experience_years', 
-        'consultation_fee', 
-        'clinic_name', 
-        'clinic_address', 
-        'latitude', 
-        'longitude', 
-        'gender', 
-        'is_verified'
+        'user_id',
+        'bio',
+        'experience_years',
+        'consultation_fee',
+        'clinic_name',
+        'clinic_address',
+        'latitude',
+        'longitude',
+        'gender',
+        'is_verified',
+        'practice_name',
+        'practice_specialty',
+        'practice_size',
+        'phone_number',
+        'practice_zip_code',
+        'referral_source',
     ];
 
     protected $casts = [

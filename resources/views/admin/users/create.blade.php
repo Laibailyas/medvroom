@@ -101,9 +101,7 @@
                 <!-- Footer Actions -->
                 <div class="mt-10 pt-8 border-t border-slate-100 flex items-center justify-end space-x-4">
                     <a href="{{ route('admin.users.index') }}" class="px-6 py-2 text-sm font-bold text-slate-600 hover:text-slate-800 transition">Cancel</a>
-                    <button type="submit" class="inline-flex items-center px-10 py-3 bg-indigo-600 border border-transparent rounded-xl font-bold text-sm text-white hover:bg-indigo-700 active:bg-indigo-800 shadow-lg shadow-indigo-500/30 transition-all active:scale-[0.98]">
-                        Register User Account
-                    </button>
+                    <x-button>Register User Account</x-button>
                 </div>
             </form>
         </div>

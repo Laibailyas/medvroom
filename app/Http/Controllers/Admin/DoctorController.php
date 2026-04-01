@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\DoctorProfile;
 use App\Models\Specialty;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DoctorController extends Controller
@@ -23,8 +23,8 @@ class DoctorController extends Controller
         }
 
         if ($request->has('search')) {
-            $query->whereHas('user', function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%');
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -39,6 +39,7 @@ class DoctorController extends Controller
     public function edit(DoctorProfile $doctor): View
     {
         $specialties = Specialty::all();
+
         return view('admin.doctors.edit', compact('doctor', 'specialties'));
     }
 
@@ -70,9 +71,10 @@ class DoctorController extends Controller
      */
     public function toggleVerification(DoctorProfile $doctor): RedirectResponse
     {
-        $doctor->update(['is_verified' => !$doctor->is_verified]);
+        $doctor->update(['is_verified' => ! $doctor->is_verified]);
 
         $status = $doctor->is_verified ? 'verified' : 'unverified';
+
         return back()->with('success', "Doctor marked as {$status} successfully.");
     }
 
@@ -82,6 +84,7 @@ class DoctorController extends Controller
     public function destroy(DoctorProfile $doctor): RedirectResponse
     {
         $doctor->delete();
+
         return redirect()->route('admin.doctors.index')->with('success', 'Doctor profile removed successfully.');
     }
 }

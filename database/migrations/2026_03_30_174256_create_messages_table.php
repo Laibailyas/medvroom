@@ -20,7 +20,7 @@ return new class extends Migration
             $table->json('metadata')->nullable(); // For future attachments
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['conversation_id', 'created_at']);
         });
     }

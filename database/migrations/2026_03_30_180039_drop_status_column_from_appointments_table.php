@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
+            $table->dropIndex('appointments_doctor_profile_id_status_index');
+            $table->dropIndex('appointments_patient_profile_id_status_index');
             $table->dropColumn('status');
         });
     }

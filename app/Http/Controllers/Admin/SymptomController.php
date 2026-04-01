@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Symptom;
 use App\Models\Specialty;
-use Illuminate\Http\Request;
+use App\Models\Symptom;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class SymptomController extends Controller
 {
@@ -30,6 +30,7 @@ class SymptomController extends Controller
     public function create(): View
     {
         $specialties = Specialty::all();
+
         return view('admin.symptoms.create', compact('specialties'));
     }
 
@@ -62,6 +63,7 @@ class SymptomController extends Controller
     {
         $specialties = Specialty::all();
         $symptom->load('specialties');
+
         return view('admin.symptoms.edit', compact('symptom', 'specialties'));
     }
 
@@ -71,7 +73,7 @@ class SymptomController extends Controller
     public function update(Request $request, Symptom $symptom): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:symptoms,name,' . $symptom->id,
+            'name' => 'required|string|max:255|unique:symptoms,name,'.$symptom->id,
             'specialties' => 'array',
             'specialties.*' => 'exists:specialties,id',
         ]);

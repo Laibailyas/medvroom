@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\InsuranceProvider;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class InsuranceProviderController extends Controller
 {
@@ -19,7 +19,7 @@ class InsuranceProviderController extends Controller
         $query = InsuranceProvider::query();
 
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         $providers = $query->withCount('plans')->latest()->paginate(10);
@@ -70,7 +70,7 @@ class InsuranceProviderController extends Controller
     public function update(Request $request, InsuranceProvider $insuranceProvider): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:insurance_providers,name,' . $insuranceProvider->id,
+            'name' => 'required|string|max:255|unique:insurance_providers,name,'.$insuranceProvider->id,
             'logo' => 'nullable|image|max:2048',
             'is_featured' => 'boolean',
         ]);

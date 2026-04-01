@@ -10,7 +10,7 @@
             <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <span class="text-white font-bold text-lg">M</span>
             </div>
-            <span class="text-lg font-bold text-slate-800 tracking-tight">MyDoc Admin</span>
+            <span class="text-lg font-bold text-slate-800 tracking-tight">MedVroom Admin</span>
         </a>
     </div>
 
@@ -72,6 +72,15 @@
                 </x-admin.sidebar-link>
                 <x-admin.sidebar-link :href="route('admin.reviews.index')" :active="request()->routeIs('admin.reviews.*')" icon="reviews">
                     Moderation
+                </x-admin.sidebar-link>
+                <x-admin.sidebar-link :href="route('admin.mail-logs.index')" :active="request()->routeIs('admin.mail-logs.*')" icon="mail">
+                    Email Logs
+                </x-admin.sidebar-link>
+                <x-admin.sidebar-link :href="route('admin.sms-logs.index')" :active="request()->routeIs('admin.sms-logs.*')" icon="phone">
+                    SMS Logs
+                </x-admin.sidebar-link>
+                <x-admin.sidebar-link :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')" icon="settings">
+                    System Settings
                 </x-admin.sidebar-link>
             </div>
         </div>

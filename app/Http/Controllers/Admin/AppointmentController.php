@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AppointmentController extends Controller
@@ -18,7 +19,7 @@ class AppointmentController extends Controller
         $query = Appointment::with(['doctorProfile.user', 'patientProfile.user', 'latestStatusHistory']);
 
         if ($request->has('status')) {
-            $query->whereHas('latestStatusHistory', function($q) use ($request) {
+            $query->whereHas('latestStatusHistory', function ($q) use ($request) {
                 $q->where('status', $request->status);
             });
         }
@@ -38,6 +39,7 @@ class AppointmentController extends Controller
     public function show(Appointment $appointment): View
     {
         $appointment->load(['doctorProfile.user', 'patientProfile.user', 'statusHistories.changedBy', 'review']);
+
         return view('admin.appointments.show', compact('appointment'));
     }
 
@@ -52,9 +54,9 @@ class AppointmentController extends Controller
         ]);
 
         $appointment->transitionStatus(
-            $validated['status'], 
-            ($validated['comment'] ?? 'Admin action'), 
-            \Illuminate\Support\Facades\Auth::id()
+            $validated['status'],
+            ($validated['comment'] ?? 'Admin action'),
+            Auth::id()
         );
 
         return back()->with('success', "Appointment marked as {$validated['status']} successfully.");
@@ -65,7 +67,7 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment): RedirectResponse
     {
-        $appointment->transitionStatus('cancelled', 'Administrative cancellation', \Illuminate\Support\Facades\Auth::id());
+        $appointment->transitionStatus('cancelled', 'Administrative cancellation', Auth::id());
         $appointment->delete();
 
         return redirect()->route('admin.appointments.index')->with('success', 'Appointment cancelled and removed successfully.');

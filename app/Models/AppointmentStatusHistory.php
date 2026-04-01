@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AppointmentStatusHistory extends Model
@@ -12,10 +11,10 @@ class AppointmentStatusHistory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'appointment_id', 
-        'status', 
-        'changed_by_id', 
-        'comment'
+        'appointment_id',
+        'status',
+        'changed_by_id',
+        'comment',
     ];
 
     public function appointment(): BelongsTo

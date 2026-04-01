@@ -90,9 +90,7 @@
                 <!-- Footer Actions -->
                 <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-end space-x-3">
                     <a href="{{ route('admin.users.index') }}" class="px-4 py-2 text-sm font-bold text-slate-600 hover:text-slate-800 transition text-sm">Cancel</a>
-                    <button type="submit" class="inline-flex items-center px-6 py-2 bg-indigo-600 border border-transparent rounded-lg font-bold text-sm text-white hover:bg-indigo-700 active:bg-indigo-800 shadow-sm transition">
-                        Update User Account
-                    </button>
+                    <x-button>Update User Account</x-button>
                 </div>
             </form>
         </div>

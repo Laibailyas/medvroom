@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('changed_by_id')->nullable()->constrained('users')->onDelete('set null');
             $table->text('comment')->nullable();
             $table->timestamps();
-            
+
             $table->index(['appointment_id', 'created_at']);
         });
     }

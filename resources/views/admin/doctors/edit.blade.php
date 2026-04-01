@@ -106,9 +106,7 @@
                 <!-- Actions -->
                 <div class="flex items-center justify-end space-x-3">
                     <a href="{{ route('admin.doctors.index') }}" class="px-6 py-2 text-sm font-bold text-slate-600 hover:text-slate-800 transition">Discard Changes</a>
-                    <button type="submit" class="inline-flex items-center px-8 py-2 bg-indigo-600 border border-transparent rounded-lg font-bold text-sm text-white hover:bg-indigo-700 active:bg-indigo-800 shadow-sm transition">
-                        Save Metadata
-                    </button>
+                    <x-button>Save Metadata</x-button>
                 </div>
             </div>
         </form>

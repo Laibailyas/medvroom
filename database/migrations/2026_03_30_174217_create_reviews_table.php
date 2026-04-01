@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('rating'); // 1-5
             $table->text('comment')->nullable();
             $table->timestamps();
-            
+
             // Index for fast calculation of average ratings
             $table->index('doctor_profile_id');
         });

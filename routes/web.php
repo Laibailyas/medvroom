@@ -1,9 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,13 +18,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-use App\Http\Controllers\Admin\InsuranceProviderController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\AppointmentController;
+use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\InsuranceProviderController;
+use App\Http\Controllers\Admin\MailLogController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SmsLogController;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\SymptomController;
-use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SystemSettingController;
+use App\Http\Controllers\Admin\UserController;
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(function () {
@@ -39,6 +41,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::resource('specialties', SpecialtyController::class);
     Route::resource('symptoms', SymptomController::class);
     Route::resource('reviews', ReviewController::class);
+    Route::resource('mail-logs', MailLogController::class)->only(['index', 'show']);
+    Route::resource('sms-logs', SmsLogController::class)->only(['index', 'show']);
+    Route::get('settings', [SystemSettingController::class, 'index'])->name('settings.index');
+    Route::patch('settings/{setting}', [SystemSettingController::class, 'update'])->name('settings.update');
 });
 
 require __DIR__.'/auth.php';
