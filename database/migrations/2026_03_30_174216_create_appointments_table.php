@@ -17,17 +17,12 @@ return new class extends Migration
             $table->foreignId('patient_profile_id')->constrained()->onDelete('cascade');
             $table->foreignId('insurance_plan_id')->nullable()->constrained()->onDelete('set null');
             $table->dateTime('appointment_datetime');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed'])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             // Critical: Prevent double-booking for the same doctor at the same time
             $table->unique(['doctor_profile_id', 'appointment_datetime'], 'doc_time_unique');
-
-            // Indexes for search and dashboard performance
-            $table->index(['doctor_profile_id', 'status']);
-            $table->index(['patient_profile_id', 'status']);
         });
     }
 

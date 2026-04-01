@@ -5,7 +5,10 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $specialties = \App\Models\Specialty::all();
+    $featuredInsurances = \App\Models\InsuranceProvider::where('is_featured', true)->get();
+    
+    return view('welcome', compact('specialties', 'featuredInsurances'));
 });
 
 Route::get('/dashboard', function () {

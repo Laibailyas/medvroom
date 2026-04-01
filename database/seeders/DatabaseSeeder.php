@@ -15,11 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Admin User
+        User::factory()->admin()->create([
+            'name' => 'MedVroom Admin',
+            'email' => 'admin@medvroom.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Platform Data
+        $this->call([
+            SpecialtySeeder::class,
+            InsuranceProviderSeeder::class,
+            InsurancePlanSeeder::class,
+            DoctorSeeder::class,
         ]);
     }
 }
