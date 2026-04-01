@@ -55,7 +55,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'name' => $request->first_name . ' ' . $request->last_name,
+            'name' => $request->first_name.' '.$request->last_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
             'mobile_verification_code' => $code,
@@ -76,7 +76,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('verification.mobile.notice');
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -105,7 +105,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'name' => $request->first_name . ' ' . $request->last_name,
+            'name' => $request->first_name.' '.$request->last_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
             'mobile_verification_code' => $code,
@@ -130,6 +130,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('verification.mobile.notice');
+        return redirect()->route('dashboard');
     }
 }

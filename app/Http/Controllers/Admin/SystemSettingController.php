@@ -74,7 +74,15 @@ class SystemSettingController extends Controller
                 'value' => [
                     'client_id' => config('services.google.client_id'),
                     'client_secret' => config('services.google.client_secret'),
-                    'redirect' => config('services.google.redirect'),
+                    'redirect' => config('services.google.redirect') ?? 'http://localhost:8000/auth/google/callback',
+                ],
+            ],
+            [
+                'key' => 'maintenance_settings',
+                'group' => 'Maintenance',
+                'description' => 'Automated system cleanup tasks and retention policies.',
+                'value' => [
+                    'log_retention_days' => '30',
                 ],
             ],
         ];

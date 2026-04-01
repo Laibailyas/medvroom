@@ -26,12 +26,12 @@ class UserFactory extends Factory
     {
         $firstName = fake()->firstName();
         $lastName = fake()->lastName();
-        
+
         return [
             'first_name' => $firstName,
             'middle_name' => fake()->optional(0.3)->firstName(),
             'last_name' => $lastName,
-            'name' => $firstName . ' ' . $lastName,
+            'name' => $firstName.' '.$lastName,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

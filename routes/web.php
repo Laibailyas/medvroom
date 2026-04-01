@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\SymptomController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\UserController;
+
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -51,4 +52,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::patch('settings/{setting}', [SystemSettingController::class, 'update'])->name('settings.update');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
