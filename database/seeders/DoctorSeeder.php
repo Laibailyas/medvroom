@@ -33,7 +33,13 @@ class DoctorSeeder extends Seeder
         ];
 
         foreach ($doctors as $docData) {
+            $nameParts = explode(' ', str_replace(['Dr. ', 'Dr '], '', $docData['name']));
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? ($nameParts[0] ?? '');
+
             $user = User::factory()->doctor()->create([
+                'first_name' => $firstName,
+                'last_name' => $lastName,
                 'name' => $docData['name'],
                 'email' => strtolower(str_replace([' ', '.'], ['', ''], $docData['name'])).'@medvroom.com',
             ]);

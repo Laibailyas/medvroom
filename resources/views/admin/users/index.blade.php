@@ -12,7 +12,7 @@
                         type="text" 
                         name="search" 
                         value="{{ request('search') }}"
-                        placeholder="Search by name or email..."
+                        placeholder="Search by name (First, Last) or email..."
                         class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all shadow-sm"
                     >
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">

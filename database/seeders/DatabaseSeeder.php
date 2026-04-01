@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
     {
         // Admin User
         User::factory()->admin()->create([
+            'first_name' => 'MedVroom',
+            'last_name' => 'Admin',
             'name' => 'MedVroom Admin',
             'email' => 'admin@medvroom.com',
             'password' => Hash::make('password'),

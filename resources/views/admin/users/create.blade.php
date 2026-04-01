@@ -20,21 +20,57 @@
                 @csrf
                 
                 <div class="space-y-6">
-                    <!-- Name -->
-                    <div>
-                        <label for="name" class="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
-                        <input 
-                            type="text" 
-                            name="name" 
-                            id="name" 
-                            value="{{ old('name') }}"
-                            placeholder="John Doe"
-                            class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-semibold transition-all @error('name') border-rose-300 ring-rose-100 @enderror"
-                            required
-                        >
-                        @error('name')
-                            <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
-                        @enderror
+                    <!-- Names -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- First Name -->
+                        <div>
+                            <label for="first_name" class="block text-sm font-bold text-slate-700 mb-1">First Name</label>
+                            <input 
+                                type="text" 
+                                name="first_name" 
+                                id="first_name" 
+                                value="{{ old('first_name') }}"
+                                placeholder="John"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-semibold transition-all @error('first_name') border-rose-300 ring-rose-100 @enderror"
+                                required
+                            >
+                            @error('first_name')
+                                <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Middle Name -->
+                        <div>
+                            <label for="middle_name" class="block text-sm font-bold text-slate-700 mb-1">Middle Name</label>
+                            <input 
+                                type="text" 
+                                name="middle_name" 
+                                id="middle_name" 
+                                value="{{ old('middle_name') }}"
+                                placeholder="Quincy"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-semibold transition-all @error('middle_name') border-rose-300 ring-rose-100 @enderror"
+                            >
+                            @error('middle_name')
+                                <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Last Name -->
+                        <div>
+                            <label for="last_name" class="block text-sm font-bold text-slate-700 mb-1">Last Name</label>
+                            <input 
+                                type="text" 
+                                name="last_name" 
+                                id="last_name" 
+                                value="{{ old('last_name') }}"
+                                placeholder="Doe"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-semibold transition-all @error('last_name') border-rose-300 ring-rose-100 @enderror"
+                                required
+                            >
+                            @error('last_name')
+                                <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <!-- Email -->

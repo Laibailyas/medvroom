@@ -14,12 +14,40 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['first_name', 'last_name', 'name', 'email', 'mobile', 'password', 'role', 'provider', 'provider_id', 'provider_token', 'mobile_verification_code', 'mobile_verification_expires_at', 'mobile_verified_at'])]
+#[Fillable(['first_name', 'middle_name', 'last_name', 'name', 'email', 'mobile', 'password', 'role', 'provider', 'provider_id', 'provider_token', 'mobile_verification_code', 'mobile_verification_expires_at', 'mobile_verified_at'])]
 #[Hidden(['password', 'remember_token', 'provider_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (User $user) {
+            if ($user->isDirty(['first_name', 'middle_name', 'last_name'])) {
+                $user->name = collect([$user->first_name, $user->middle_name, $user->last_name])
+                    ->filter()
+                    ->implode(' ');
+            }
+        });
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function getNameAttribute($value): string
+    {
+        if (! empty($this->first_name) || ! empty($this->last_name)) {
+            return collect([$this->first_name, $this->middle_name, $this->last_name])
+                ->filter()
+                ->implode(' ');
+        }
+
+        return $value ?? '';
+    }
 
     /**
      * Send the email verification notification.
