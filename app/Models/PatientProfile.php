@@ -12,11 +12,12 @@ class PatientProfile extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'medical_notes', 'date_of_birth', 'sex', 'extended_gender'];
+    protected $fillable = ['user_id', 'medical_notes', 'date_of_birth', 'sex', 'extended_gender', 'well_guide_data'];
 
     protected $casts = [
         'date_of_birth' => 'date',
         'extended_gender' => 'array',
+        'well_guide_data' => 'array',
     ];
 
     public function user(): BelongsTo

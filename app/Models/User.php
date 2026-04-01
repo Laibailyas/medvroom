@@ -35,6 +35,13 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    public function getProfilePhotoUrl(): string
+    {
+        return $this->profile_photo_path
+            ? asset('storage/'.$this->profile_photo_path)
+            : 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=7F9CF5&background=EBF4FF';
+    }
+
     /**
      * Get the user's full name.
      */

@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\Patient\DashboardController as PatientDashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Models\InsuranceProvider;
 use App\Models\Specialty;
 use Illuminate\Support\Facades\Route;
@@ -13,9 +16,28 @@ Route::get('/', function () {
     return view('welcome', compact('specialties', 'featuredInsurances'));
 });
 
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/doctors/{doctor}', [SearchController::class, 'showDoctor'])->name('doctors.show');
+
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    /** @var User $user */
+    $user = auth()->user();
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return redirect()->route('patient.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified', 'patient'])->prefix('patient')->as('patient.')->group(function () {
+    Route::get('/dashboard', [PatientDashboardController::class, 'index'])->name('dashboard');
+    Route::post('/well-guide/{itemId}/toggle', [PatientDashboardController::class, 'toggleWellGuide'])->name('well-guide.toggle');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,6 +55,7 @@ use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\SymptomController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Models\User;
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(function () {
