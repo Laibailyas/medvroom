@@ -37,6 +37,24 @@
 
         <!-- Categories Grid -->
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 pb-20">
+            <!-- Type Switcher Tabs -->
+            <div class="flex justify-center mb-12">
+                <div class="bg-white p-1 rounded-2xl shadow-sm border border-slate-100 flex inline-flex">
+                    <a 
+                        href="{{ route('help.index', ['type' => 'patient']) }}" 
+                        class="px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest transition-all {{ $type === 'patient' ? 'bg-[#ffde00] text-slate-800 shadow-md' : 'text-slate-400 hover:text-slate-600' }}"
+                    >
+                        For Patients
+                    </a>
+                    <a 
+                        href="{{ route('help.index', ['type' => 'provider']) }}" 
+                        class="px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest transition-all {{ $type === 'provider' ? 'bg-[#ffde00] text-slate-800 shadow-md' : 'text-slate-400 hover:text-slate-600' }}"
+                    >
+                        For Providers
+                    </a>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @foreach($categories as $category)
                     <a href="{{ route('help.category', $category) }}" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-xl hover:-translate-y-1 group">

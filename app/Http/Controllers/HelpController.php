@@ -17,12 +17,17 @@ class HelpController extends Controller
         $query = $request->get('q');
 
         if ($query) {
-            $articles = HelpArticle::where('title', 'like', "%{$query}%")
-                ->orWhere('content', 'like', "%{$query}%")
-                ->where('is_published', true)
+            $articles = HelpArticle::where('is_published', true)
+                ->where(function($q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%")
+                      ->orWhere('content', 'like', "%{$query}%");
+                })
+                ->whereHas('category', function($q) use ($type) {
+                    $q->where('type', $type)->orWhere('type', 'both');
+                })
                 ->get();
 
-            return view('help.search', compact('articles', 'query'));
+            return view('help.search', compact('articles', 'query', 'type'));
         }
 
         $categories = HelpCategory::where('type', $type)

@@ -5,7 +5,9 @@
             <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
                 <!-- Breadcrumbs -->
                 <nav class="flex text-[11px] font-black uppercase tracking-widest text-slate-600 mb-4 md:mb-0">
-                    <a href="{{ route('help.index') }}" class="hover:text-slate-900">All Collections</a>
+                    <a href="{{ route('help.index', ['type' => $category->type === 'both' ? 'patient' : $category->type]) }}" class="hover:text-slate-900">
+                        {{ $category->type === 'provider' ? 'Provider' : 'Patient' }} Collections
+                    </a>
                     <span class="mx-2 text-slate-400">›</span>
                     <span class="text-slate-400">{{ $category->name }}</span>
                 </nav>

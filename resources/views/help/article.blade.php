@@ -5,7 +5,9 @@
             <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
                 <!-- Breadcrumbs -->
                 <nav class="flex text-[11px] font-black uppercase tracking-widest text-slate-600 mb-4 md:mb-0 truncate">
-                    <a href="{{ route('help.index') }}" class="hover:text-slate-900 shrink-0">All Collections</a>
+                    <a href="{{ route('help.index', ['type' => $article->category->type === 'both' ? 'patient' : $article->category->type]) }}" class="hover:text-slate-900 shrink-0">
+                        All {{ ucfirst($article->category->type === 'provider' ? 'provider' : 'patient') }} Collections
+                    </a>
                     <span class="mx-2 text-slate-400 shrink-0">›</span>
                     <a href="{{ route('help.category', $article->category) }}" class="hover:text-slate-900 truncate">{{ $article->category->name }}</a>
                     <span class="mx-2 text-slate-400 shrink-0">›</span>
@@ -14,6 +16,7 @@
 
                 <!-- Search Input (Small) -->
                 <form action="{{ route('help.index') }}" method="GET" class="w-full md:w-64">
+                    <input type="hidden" name="type" value="{{ $article->category->type === 'provider' ? 'provider' : 'patient' }}">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

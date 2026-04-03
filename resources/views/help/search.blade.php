@@ -5,13 +5,14 @@
             <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
                 <!-- Breadcrumbs -->
                 <nav class="flex text-[11px] font-black uppercase tracking-widest text-slate-600 mb-4 md:mb-0">
-                    <a href="{{ route('help.index') }}" class="hover:text-slate-900">All Collections</a>
+                    <a href="{{ route('help.index', ['type' => $type]) }}" class="hover:text-slate-900">All {{ ucfirst($type) }} Collections</a>
                     <span class="mx-2 text-slate-400">›</span>
                     <span class="text-slate-400">Search Results</span>
                 </nav>
 
                 <!-- Search Input (Small) -->
                 <form action="{{ route('help.index') }}" method="GET" class="w-full md:w-64">
+                    <input type="hidden" name="type" value="{{ $type }}">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
