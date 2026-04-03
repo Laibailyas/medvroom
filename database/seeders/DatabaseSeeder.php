@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             InsuranceProviderSeeder::class,
             InsurancePlanSeeder::class,
             DoctorSeeder::class,
+            HelpDeskSeeder::class,
         ]);
     }
 }

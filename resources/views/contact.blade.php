@@ -66,8 +66,8 @@
                         Find answers and step-by-step guides.
                     </p>
                     <div class="flex gap-4">
-                        <a href="#" class="text-sm font-black text-primary hover:underline uppercase tracking-widest">Patient</a>
-                        <a href="#" class="text-sm font-black text-primary hover:underline uppercase tracking-widest">Provider</a>
+                        <a href="{{ route('help.index', ['type' => 'patient']) }}" class="text-sm font-black text-primary hover:underline uppercase tracking-widest">Patient</a>
+                        <a href="{{ route('help.index', ['type' => 'provider']) }}" class="text-sm font-black text-primary hover:underline uppercase tracking-widest">Provider</a>
                     </div>
                 </div>
             </div>

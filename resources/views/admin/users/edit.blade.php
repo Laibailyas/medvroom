@@ -24,85 +24,43 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- First Name -->
                         <div>
-                            <label for="first_name" class="block text-sm font-bold text-slate-700 mb-1">First Name</label>
-                            <input 
-                                type="text" 
-                                name="first_name" 
-                                id="first_name" 
-                                value="{{ old('first_name', $user->first_name) }}"
-                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all @error('first_name') border-rose-300 ring-rose-100 @enderror"
-                                required
-                            >
-                            @error('first_name')
-                                <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
-                            @enderror
+                            <x-form.label for="first_name">First Name</x-form.label>
+                            <x-form.input id="first_name" name="first_name" type="text" value="{{ old('first_name', $user->first_name) }}" required :error="$errors->has('first_name')" />
+                            <x-form.error :messages="$errors->get('first_name')" />
                         </div>
 
                         <!-- Middle Name -->
                         <div>
-                            <label for="middle_name" class="block text-sm font-bold text-slate-700 mb-1">Middle Name</label>
-                            <input 
-                                type="text" 
-                                name="middle_name" 
-                                id="middle_name" 
-                                value="{{ old('middle_name', $user->middle_name) }}"
-                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all @error('middle_name') border-rose-300 ring-rose-100 @enderror"
-                            >
-                            @error('middle_name')
-                                <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
-                            @enderror
+                            <x-form.label for="middle_name">Middle Name</x-form.label>
+                            <x-form.input id="middle_name" name="middle_name" type="text" value="{{ old('middle_name', $user->middle_name) }}" :error="$errors->has('middle_name')" />
+                            <x-form.error :messages="$errors->get('middle_name')" />
                         </div>
 
                         <!-- Last Name -->
                         <div>
-                            <label for="last_name" class="block text-sm font-bold text-slate-700 mb-1">Last Name</label>
-                            <input 
-                                type="text" 
-                                name="last_name" 
-                                id="last_name" 
-                                value="{{ old('last_name', $user->last_name) }}"
-                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all @error('last_name') border-rose-300 ring-rose-100 @enderror"
-                                required
-                            >
-                            @error('last_name')
-                                <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
-                            @enderror
+                            <x-form.label for="last_name">Last Name</x-form.label>
+                            <x-form.input id="last_name" name="last_name" type="text" value="{{ old('last_name', $user->last_name) }}" required :error="$errors->has('last_name')" />
+                            <x-form.error :messages="$errors->get('last_name')" />
                         </div>
                     </div>
 
                     <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
-                        <input 
-                            type="email" 
-                            name="email" 
-                            id="email" 
-                            value="{{ old('email', $user->email) }}"
-                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all @error('email') border-rose-300 ring-rose-100 @enderror"
-                            required
-                        >
-                        @error('email')
-                            <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
-                        @enderror
+                        <x-form.label for="email">Email Address</x-form.label>
+                        <x-form.input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" required :error="$errors->has('email')" />
+                        <x-form.error :messages="$errors->get('email')" />
                     </div>
 
                     <!-- Role Selection -->
                     <div>
-                        <label for="role" class="block text-sm font-bold text-slate-700 mb-1">System Role</label>
-                        <select 
-                            name="role" 
-                            id="role" 
-                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all @error('role') border-rose-300 ring-rose-100 @enderror"
-                            required
-                        >
+                        <x-form.label for="role">System Role</x-form.label>
+                        <x-form.select id="role" name="role" required :error="$errors->has('role')">
                             <option value="patient" {{ old('role', $user->role) === 'patient' ? 'selected' : '' }}>Patient (Default)</option>
                             <option value="doctor" {{ old('role', $user->role) === 'doctor' ? 'selected' : '' }}>Healthcare Provider (Doctor)</option>
                             <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>System Administrator</option>
-                        </select>
+                        </x-form.select>
                         <p class="mt-2 text-xs text-slate-500 font-medium">Changing a user's role may affect their access to clinical or administrative interfaces.</p>
-                        @error('role')
-                            <p class="mt-1 text-xs text-rose-500 font-medium">{{ $message }}</p>
-                        @enderror
+                        <x-form.error :messages="$errors->get('role')" />
                     </div>
 
                     @if($user->role === 'doctor')

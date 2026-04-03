@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HelpArticleController;
+use App\Http\Controllers\Admin\HelpCategoryController;
+use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Patient\DashboardController as PatientDashboardController;
 use App\Http\Controllers\ProfileController;
@@ -23,6 +26,13 @@ Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+
+// Help Center (Frontend)
+Route::prefix('help')->name('help.')->group(function () {
+    Route::get('/', [HelpController::class, 'index'])->name('index');
+    Route::get('/{category:slug}', [HelpController::class, 'category'])->name('category');
+    Route::get('/article/{article:slug}', [HelpController::class, 'article'])->name('article');
+});
 
 Route::get('/dashboard', function () {
     /** @var User $user */
@@ -73,6 +83,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::resource('sms-logs', SmsLogController::class)->only(['index', 'show']);
     Route::get('settings', [SystemSettingController::class, 'index'])->name('settings.index');
     Route::patch('settings/{setting}', [SystemSettingController::class, 'update'])->name('settings.update');
+
+    // Help Center Management
+    Route::prefix('help')->name('help.')->group(function () {
+        Route::post('categories/reorder', [HelpCategoryController::class, 'reorder'])->name('categories.reorder');
+        Route::resource('categories', HelpCategoryController::class);
+
+        Route::post('articles/reorder', [HelpArticleController::class, 'reorder'])->name('articles.reorder');
+        Route::resource('articles', HelpArticleController::class);
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -63,6 +63,19 @@
             </div>
         </div>
 
+        <!-- Help Section -->
+        <div>
+            <h3 class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Help Center</h3>
+            <div class="space-y-1">
+                <x-admin.sidebar-link :href="route('admin.help.categories.index')" :active="request()->routeIs('admin.help.categories.*')" icon="help">
+                    Categories
+                </x-admin.sidebar-link>
+                <x-admin.sidebar-link :href="route('admin.help.articles.index')" :active="request()->routeIs('admin.help.articles.*')" icon="article">
+                    Articles
+                </x-admin.sidebar-link>
+            </div>
+        </div>
+
         <!-- Operations Section -->
         <div>
             <h3 class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Operations</h3>

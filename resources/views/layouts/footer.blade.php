@@ -11,7 +11,7 @@
                     <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Press</a></li>
                     <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Careers</a></li>
                     <li><a href="{{ route('contact') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Contact us</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Help</a></li>
+                    <li><a href="{{ route('help.index') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Help</a></li>
                 </ul>
             </div>
 
