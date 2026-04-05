@@ -33,10 +33,11 @@ class ConversationController extends Controller
                 return $conv;
             });
 
-        // Set partner for the active conversation if provided
+        // Set partner and check activity for the active conversation
         if ($conversation) {
             $conversation->load(['patient', 'doctor']);
             $conversation->partner = ($conversation->patient_id === $user->id) ? $conversation->doctor : $conversation->patient;
+            $conversation->is_active = $conversation->isActive();
         }
 
         return view('messages.index', compact('conversations', 'conversation'));
@@ -82,6 +83,10 @@ class ConversationController extends Controller
             abort(403, 'Unauthorized.');
         }
 
+        if (!$conversation->isActive()) {
+            return response()->json(['message' => 'Chatting is only available for confirmed appointments.'], 403);
+        }
+
         $request->validate([
             'message' => 'required|string|max:2000'
         ]);
@@ -123,6 +128,10 @@ class ConversationController extends Controller
         // Verify message belongs to conversation
         if ($message->conversation_id !== $conversation->id) {
             abort(404, 'Message not found in this conversation.');
+        }
+
+        if (!$conversation->isActive()) {
+            return response()->json(['message' => 'Cannot delete messages in read-only mode.'], 403);
         }
 
         // Mark as deleted and clear body for privacy
