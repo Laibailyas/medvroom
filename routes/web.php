@@ -22,6 +22,13 @@ Route::get('/', function () {
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/doctors/{doctor}', [SearchController::class, 'showDoctor'])->name('doctors.show');
 
+// Booking Flow
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/booking/review', [\App\Http\Controllers\BookingController::class, 'review'])->name('booking.review');
+    Route::post('/booking/checkout', [\App\Http\Controllers\BookingController::class, 'checkout'])->name('booking.checkout');
+    Route::get('/booking/success', [\App\Http\Controllers\BookingController::class, 'success'])->name('booking.success');
+});
+
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
@@ -46,6 +53,10 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'verified', 'patient'])->prefix('patient')->as('patient.')->group(function () {
     Route::get('/dashboard', [PatientDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/appointments', [PatientDashboardController::class, 'appointments'])->name('appointments.index');
+    Route::get('/appointments/{appointment}', [PatientDashboardController::class, 'show'])->name('appointments.show');
+    Route::get('/appointments/{appointment}/reschedule', [PatientDashboardController::class, 'reschedule'])->name('appointments.reschedule');
+    Route::post('/appointments/{appointment}/reschedule', [PatientDashboardController::class, 'updateReschedule'])->name('appointments.update-reschedule');
     Route::post('/well-guide/{itemId}/toggle', [PatientDashboardController::class, 'toggleWellGuide'])->name('well-guide.toggle');
 });
 

@@ -95,7 +95,10 @@
                 <!-- Appointment History -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                     <div class="p-6">
-                        <h2 class="text-xl font-bold text-slate-900 mb-6">Recent Activity</h2>
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-slate-900">Recent Activity</h2>
+                            <a href="{{ route('patient.appointments.index') }}" class="text-xs font-black text-primary uppercase tracking-widest hover:underline decoration-primary/30 underline-offset-4 decoration-2">View All</a>
+                        </div>
                         @if($pastAppointments->isEmpty())
                             <div class="text-center py-12 text-slate-400">
                                 <p>No completed appointments yet.</p>

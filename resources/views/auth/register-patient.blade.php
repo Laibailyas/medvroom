@@ -1,4 +1,4 @@
-<x-auth-layout>
+<x-auth-layout title="Patient Registration" description="Create a MedVroom account to find doctors, book appointments, and manage your family's healthcare in one place.">
     <div class="max-w-xl mx-auto py-12 px-6">
         <div class="text-center mb-10">
             <h1 class="text-3xl font-black text-neutral-dark tracking-normal mb-8">Create an account</h1>

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\DoctorProfile;
+use App\Models\Payment;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -31,7 +34,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // Care Team (Doctors the patient has visited)
+        // Care Team
         $careTeamIds = $patientProfile->appointments()->pluck('doctor_profile_id')->unique();
         $careTeam = DoctorProfile::whereIn('id', $careTeamIds)
             ->with(['user', 'specialties'])
@@ -60,9 +63,112 @@ class DashboardController extends Controller
     }
 
     /**
+     * Display all patient appointments.
+     */
+    public function appointments(Request $request): View
+    {
+        $user = $request->user();
+        $patientProfile = $user->patientProfile;
+
+        $appointments = $patientProfile->appointments()
+            ->with(['doctorProfile.user', 'doctorProfile.specialties', 'latestStatusHistory', 'review'])
+            ->orderByDesc('appointment_datetime')
+            ->paginate(15);
+
+        // Sidebar data
+        $careTeamIds = $patientProfile->appointments()->pluck('doctor_profile_id')->unique();
+        $careTeam = DoctorProfile::whereIn('id', $careTeamIds)
+            ->with(['user', 'specialties'])
+            ->take(4)
+            ->get();
+        $insurancePlans = $patientProfile->insurancePlans()->with('provider')->get();
+
+        return view('patient.appointments.index', compact('appointments', 'careTeam', 'insurancePlans'));
+    }
+
+    /**
+     * Display appointment details.
+     */
+    public function show(Appointment $appointment): View
+    {
+        $this->authorizeOwner($appointment);
+
+        $appointment->load(['doctorProfile.user', 'doctorProfile.specialties', 'payment', 'statusHistories', 'insurancePlan.provider']);
+
+        return view('patient.appointments.show', compact('appointment'));
+    }
+
+    /**
+     * Show the rescheduling form.
+     */
+    public function reschedule(Appointment $appointment): View|RedirectResponse
+    {
+        $this->authorizeOwner($appointment);
+
+        // Check 24 hour cutoff: must be more than 24 hours in the future
+        if (! $appointment->appointment_datetime->isAfter(now()->addHours(24))) {
+            return redirect()->route('patient.appointments.show', $appointment)
+                ->with('error', 'Appointments can only be rescheduled up to 24 hours before the scheduled time.');
+        }
+
+        $doctor = $appointment->doctorProfile->load('user', 'specialties');
+        
+        // Load availability for the next 7 days
+        $startDate = now()->startOfDay();
+        $endDate = now()->addDays(7)->endOfDay();
+        $userTimezone = config('app.timezone'); 
+        $availability = $doctor->getAvailabilityForRange($startDate, $endDate, $userTimezone);
+
+        return view('patient.appointments.reschedule', compact('appointment', 'doctor', 'availability'));
+    }
+
+    /**
+     * Update the appointment time.
+     */
+    public function updateReschedule(Request $request, Appointment $appointment): RedirectResponse
+    {
+        $this->authorizeOwner($appointment);
+
+        if (! $appointment->appointment_datetime->isAfter(now()->addHours(24))) {
+            return redirect()->route('patient.appointments.show', $appointment)
+                ->with('error', 'This appointment can no longer be rescheduled.');
+        }
+
+        $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'time' => 'required|string',
+        ]);
+
+        $newDateTime = \Carbon\Carbon::parse("{$request->date} {$request->time}");
+
+        // Simple validation: ensure it's in the future
+        if ($newDateTime->isPast()) {
+            return back()->with('error', 'Please select a future time slot.');
+        }
+
+        $oldDateTime = $appointment->appointment_datetime;
+        $appointment->update(['appointment_datetime' => $newDateTime]);
+
+        $appointment->transitionStatus('confirmed', "Rescheduled by patient. Was originally: " . $oldDateTime->format('M d, Y h:i A'));
+
+        return redirect()->route('patient.appointments.show', $appointment)
+            ->with('success', 'Appointment successfully rescheduled!');
+    }
+
+    /**
+     * Authorize that the authenticated user owns the appointment.
+     */
+    private function authorizeOwner(Appointment $appointment): void
+    {
+        if ($appointment->patient_profile_id !== auth()->user()->patientProfile->id) {
+            abort(403, 'Unauthorized access to appointment details.');
+        }
+    }
+
+    /**
      * Toggle the completion status of a well guide item.
      */
-    public function toggleWellGuide(Request $request, string $itemId)
+    public function toggleWellGuide(Request $request, string $itemId): RedirectResponse
     {
         $patientProfile = $request->user()->patientProfile;
         $data = $patientProfile->well_guide_data ?? [];

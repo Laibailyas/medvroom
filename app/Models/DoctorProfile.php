@@ -30,6 +30,7 @@ class DoctorProfile extends Model
         'phone_number',
         'practice_zip_code',
         'referral_source',
+        'timezone',
     ];
 
     protected $casts = [
@@ -81,5 +82,66 @@ class DoctorProfile extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get availability for a given date range, adjusted for user timezone.
+     */
+    public function getAvailabilityForRange(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate, string $userTimezone = 'UTC'): array
+    {
+        $doctorTimezone = $this->timezone ?? config('app.timezone');
+        $schedules = $this->schedules;
+        
+        // Fetch appointments in the range
+        $appointments = $this->appointments()
+            ->whereBetween('appointment_datetime', [$startDate->copy()->startOfDay()->setTimezone('UTC'), $endDate->copy()->endOfDay()->setTimezone('UTC')])
+            ->get();
+
+        $availability = [];
+        $currentDate = $startDate->copy()->startOfDay();
+        $nowDoctor = \Carbon\Carbon::now($doctorTimezone);
+
+        while ($currentDate <= $endDate) {
+            $dayOfWeek = $currentDate->dayOfWeek; // 0 (Sun) - 6 (Sat)
+            $daySchedule = $schedules->where('day_of_week', $dayOfWeek)->first();
+
+            $daySlots = [];
+            if ($daySchedule) {
+                // Determine doctor's working hours for this date in doctor's timezone
+                $startTimeDoctor = \Carbon\Carbon::createFromFormat('H:i:s', $daySchedule->start_time, $doctorTimezone)
+                    ->setDate($currentDate->year, $currentDate->month, $currentDate->day);
+                $endTimeDoctor = \Carbon\Carbon::createFromFormat('H:i:s', $daySchedule->end_time, $doctorTimezone)
+                    ->setDate($currentDate->year, $currentDate->month, $currentDate->day);
+
+                $slotDuration = $daySchedule->slot_duration_minutes ?? 30;
+
+                $currentSlotStart = $startTimeDoctor->copy();
+                while ($currentSlotStart->copy()->addMinutes($slotDuration) <= $endTimeDoctor) {
+                    // Skip if slot is in the past
+                    if ($currentSlotStart->lte($nowDoctor)) {
+                        $currentSlotStart->addMinutes($slotDuration);
+                        continue;
+                    }
+
+                    $slotStartUTC = $currentSlotStart->copy()->setTimezone('UTC');
+                    
+                    // Check if booked
+                    $isBooked = $appointments->contains(function ($appointment) use ($slotStartUTC) {
+                        return $appointment->appointment_datetime->equalTo($slotStartUTC);
+                    });
+
+                    if (!$isBooked) {
+                        $daySlots[] = $currentSlotStart->copy()->setTimezone($userTimezone)->format('H:i');
+                    }
+
+                    $currentSlotStart->addMinutes($slotDuration);
+                }
+            }
+
+            $availability[$currentDate->format('Y-m-d')] = $daySlots;
+            $currentDate->addDay();
+        }
+
+        return $availability;
     }
 }

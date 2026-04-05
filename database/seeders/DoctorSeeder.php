@@ -36,25 +36,52 @@ class DoctorSeeder extends Seeder
             $nameParts = explode(' ', str_replace(['Dr. ', 'Dr '], '', $docData['name']));
             $firstName = $nameParts[0] ?? '';
             $lastName = $nameParts[1] ?? ($nameParts[0] ?? '');
+            $email = strtolower(str_replace([' ', '.'], ['', ''], $docData['name'])).'@medvroom.com';
 
-            $user = User::factory()->doctor()->create([
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'name' => $docData['name'],
-                'email' => strtolower(str_replace([' ', '.'], ['', ''], $docData['name'])).'@medvroom.com',
-            ]);
+            $user = User::updateOrCreate(
+                ['email' => $email],
+                [
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'name' => $docData['name'],
+                    'password' => bcrypt('password'),
+                    'role' => User::ROLE_DOCTOR,
+                    'email_verified_at' => now(),
+                ]
+            );
 
-            $profile = DoctorProfile::create([
-                'user_id' => $user->id,
-                'bio' => 'Experienced specialist dedicated to providing top-quality care in '.$docData['specialty'].'.',
-                'experience_years' => rand(5, 25),
-                'consultation_fee' => rand(100, 300),
-                'clinic_name' => 'MedVroom '.$docData['specialty'].' Center',
-                'clinic_address' => rand(100, 999).' Healthcare Ave, Suite '.rand(10, 99),
-                'gender' => $docData['gender'],
-                'is_verified' => true,
-                'practice_zip_code' => '10001',
-            ]);
+            $profile = DoctorProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'bio' => 'Experienced specialist dedicated to providing top-quality care in '.$docData['specialty'].'.',
+                    'experience_years' => rand(5, 25),
+                    'consultation_fee' => rand(100, 300),
+                    'clinic_name' => 'MedVroom '.$docData['specialty'].' Center',
+                    'clinic_address' => rand(100, 999).' Healthcare Ave, Suite '.rand(10, 99),
+                    'latitude' => 40.7128 + (rand(-100, 100) / 1000), // Randomize slightly around NYC
+                    'longitude' => -74.0060 + (rand(-100, 100) / 1000),
+                    'timezone' => 'America/New_York',
+                    'gender' => $docData['gender'],
+                    'is_verified' => true,
+                    'practice_zip_code' => '10001',
+                ]
+            );
+
+            // Clean up existing relations to avoid duplicates when re-seeding
+            $profile->schedules()->delete();
+            $profile->specialties()->detach();
+            $profile->insurancePlans()->detach();
+            $profile->reviews()->delete();
+
+            // Add default schedule
+            for ($day = 1; $day <= 5; $day++) {
+                $profile->schedules()->create([
+                    'day_of_week' => $day,
+                    'start_time' => '09:00:00',
+                    'end_time' => '17:00:00',
+                    'slot_duration_minutes' => 30,
+                ]);
+            }
 
             // Link to specialty
             $specialty = $specialties->where('name', $docData['specialty'])->first();

@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'MedVroom') }}</title>
+        <title>{{ isset($title) ? $title . ' | ' . config('app.name', 'MedVroom') : config('app.name', 'MedVroom') }}</title>
+        <meta name="description" content="{{ $description ?? 'Find and book the best doctors near you with MedVroom. Local doctors, verified reviews, and instant booking.' }}">
 
         <!-- Google Fonts: Instrument Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +19,8 @@
         <style>
             body { font-family: 'Instrument Sans', sans-serif; }
         </style>
+
+        @stack('styles')
     </head>
     <body class="antialiased bg-white text-neutral-dark">
 
@@ -39,5 +42,6 @@
 
         @include('layouts.footer')
 
+        @stack('scripts')
     </body>
 </html>

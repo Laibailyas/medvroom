@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'MedVroom') }} - Secure Enrollment</title>
+        <title>{{ isset($title) ? $title . ' | ' . config('app.name', 'MedVroom') : config('app.name', 'MedVroom') . ' - Secure Enrollment' }}</title>
+        <meta name="description" content="{{ $description ?? 'Securely log in or register with MedVroom to manage your healthcare appointments and reviews.' }}">
 
         <!-- Google Fonts: Instrument Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

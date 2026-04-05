@@ -1,4 +1,8 @@
-<x-app-layout>
+<?php
+    $title = 'Book local doctors who take your insurance';
+    $description = 'Find and book top-rated doctors, dentists, and specialists who take your insurance. Read verified patient reviews and book appointments online instantly with MedVroom.';
+?>
+<x-app-layout :title="$title" :description="$description">
     <!-- Hero Section -->
     <section class="relative bg-[#fffce6] pt-20 pb-28 min-h-[600px] flex items-center overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">

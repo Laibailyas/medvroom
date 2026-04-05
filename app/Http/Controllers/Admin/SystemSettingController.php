@@ -85,6 +85,16 @@ class SystemSettingController extends Controller
                     'log_retention_days' => '30',
                 ],
             ],
+            [
+                'key' => 'stripe_settings',
+                'group' => 'Payments',
+                'description' => 'Stripe API keys for Cashier and Elements integration.',
+                'value' => [
+                    'stripe_key' => env('STRIPE_KEY'),
+                    'stripe_secret' => env('STRIPE_SECRET'),
+                    'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+                ],
+            ],
         ];
 
         foreach ($defaults as $default) {

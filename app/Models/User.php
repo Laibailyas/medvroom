@@ -13,13 +13,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
-#[Fillable(['first_name', 'middle_name', 'last_name', 'name', 'email', 'mobile', 'password', 'role', 'provider', 'provider_id', 'provider_token', 'mobile_verification_code', 'mobile_verification_expires_at', 'mobile_verified_at'])]
+#[Fillable(['first_name', 'middle_name', 'last_name', 'name', 'email', 'mobile', 'password', 'role', 'provider', 'provider_id', 'provider_token', 'mobile_verification_code', 'mobile_verification_expires_at', 'mobile_verified_at', 'timezone'])]
 #[Hidden(['password', 'remember_token', 'provider_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use Billable, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The "booted" method of the model.

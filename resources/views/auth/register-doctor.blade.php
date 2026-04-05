@@ -1,4 +1,4 @@
-<x-auth-layout :forProviders="true">
+<x-auth-layout :forProviders="true" title="Join MedVroom as a Provider" description="Register your medical practice with MedVroom to reach more patients, fill your calendar, and manage appointments efficiently.">
     <div class="max-w-7xl mx-auto grid lg:grid-cols-5 gap-16 items-start px-6 md:px-12 py-16">
         <!-- Left Side: Branding & Rocket Info -->
         <div class="lg:col-span-2 pt-12 space-y-12">

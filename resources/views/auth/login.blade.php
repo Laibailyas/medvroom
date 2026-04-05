@@ -1,4 +1,4 @@
-<x-auth-layout>
+<x-auth-layout title="Log In" description="Securely log in to your MedVroom account to manage appointments and medical records.">
     <div class="max-w-md mx-auto py-24 px-6">
         <div class="bg-white p-10 shadow-[0_4px_24px_rgba(0,0,0,0.06)] rounded-md border border-slate-50">
             <div class="mb-10 text-center">
@@ -30,7 +30,7 @@
                     <div class="flex items-center justify-between mb-2">
                         <x-input-label for="password" value="Password" />
                         @if (Route::has('password.request'))
-                            <a class="text-xs font-bold text-primary hover:underline underline-offset-2" href="{{ route('password.request') }}">
+                            <a tabindex="-1" class="text-xs font-bold text-primary hover:underline underline-offset-2" href="{{ route('password.request') }}">
                                 Forgot password?
                             </a>
                         @endif

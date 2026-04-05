@@ -13,7 +13,17 @@ class SearchController extends Controller
      */
     public function index(Request $request)
     {
-        $query = DoctorProfile::query()->with(['user', 'specialties']);
+        $user = auth()->user();
+        $query = DoctorProfile::query()
+            ->with(['user', 'specialties', 'reviews', 'schedules'])
+            ->with(['appointments' => function ($q) use ($user) {
+                if ($user && $user->isPatient() && $user->patientProfile) {
+                    $q->where('patient_profile_id', $user->patientProfile->id)
+                        ->where('appointment_datetime', '>=', now());
+                } else {
+                    $q->whereRaw('1 = 0');
+                }
+            }]);
 
         if ($request->filled('q')) {
             $q = $request->q;
@@ -32,9 +42,20 @@ class SearchController extends Controller
         }
 
         $doctors = $query->paginate(12);
+        
+        // Timezone and Date Range for Availability
+        $userTimezone = auth()->user()?->timezone ?? $request->query('timezone', 'UTC');
+        $startDate = \Carbon\Carbon::now($userTimezone);
+        $endDate = $startDate->copy()->addDays(6);
+
+        // Pre-calculate availability for the search results
+        foreach ($doctors as $doctor) {
+            $doctor->availability = $doctor->getAvailabilityForRange($startDate, $endDate, $userTimezone);
+        }
+
         $specialties = Specialty::all();
 
-        return view('search.index', compact('doctors', 'specialties'));
+        return view('search.index', compact('doctors', 'specialties', 'userTimezone', 'startDate', 'endDate'));
     }
 
     /**
