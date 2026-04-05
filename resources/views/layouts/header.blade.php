@@ -137,9 +137,20 @@
                 </a>
 
                 @if(Auth::user()->isPatient())
-                <a href="{{ route('patient.dashboard') }}" class="flex items-center space-x-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group">
+                <a href="{{ route('patient.appointments.index') }}" class="flex items-center space-x-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
                     <span class="text-sm font-bold text-slate-600 group-hover:text-slate-900">Appointment History</span>
+                </a>
+                @endif
+
+                @if(Auth::user()->isDoctor())
+                <a href="{{ route('doctor.appointments.index') }}" class="flex items-center space-x-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                    <span class="text-sm font-bold text-slate-600 group-hover:text-slate-900">Appointments</span>
+                </a>
+                <a href="{{ route('doctor.schedule.index') }}" class="flex items-center space-x-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span class="text-sm font-bold text-slate-600 group-hover:text-slate-900">Schedule Settings</span>
                 </a>
                 @endif
 
@@ -161,7 +172,7 @@
         </div>
 @endguest
 
-        <a href="#" class="px-4 py-2 border border-slate-300 rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all ml-2">Need help?</a>
+        <a href="{{ route('help.index') }}" class="px-4 py-2 border border-slate-300 rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all ml-2">Need help?</a>
     </nav>
 
     <!-- Mobile: Hamburger -->
@@ -193,6 +204,17 @@
                 <a href="{{ route('patient.appointments.index') }}" class="block text-sm font-bold text-slate-700 py-2 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
                     Appointment History
+                </a>
+                @endif
+                
+                @if(Auth::user()->isDoctor())
+                <a href="{{ route('doctor.appointments.index') }}" class="block text-sm font-bold text-slate-700 py-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                    Appointments
+                </a>
+                <a href="{{ route('doctor.schedule.index') }}" class="block text-sm font-bold text-slate-700 py-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Schedule Settings
                 </a>
                 @endif
                 <a href="{{ route('profile.edit') }}" class="block text-sm font-bold text-slate-700 py-2 flex items-center">

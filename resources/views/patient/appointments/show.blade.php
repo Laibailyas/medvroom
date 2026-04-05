@@ -127,6 +127,24 @@
                             @endforeach
                         </div>
                     </div>
+
+                    <!-- Chat Interface Link -->
+                    @if($appointment->status !== 'pending' && $appointment->conversation())
+                        <div class="mt-8 bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100 flex items-center justify-between">
+                            <div class="flex items-center gap-6">
+                                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-black text-slate-900 tracking-tight">Chat with your provider?</h3>
+                                    <p class="text-sm font-bold text-slate-500">The chat has been moved to our dedicated Messenger portal.</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('messages.index', $appointment->conversation()) }}" class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20">
+                                Open Messenger
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Right Column: Actions & Payment -->
@@ -136,7 +154,25 @@
                     <div class="bg-slate-900 rounded-[2.5rem] p-8 shadow-2xl shadow-slate-900/20">
                         <h2 class="text-white text-xl font-black mb-8 italic tracking-tight">Need to make a change?</h2>
                         <div class="space-y-4">
-                            @if($appointment->appointment_datetime->isAfter(now()->addHours(24)))
+                            @if($appointment->status === 'reschedule_requested')
+                                <div class="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-2xl text-center mb-4">
+                                    <p class="text-xs font-bold text-yellow-500 uppercase tracking-widest">Doctor proposed a new time</p>
+                                </div>
+                                <form action="{{ route('patient.appointments.reply-reschedule', $appointment) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="action" value="accept">
+                                    <button type="submit" class="group w-full bg-green-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:bg-green-600 transition-all mb-4">
+                                        Accept New Time
+                                    </button>
+                                </form>
+                                <form action="{{ route('patient.appointments.reply-reschedule', $appointment) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="action" value="reject">
+                                    <button type="submit" class="w-full bg-red-600/20 text-red-500 border border-red-500/20 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:bg-red-600 hover:text-white transition-all">
+                                        Reject Reschedule
+                                    </button>
+                                </form>
+                            @elseif($appointment->appointment_datetime->isAfter(now()->addHours(24)))
                                 <a href="{{ route('patient.appointments.reschedule', $appointment) }}" class="group w-full bg-primary text-slate-900 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:scale-[1.03] active:scale-95 transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     Reschedule Visit

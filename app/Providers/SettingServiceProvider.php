@@ -68,9 +68,9 @@ class SettingServiceProvider extends ServiceProvider
             $stripeSettings = SystemSetting::where('key', 'stripe_settings')->first();
             if ($stripeSettings) {
                 config([
-                    'cashier.key' => $stripeSettings['stripe_key'] ?? config('cashier.key'),
-                    'cashier.secret' => $stripeSettings['stripe_secret'] ?? config('cashier.secret'),
-                    'cashier.webhook.secret' => $stripeSettings['webhook_secret'] ?? config('cashier.webhook.secret'),
+                    'cashier.key' => $stripeSettings->value['stripe_key'] ?? config('cashier.key'),
+                    'cashier.secret' => $stripeSettings->value['stripe_secret'] ?? config('cashier.secret'),
+                    'cashier.webhook.secret' => $stripeSettings->value['webhook_secret'] ?? config('cashier.webhook.secret'),
                 ]);
             }
         } catch (\Exception $e) {

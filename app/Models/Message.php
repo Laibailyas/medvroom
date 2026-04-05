@@ -17,11 +17,13 @@ class Message extends Model
         'message_body',
         'read_at',
         'metadata',
+        'is_deleted',
     ];
 
     protected $casts = [
         'read_at' => 'datetime',
         'metadata' => 'array',
+        'is_deleted' => 'boolean',
     ];
 
     public function conversation(): BelongsTo

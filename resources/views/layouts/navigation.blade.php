@@ -11,10 +11,20 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @auth
+                        <x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.*')">
+                            {{ __('Messages') }}
+                        </x-nav-link>
+
+                        @if(auth()->user()->isDoctor())
+                            <x-nav-link :href="route('doctor.appointments.index')" :active="request()->routeIs('doctor.appointments.*')">
+                                {{ __('Appointments') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('doctor.schedule.index')" :active="request()->routeIs('doctor.schedule.index')">
+                                {{ __('Schedule Settings') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -79,6 +89,21 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @auth
+                <x-responsive-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.*')">
+                    {{ __('Messages') }}
+                </x-responsive-nav-link>
+
+                @if(auth()->user()->isDoctor())
+                    <x-responsive-nav-link :href="route('doctor.appointments.index')" :active="request()->routeIs('doctor.appointments.*')">
+                        {{ __('Appointments') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('doctor.schedule.index')" :active="request()->routeIs('doctor.schedule.index')">
+                        {{ __('Schedule Settings') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         @auth

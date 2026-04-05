@@ -7,7 +7,9 @@
     @while ($current <= $endDate)
         @php
             $dateKey = $current->format('Y-m-d');
-            $slots = $availability[$dateKey] ?? [];
+            $slotsData = array_key_exists($dateKey, $availability) ? $availability[$dateKey] : null;
+            $hasSchedule = $slotsData !== null;
+            $slots = $slotsData ?: [];
             $count = count($slots);
             $isToday = $current->isToday();
         @endphp
@@ -28,10 +30,15 @@
                         <span class="text-[8px] font-bold text-slate-700 uppercase tracking-tighter leading-none">appts</span>
                     </div>
                 </div>
-            @else
+            @elseif (!$hasSchedule)
                 <div class="bg-slate-50/50 rounded-xl p-1.5 h-[52px] flex flex-col items-center justify-center border border-slate-100/50">
                     <span class="text-[8px] font-bold text-slate-300 leading-none uppercase mb-0.5">No</span>
                     <span class="text-[8px] font-bold text-slate-300 uppercase tracking-tighter leading-none">appts</span>
+                </div>
+            @else
+                <div class="bg-slate-50 rounded-xl p-1.5 h-[52px] flex flex-col items-center justify-center border border-slate-200">
+                    <span class="text-[8px] font-bold text-slate-400 leading-none uppercase mb-0.5">Fully</span>
+                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter leading-none">booked</span>
                 </div>
             @endif
         </div>

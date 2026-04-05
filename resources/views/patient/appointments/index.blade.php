@@ -16,24 +16,30 @@
             <!-- Left Column: Full Appointment List -->
             <div class="lg:col-span-2 space-y-6">
                 @forelse($appointments as $appointment)
-                    <div class="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row items-center gap-6 group transition-all hover:shadow-xl hover:shadow-slate-200/50">
+                    <div class="rounded-[2rem] p-6 md:p-8 shadow-sm border flex flex-col md:flex-row items-center gap-6 group transition-all hover:shadow-xl hover:shadow-slate-200/50 
+                        {{ $appointment->status === 'reschedule_requested' ? 'bg-yellow-50 border-yellow-300 shadow-yellow-100' : 'bg-white border-slate-100' }}">
                         <!-- Doctor Illustration/Photo -->
-                        <div class="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-inner group-hover:scale-105 transition-transform duration-500">
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden border shadow-inner group-hover:scale-105 transition-transform duration-500
+                            {{ $appointment->status === 'reschedule_requested' ? 'bg-white border-yellow-200' : 'bg-slate-50 border-slate-100' }}">
                             @if($appointment->doctorProfile->user->getProfilePhotoUrl())
-                                <img src="{{ $appointment->doctorProfile->user->getProfilePhotoUrl() }}" class="w-full h-full object-cover">
+                                <img src="{{ Str::startsWith($appointment->doctorProfile->user->profile_photo_path, 'http') ? $appointment->doctorProfile->user->profile_photo_path : Storage::url($appointment->doctorProfile->user->profile_photo_path) }}" class="w-full h-full object-cover">
                             @else
-                                <span class="text-2xl font-black text-slate-200">{{ substr($appointment->doctorProfile->user->first_name, 0, 1) }}</span>
+                                <span class="text-2xl font-black {{ $appointment->status === 'reschedule_requested' ? 'text-yellow-400' : 'text-slate-200' }}">{{ substr($appointment->doctorProfile->user->first_name, 0, 1) }}</span>
                             @endif
                         </div>
 
                         <!-- Main Info -->
                         <div class="flex-1 text-center md:text-left">
                             <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
-                                <span class="px-2.5 py-0.5 bg-slate-100 text-slate-600 text-[9px] font-black uppercase tracking-widest rounded-md">
+                                <span class="px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest rounded-md
+                                    {{ $appointment->status === 'reschedule_requested' ? 'bg-yellow-200 text-yellow-800' : 'bg-slate-100 text-slate-600' }}">
                                     {{ $appointment->appointment_datetime->isPast() ? 'Past' : 'Upcoming' }}
                                 </span>
-                                <span class="px-2.5 py-0.5 {{ $appointment->status === 'confirmed' ? 'bg-green-50 text-green-600' : 'bg-yellow-50 text-yellow-600' }} text-[9px] font-black uppercase tracking-widest rounded-md">
-                                    {{ $appointment->status }}
+                                <span class="px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest rounded-md
+                                    @if($appointment->status === 'confirmed') bg-green-50 text-green-600
+                                    @elseif($appointment->status === 'reschedule_requested') bg-yellow-200 text-yellow-800
+                                    @else bg-yellow-50 text-yellow-600 @endif">
+                                    {{ str_replace('_', ' ', $appointment->status) }}
                                 </span>
                             </div>
                             <h3 class="text-xl font-black text-slate-900 tracking-tight">Dr. {{ $appointment->doctorProfile->user->name }}</h3>
@@ -66,7 +72,23 @@
                                 <a href="{{ route('doctors.show', $appointment->doctorProfile) }}" class="w-full bg-white text-slate-900 text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] border border-slate-200 hover:bg-slate-50 transition-all">Book Again</a>
                             @else
                                 <a href="{{ route('patient.appointments.show', $appointment) }}" class="w-full bg-primary text-slate-900 text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] hover:bg-primary-dark transition-all hover:scale-[1.02] active:scale-95 shadow-sm">View Details</a>
-                                @if($appointment->appointment_datetime->isAfter(now()->addHours(24)))
+                                @if($appointment->status !== 'pending' && $appointment->conversation())
+                                    <a href="{{ route('messages.index', $appointment->conversation()) }}" class="w-full bg-slate-900 text-white text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] hover:bg-slate-800 transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-slate-900/10">Open Messenger</a>
+                                @endif
+                                @if($appointment->status === 'reschedule_requested')
+                                    <div class="flex flex-col gap-2">
+                                        <form action="{{ route('patient.appointments.reply-reschedule', $appointment) }}" method="POST" class="w-full">
+                                            @csrf
+                                            <input type="hidden" name="action" value="accept">
+                                            <button type="submit" class="w-full bg-yellow-500 text-white text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] hover:bg-yellow-600 transition-all shadow-lg shadow-yellow-500/20 active:scale-95">Accept Time</button>
+                                        </form>
+                                        <form action="{{ route('patient.appointments.reply-reschedule', $appointment) }}" method="POST" class="w-full">
+                                            @csrf
+                                            <input type="hidden" name="action" value="reject">
+                                            <button type="submit" class="w-full bg-white text-slate-900 border border-slate-200 text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] hover:bg-slate-50 transition-all shadow-sm active:scale-95">Reject</button>
+                                        </form>
+                                    </div>
+                                @elseif($appointment->appointment_datetime->isAfter(now()->addHours(24)))
                                     <a href="{{ route('patient.appointments.reschedule', $appointment) }}" class="w-full bg-white text-slate-600 text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] border border-slate-200 hover:bg-slate-50 transition-all">Reschedule</a>
                                 @endif
                             @endif

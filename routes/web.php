@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\BlogCategoryController as AdminBlogCategoryController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Admin\BlogPostController as AdminBlogPostController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HelpArticleController;
 use App\Http\Controllers\Admin\HelpCategoryController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Patient\DashboardController as PatientDashboardController;
@@ -24,9 +28,9 @@ Route::get('/doctors/{doctor}', [SearchController::class, 'showDoctor'])->name('
 
 // Booking Flow
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/booking/review', [\App\Http\Controllers\BookingController::class, 'review'])->name('booking.review');
-    Route::post('/booking/checkout', [\App\Http\Controllers\BookingController::class, 'checkout'])->name('booking.checkout');
-    Route::get('/booking/success', [\App\Http\Controllers\BookingController::class, 'success'])->name('booking.success');
+    Route::get('/booking/review', [BookingController::class, 'review'])->name('booking.review');
+    Route::post('/booking/checkout', [BookingController::class, 'checkout'])->name('booking.checkout');
+    Route::get('/booking/success', [BookingController::class, 'success'])->name('booking.success');
 });
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
@@ -41,6 +45,12 @@ Route::prefix('help')->name('help.')->group(function () {
     Route::get('/article/{article:slug}', [HelpController::class, 'article'])->name('article');
 });
 
+// Blog (Frontend)
+Route::prefix('blog')->name('blog.')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('index');
+    Route::get('/{post:slug}', [BlogController::class, 'show'])->name('show');
+});
+
 Route::get('/dashboard', function () {
     /** @var User $user */
     $user = auth()->user();
@@ -48,8 +58,34 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     }
 
+    if ($user->isDoctor()) {
+        return redirect()->route('doctor.dashboard');
+    }
+
     return redirect()->route('patient.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Doctor Portal Routes
+Route::middleware(['auth', 'verified', 'doctor'])->prefix('doctor')->as('doctor.')->group(function () {
+    Route::get('/dashboard', \App\Http\Controllers\Doctor\DashboardController::class)->name('dashboard');
+    Route::get('/appointments', [\App\Http\Controllers\Doctor\AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/appointments/{appointment}', [\App\Http\Controllers\Doctor\AppointmentController::class, 'show'])->name('appointments.show');
+    Route::get('/schedule', [\App\Http\Controllers\Doctor\ScheduleController::class, 'index'])->name('schedule.index');
+    Route::post('/schedule', [\App\Http\Controllers\Doctor\ScheduleController::class, 'store'])->name('schedule.store');
+    
+    Route::post('/appointments/{appointment}/status', [\App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('appointments.status');
+    Route::post('/appointments/{appointment}/reschedule', [\App\Http\Controllers\Doctor\AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
+
+    Route::get('/patients/{patient}', [\App\Http\Controllers\Doctor\PatientController::class, 'show'])->name('patients.show');
+});
+
+// Common Authenticated Routes (API Chat endpoints)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/messages/{conversation?}', [\App\Http\Controllers\ConversationController::class, 'index'])->name('messages.index');
+    Route::get('/conversations/{conversation}/messages', [\App\Http\Controllers\ConversationController::class, 'fetchMessages'])->name('conversations.messages.index');
+    Route::post('/conversations/{conversation}/messages', [\App\Http\Controllers\ConversationController::class, 'sendMessage'])->name('conversations.messages.store');
+    Route::delete('/conversations/{conversation}/messages/{message}', [\App\Http\Controllers\ConversationController::class, 'deleteMessage'])->name('conversations.messages.destroy');
+});
 
 Route::middleware(['auth', 'verified', 'patient'])->prefix('patient')->as('patient.')->group(function () {
     Route::get('/dashboard', [PatientDashboardController::class, 'index'])->name('dashboard');
@@ -57,6 +93,7 @@ Route::middleware(['auth', 'verified', 'patient'])->prefix('patient')->as('patie
     Route::get('/appointments/{appointment}', [PatientDashboardController::class, 'show'])->name('appointments.show');
     Route::get('/appointments/{appointment}/reschedule', [PatientDashboardController::class, 'reschedule'])->name('appointments.reschedule');
     Route::post('/appointments/{appointment}/reschedule', [PatientDashboardController::class, 'updateReschedule'])->name('appointments.update-reschedule');
+    Route::post('/appointments/{appointment}/reply-reschedule', [PatientDashboardController::class, 'replyReschedule'])->name('appointments.reply-reschedule');
     Route::post('/well-guide/{itemId}/toggle', [PatientDashboardController::class, 'toggleWellGuide'])->name('well-guide.toggle');
 });
 
@@ -102,6 +139,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
 
         Route::post('articles/reorder', [HelpArticleController::class, 'reorder'])->name('articles.reorder');
         Route::resource('articles', HelpArticleController::class);
+    });
+
+    // Blog Management
+    Route::prefix('blog')->name('blog.')->group(function () {
+        Route::post('categories/reorder', [AdminBlogCategoryController::class, 'reorder'])->name('categories.reorder');
+        Route::resource('categories', AdminBlogCategoryController::class);
+        Route::resource('posts', AdminBlogPostController::class);
     });
 });
 

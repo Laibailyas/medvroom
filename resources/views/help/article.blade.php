@@ -70,7 +70,7 @@
                 </div>
             @endif
 
-            <!-- Feedback Section (Simplified Mockup) -->
+            {{-- <!-- Feedback Section (Simplified Mockup) -->
             <div class="mt-20 bg-slate-50 rounded-2xl p-12 text-center border border-slate-200/50">
                 <p class="text-sm font-black text-slate-600 uppercase tracking-widest mb-6">Did this answer your question?</p>
                 <div class="flex justify-center gap-4">
@@ -78,7 +78,7 @@
                     <button class="w-16 h-16 bg-white border border-slate-200 rounded-xl text-3xl hover:scale-110 transition-transform shadow-sm">😐</button>
                     <button class="w-16 h-16 bg-white border border-slate-200 rounded-xl text-3xl hover:scale-110 transition-transform shadow-sm">😃</button>
                 </div>
-            </div>
+            </div> --}}
         </article>
     </div>
 

@@ -92,6 +92,99 @@
                     </div>
                 </div>
 
+                <!-- Action Required (Reschedule Requests) at the Top -->
+                @if($actionRequiredAppointments->isNotEmpty())
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-[2.5rem] p-6 shadow-sm mb-8 mt-8">
+                        <div class="flex items-center gap-3 mb-6">
+                            <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            <h2 class="text-xl font-black text-slate-900 uppercase tracking-tight italic">Action Required</h2>
+                        </div>
+                        <div class="space-y-4">
+                            @foreach($actionRequiredAppointments as $appointment)
+                                <div class="bg-white p-6 rounded-2xl border border-yellow-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 transition hover:shadow-md">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center overflow-hidden border border-slate-100 shrink-0">
+                                            @if($appointment->doctorProfile->user->getProfilePhotoUrl())
+                                                <img src="{{ Str::startsWith($appointment->doctorProfile->user->profile_photo_path, 'http') ? $appointment->doctorProfile->user->profile_photo_path : Storage::url($appointment->doctorProfile->user->profile_photo_path) }}" class="w-full h-full object-cover">
+                                            @else
+                                                <span class="text-xl font-black text-primary">{{ substr($appointment->doctorProfile->user->first_name, 0, 1) }}</span>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-black text-slate-900">Dr. {{ $appointment->doctorProfile->user->name }}</h3>
+                                            <div class="flex flex-col gap-1 mt-1 text-sm font-bold text-slate-500">
+                                                <div class="flex items-center gap-1.5 text-yellow-700">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                                    Proposed Time: {{ $appointment->appointment_datetime->format('M d, Y • g:i A') }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row items-center gap-2">
+                                        <form action="{{ route('patient.appointments.reply-reschedule', $appointment) }}" method="POST" class="w-full sm:w-auto">
+                                            @csrf
+                                            <input type="hidden" name="action" value="accept">
+                                            <button type="submit" class="w-full px-5 py-3 text-xs font-black uppercase tracking-[0.2em] bg-yellow-500 text-white rounded-xl shadow-lg shadow-yellow-500/20 hover:scale-105 active:scale-95 transition-all">Accept Time</button>
+                                        </form>
+                                        <form action="{{ route('patient.appointments.reply-reschedule', $appointment) }}" method="POST" class="w-full sm:w-auto">
+                                            @csrf
+                                            <input type="hidden" name="action" value="reject">
+                                            <button type="submit" class="w-full px-5 py-3 text-xs font-black uppercase tracking-[0.2em] bg-white text-slate-900 border border-slate-200 rounded-xl hover:bg-slate-50 active:scale-95 transition-all">Reject</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Upcoming Appointments -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden {{ $actionRequiredAppointments->isEmpty() ? 'mt-8' : '' }}">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-slate-900">Upcoming Appointments</h2>
+                            <a href="{{ route('patient.appointments.index') }}" class="text-xs font-black text-primary uppercase tracking-widest hover:underline decoration-primary/30 underline-offset-4 decoration-2">Manage All</a>
+                        </div>
+                        @if($upcomingAppointments->isEmpty())
+                            <div class="text-center py-12 text-slate-400">
+                                <p>No upcoming appointments.</p>
+                            </div>
+                        @else
+                            <div class="space-y-4">
+                                @foreach($upcomingAppointments as $appointment)
+                                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-12 h-12 bg-white rounded-full border border-slate-100 flex items-center justify-center overflow-hidden">
+                                                @if($appointment->doctorProfile->user->profile_photo_path)
+                                                    <img src="{{ Storage::url($appointment->doctorProfile->user->profile_photo_path) }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <span class="text-lg font-bold text-primary">{{ substr($appointment->doctorProfile->user->first_name, 0, 1) }}</span>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-slate-900">Dr. {{ $appointment->doctorProfile->user->name }}</h4>
+                                                <div class="text-sm text-slate-500">
+                                                    {{ $appointment->appointment_datetime->format('M d, Y • g:i A') }} 
+                                                    <span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">{{ str_replace('_', ' ', $appointment->status) }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-4">
+                                            @if($appointment->status !== 'pending' && $appointment->conversation())
+                                                <a href="{{ route('messages.index', $appointment->conversation()) }}" class="text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                                    Chat
+                                                </a>
+                                            @endif
+                                            <a href="{{ route('patient.appointments.show', $appointment) }}" class="text-sm font-bold text-primary hover:underline">View details</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
                 <!-- Appointment History -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                     <div class="p-6">

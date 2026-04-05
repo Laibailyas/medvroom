@@ -69,8 +69,29 @@ class Appointment extends Model
         $this->statusHistories()->create([
             'status' => $newStatus,
             'comment' => $comment,
-            'changed_by_id' => $changedById ?? auth()->id(),
+            'changed_by_id' => $changedById ?? \Illuminate\Support\Facades\Auth::id(),
         ]);
+
+        try {
+            $conversation = \App\Models\Conversation::firstOrCreate([
+                'patient_id' => $this->patientProfile->user_id,
+                'doctor_id' => $this->doctorProfile->user_id,
+            ]);
+
+            $messageText = "System: Appointment status updated to " . str_replace('_', ' ', $newStatus) . ".";
+            if ($comment) {
+                $messageText .= " Reason/Note: {$comment}";
+            }
+
+            $message = $conversation->messages()->create([
+                'sender_id' => $changedById ?? \Illuminate\Support\Facades\Auth::id() ?? $this->patientProfile->user_id,
+                'message_body' => $messageText,
+                'metadata' => ['is_system' => true, 'status' => $newStatus],
+            ]);
+
+            $conversation->update(['last_message_at' => now()]);
+            broadcast(new \App\Events\MessageSent($message))->toOthers();
+        } catch (\Throwable $e) {}
     }
 
     public function review(): HasOne
@@ -81,5 +102,15 @@ class Appointment extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    /**
+     * Get the conversation between the doctor and patient users.
+     */
+    public function conversation(): ?Conversation
+    {
+        return Conversation::where('patient_id', $this->patientProfile->user_id)
+            ->where('doctor_id', $this->doctorProfile->user_id)
+            ->first();
     }
 }

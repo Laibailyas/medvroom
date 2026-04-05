@@ -105,7 +105,7 @@ class BookingController extends Controller
             'notes' => $request->notes ?? 'Booked via Stripe Checkout',
         ]);
 
-        $appointment->transitionStatus('confirmed', 'Booked and paid via Stripe Checkout');
+        $appointment->transitionStatus('pending', 'Booked and paid via Stripe Checkout, pending doctor approval');
 
         Payment::create([
             'appointment_id' => $appointment->id,

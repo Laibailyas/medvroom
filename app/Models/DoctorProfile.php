@@ -84,6 +84,11 @@ class DoctorProfile extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function payouts(): HasMany
+    {
+        return $this->hasMany(Payout::class);
+    }
+
     /**
      * Get availability for a given date range, adjusted for user timezone.
      */
@@ -105,8 +110,9 @@ class DoctorProfile extends Model
             $dayOfWeek = $currentDate->dayOfWeek; // 0 (Sun) - 6 (Sat)
             $daySchedule = $schedules->where('day_of_week', $dayOfWeek)->first();
 
-            $daySlots = [];
+            $daySlots = null;
             if ($daySchedule) {
+                $daySlots = [];
                 // Determine doctor's working hours for this date in doctor's timezone
                 $startTimeDoctor = \Carbon\Carbon::createFromFormat('H:i:s', $daySchedule->start_time, $doctorTimezone)
                     ->setDate($currentDate->year, $currentDate->month, $currentDate->day);

@@ -21,11 +21,19 @@ class DashboardController extends Controller
         $patientProfile = $user->patientProfile;
 
         // Appointments
-        $upcomingAppointments = $patientProfile->appointments()
+        $allUpcoming = $patientProfile->appointments()
             ->with(['doctorProfile.user', 'latestStatusHistory'])
             ->where('appointment_datetime', '>=', now())
             ->orderBy('appointment_datetime')
             ->get();
+
+        $actionRequiredAppointments = $allUpcoming->filter(function ($appt) {
+            return $appt->status === 'reschedule_requested';
+        });
+
+        $upcomingAppointments = $allUpcoming->filter(function ($appt) {
+            return $appt->status !== 'reschedule_requested';
+        })->take(5);
 
         $pastAppointments = $patientProfile->appointments()
             ->with(['doctorProfile.user', 'latestStatusHistory', 'review'])
@@ -51,6 +59,7 @@ class DashboardController extends Controller
         $progress = $totalCount > 0 ? ($completedCount / $totalCount) * 100 : 0;
 
         return view('patient.dashboard', compact(
+            'actionRequiredAppointments',
             'upcomingAppointments',
             'pastAppointments',
             'careTeam',
@@ -93,9 +102,14 @@ class DashboardController extends Controller
     {
         $this->authorizeOwner($appointment);
 
-        $appointment->load(['doctorProfile.user', 'doctorProfile.specialties', 'payment', 'statusHistories', 'insurancePlan.provider']);
+        $appointment->load(['patientProfile.user', 'doctorProfile.user', 'doctorProfile.specialties', 'payment', 'statusHistories', 'insurancePlan.provider']);
 
-        return view('patient.appointments.show', compact('appointment'));
+        $conversation = \App\Models\Conversation::firstOrCreate([
+            'patient_id' => $appointment->patientProfile->user_id,
+            'doctor_id' => $appointment->doctorProfile->user_id,
+        ]);
+
+        return view('patient.appointments.show', compact('appointment', 'conversation'));
     }
 
     /**
@@ -153,6 +167,30 @@ class DashboardController extends Controller
 
         return redirect()->route('patient.appointments.show', $appointment)
             ->with('success', 'Appointment successfully rescheduled!');
+    }
+
+    /**
+     * Reply to a doctor's reschedule request.
+     */
+    public function replyReschedule(Request $request, Appointment $appointment): RedirectResponse
+    {
+        $this->authorizeOwner($appointment);
+
+        if ($appointment->status !== 'reschedule_requested') {
+            return back()->with('error', 'This appointment does not have a pending reschedule request.');
+        }
+
+        $request->validate([
+            'action' => 'required|in:accept,reject',
+        ]);
+
+        if ($request->action === 'accept') {
+            $appointment->transitionStatus('confirmed', 'Patient accepted the proposed reschedule time.', $request->user()->id);
+            return back()->with('success', 'You have accepted the new appointment time.');
+        } else {
+            $appointment->transitionStatus('cancelled', 'Patient rejected the proposed reschedule time.', $request->user()->id);
+            return back()->with('success', 'You have rejected the reschedule. The appointment is cancelled.');
+        }
     }
 
     /**
