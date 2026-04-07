@@ -56,6 +56,7 @@
                     <x-button size="full">
                         Log in
                     </x-button>
+            @if(request()->query('role') !== 'doctor')
             <!-- Social Divider -->
             <div class="relative py-4">
                 <div class="absolute inset-0 flex items-center">
@@ -75,6 +76,7 @@
                     <span>Continue with Google</span>
                 </a>
             </div>
+            @endif
 
             <div class="mt-10 pt-8 border-t border-slate-100 text-center space-y-4">
                     <p class="text-sm font-bold text-slate-600">

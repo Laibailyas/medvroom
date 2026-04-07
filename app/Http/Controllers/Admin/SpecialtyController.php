@@ -7,6 +7,7 @@ use App\Models\Specialty;
 use App\Models\Symptom;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -42,11 +43,17 @@ class SpecialtyController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:specialties',
             'icon' => 'nullable|string|max:255',
+            'icon_file' => 'nullable|image|mimes:svg,png,jpg,jpeg,webp|max:2048',
             'symptoms' => 'array',
             'symptoms.*' => 'exists:symptoms,id',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
+
+        if ($request->hasFile('icon_file')) {
+            $path = $request->file('icon_file')->store('specialties/icons', 'public');
+            $validated['icon'] = $path;
+        }
 
         $specialty = Specialty::create($validated);
 
@@ -76,12 +83,23 @@ class SpecialtyController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:specialties,name,'.$specialty->id,
             'icon' => 'nullable|string|max:255',
+            'icon_file' => 'nullable|image|mimes:svg,png,jpg,jpeg,webp|max:2048',
             'symptoms' => 'array',
             'symptoms.*' => 'exists:symptoms,id',
         ]);
 
         if ($request->name !== $specialty->name) {
             $validated['slug'] = Str::slug($validated['name']);
+        }
+
+        if ($request->hasFile('icon_file')) {
+            // Delete old icon if it was a file
+            if ($specialty->icon && Storage::disk('public')->exists($specialty->icon)) {
+                Storage::disk('public')->delete($specialty->icon);
+            }
+
+            $path = $request->file('icon_file')->store('specialties/icons', 'public');
+            $validated['icon'] = $path;
         }
 
         $specialty->update($validated);

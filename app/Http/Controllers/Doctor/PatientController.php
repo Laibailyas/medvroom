@@ -10,6 +10,30 @@ use Illuminate\View\View;
 class PatientController extends Controller
 {
     /**
+     * Display a list of unique patients for this doctor.
+     */
+    public function index(Request $request): View
+    {
+        $doctorProfile = $request->user()->doctorProfile;
+
+        if (!$doctorProfile) {
+            abort(403, 'Doctor profile not found.');
+        }
+
+        $patients = PatientProfile::whereHas('appointments', function ($query) use ($doctorProfile) {
+                $query->where('doctor_profile_id', $doctorProfile->id);
+            })
+            ->with(['user'])
+            ->withCount(['appointments' => function ($query) use ($doctorProfile) {
+                $query->where('doctor_profile_id', $doctorProfile->id);
+            }])
+            ->latest()
+            ->paginate(20);
+
+        return view('doctor.patients.index', compact('patients'));
+    }
+
+    /**
      * Display the specified patient profile to the doctor.
      */
     public function show(Request $request, PatientProfile $patient): View

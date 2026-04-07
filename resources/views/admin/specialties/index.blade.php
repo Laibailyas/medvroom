@@ -26,8 +26,12 @@
                     @forelse($specialties as $specialty)
                         <tr class="hover:bg-slate-50/50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-inner">
-                                    {{ $specialty->icon ?: '🩺' }}
+                                <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-inner overflow-hidden border border-indigo-100/50">
+                                    @if($specialty->is_emoji)
+                                        {{ $specialty->icon ?: '🩺' }}
+                                    @else
+                                        <img src="{{ $specialty->icon_url }}" alt="{{ $specialty->name }}" class="w-full h-full object-contain p-1.5">
+                                    @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">

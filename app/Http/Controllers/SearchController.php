@@ -41,6 +41,16 @@ class SearchController extends Controller
             $query->where('practice_zip_code', 'like', "%{$request->location}%");
         }
 
+        if ($request->filled('insurance')) {
+            $insurance = $request->insurance;
+            $query->whereHas('insurancePlans', function ($sub) use ($insurance) {
+                $sub->where('name', 'like', "%{$insurance}%")
+                    ->orWhereHas('provider', function ($p) use ($insurance) {
+                        $p->where('name', 'like', "%{$insurance}%");
+                    });
+            });
+        }
+
         $doctors = $query->paginate(12);
         
         // Timezone and Date Range for Availability

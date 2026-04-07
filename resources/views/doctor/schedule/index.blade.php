@@ -1,115 +1,129 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-            {{ __('Weekly Schedule Settings') }}
-        </h2>
-    </x-slot>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="mb-8">
-            <a href="{{ route('doctor.dashboard') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-primary transition-colors">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                Back to Dashboard
-            </a>
+<x-doctor-layout>
+    <div class="space-y-8">
+        <!-- Header -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div>
+                <h1 class="text-4xl font-black tracking-tighter italic text-slate-900">Weekly Schedule</h1>
+                <p class="text-slate-500 font-bold mt-1 uppercase tracking-widest text-[10px]">Define your standard clinical availability and consultation rates.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button type="submit" form="schedule-form" class="px-8 py-4 bg-primary text-slate-900 rounded-[1.5rem] font-black text-sm hover:scale-105 transition-all shadow-xl shadow-primary/20 italic">
+                    Save Changes
+                </button>
+            </div>
         </div>
 
-        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-8 max-w-4xl">
-            <div class="mb-8">
-                <h3 class="text-xl font-bold text-slate-900">Manage Your Availability</h3>
-                <p class="text-sm text-slate-500 mt-1">Select the days you are available for appointments and define your working hours. Days left unchecked will show as "NO APPTS" to patients.</p>
-            </div>
+        <form id="schedule-form" action="{{ route('doctor.schedule.store') }}" method="POST" class="space-y-8">
+            @csrf
 
-            @if(session('success'))
-                <div class="mb-6 bg-green-50 text-green-700 p-4 rounded-xl text-sm font-bold border border-green-100 flex items-center gap-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="mb-6 bg-red-50 text-red-700 p-4 rounded-xl text-sm font-bold border border-red-100">
-                    <ul class="list-disc list-inside">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ route('doctor.schedule.store') }}" method="POST">
-                @csrf
-
-                <div class="mb-8 p-6 bg-slate-50/50 rounded-2xl border border-slate-100">
-                    <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">Consultation Fee</h4>
-                    <div class="flex items-center gap-4">
-                        <div class="relative w-48">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                            <input type="number" name="consultation_fee" step="0.01" value="{{ old('consultation_fee', auth()->user()->doctorProfile->consultation_fee ?? 150) }}" class="w-full bg-white border-slate-200 rounded-xl pl-8 pr-4 py-3 text-sm font-bold text-slate-900 focus:border-primary focus:ring-0">
-                        </div>
-                        <span class="text-sm font-bold text-slate-500">per session</span>
+            <!-- Consultation Fee Card -->
+            <div class="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl shadow-slate-900/10">
+                <div class="max-w-2xl">
+                    <h2 class="text-2xl font-black tracking-tighter italic mb-2">Practice Economics</h2>
+                    <p class="text-slate-500 font-bold text-sm mb-8 leading-relaxed italic">Set your base consultation fee. This amount will be displayed to patients during the booking process.</p>
+                    
+                    <div class="relative group max-w-xs">
+                        <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 font-black italic text-xl group-focus-within:text-primary transition-colors">$</div>
+                        <input 
+                            type="number" 
+                            name="consultation_fee" 
+                            step="0.01" 
+                            value="{{ old('consultation_fee', Auth::user()->doctorProfile->consultation_fee) }}"
+                            class="w-full bg-slate-800/50 border-2 border-slate-700 rounded-2xl py-5 pl-12 pr-6 text-xl font-black italic tracking-tighter text-white focus:border-primary focus:ring-0 transition-all placeholder:text-slate-700"
+                            placeholder="0.00"
+                        >
                     </div>
                 </div>
+            </div>
 
-                <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">Availability</h4>
-                <div class="space-y-4">
-                    @foreach($days as $dayIndex => $dayName)
-                        @php
-                            $schedule = $schedules->get($dayIndex);
-                            $isEnabled = $schedule ? true : false;
-                        @endphp
-                        
-                        <div x-data="{ enabled: {{ $isEnabled ? 'true' : 'false' }} }" 
-                             class="flex flex-col md:flex-row md:items-center gap-4 p-4 rounded-2xl border transition-colors"
-                             :class="enabled ? 'border-primary/30 bg-primary/5' : 'border-slate-100 bg-slate-50/50'">
-                            
-                            <!-- Checkbox and Day -->
-                            <div class="flex items-center gap-3 md:w-48">
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" name="schedules[{{ $dayIndex }}][enabled]" value="1" class="sr-only peer" x-model="enabled">
-                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                </label>
-                                <span class="font-bold whitespace-nowrap" :class="enabled ? 'text-slate-900' : 'text-slate-400'">{{ $dayName }}</span>
+            <!-- Weekly Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                @foreach($days as $index => $dayName)
+                    @php
+                        $daySchedule = $schedules->get($index);
+                        $isEnabled = (bool) $daySchedule;
+                    @endphp
+                    <div 
+                        x-data="{ enabled: {{ $isEnabled ? 'true' : 'false' }} }"
+                        class="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm transition-all duration-500 group overflow-hidden relative"
+                        :class="enabled ? 'ring-2 ring-primary bg-white' : 'bg-slate-50/50 opacity-80'"
+                    >
+                        <!-- Day Header -->
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-4">
+                                <div 
+                                    class="w-12 h-12 rounded-xl flex items-center justify-center font-black italic transition-colors"
+                                    :class="enabled ? 'bg-primary text-slate-900' : 'bg-white border border-slate-200 text-slate-400'"
+                                >
+                                    {{ substr($dayName, 0, 1) }}
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-black italic tracking-tighter" :class="enabled ? 'text-slate-900' : 'text-slate-400'">{{ $dayName }}</h3>
+                                    <p class="text-[10px] font-black uppercase tracking-widest" :class="enabled ? 'text-primary' : 'text-slate-400'">
+                                        <span x-show="enabled">Active Workspace</span>
+                                        <span x-show="!enabled">Day Off</span>
+                                    </p>
+                                </div>
                             </div>
 
-                            <!-- Time Selection -->
-                            <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4" x-show="enabled" x-collapse>
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Start Time</label>
-                                    <input type="time" name="schedules[{{ $dayIndex }}][start_time]" 
-                                           value="{{ old('schedules.'.$dayIndex.'.start_time', $schedule ? \Carbon\Carbon::parse($schedule->start_time)->format('H:i') : '09:00') }}"
-                                           class="w-full bg-white border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:border-primary focus:ring-0">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">End Time</label>
-                                    <input type="time" name="schedules[{{ $dayIndex }}][end_time]" 
-                                           value="{{ old('schedules.'.$dayIndex.'.end_time', $schedule ? \Carbon\Carbon::parse($schedule->end_time)->format('H:i') : '17:00') }}"
-                                           class="w-full bg-white border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:border-primary focus:ring-0">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Duration (min)</label>
-                                    <select name="schedules[{{ $dayIndex }}][slot_duration_minutes]" class="w-full bg-white border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:border-primary focus:ring-0">
-                                        @foreach([15, 30, 45, 60] as $duration)
-                                            <option value="{{ $duration }}" {{ old('schedules.'.$dayIndex.'.slot_duration_minutes', $schedule->slot_duration_minutes ?? 30) == $duration ? 'selected' : '' }}>
-                                                {{ $duration }} mins
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <!-- Toggle Switch -->
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="schedules[{{ $index }}][enabled]" x-model="enabled" value="1" class="sr-only peer">
+                                <div class="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+
+                        <!-- Time Controls -->
+                        <div x-show="enabled" x-collapse x-cloak class="grid grid-cols-2 gap-4">
+                            <!-- Start Time -->
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic px-1">Opens At</label>
+                                <input 
+                                    type="time" 
+                                    name="schedules[{{ $index }}][start_time]" 
+                                    value="{{ old("schedules.$index.start_time", $daySchedule?->start_time ? date('H:i', strtotime($daySchedule->start_time)) : '09:00') }}"
+                                    class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black italic tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14"
+                                >
                             </div>
-                            
-                            <div class="flex-1 text-sm font-bold text-slate-400 hidden md:block" x-show="!enabled">
-                                Unavailable
+                            <!-- End Time -->
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic px-1">Closes At</label>
+                                <input 
+                                    type="time" 
+                                    name="schedules[{{ $index }}][end_time]" 
+                                    value="{{ old("schedules.$index.end_time", $daySchedule?->end_time ? date('H:i', strtotime($daySchedule->end_time)) : '17:00') }}"
+                                    class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black italic tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14"
+                                >
+                            </div>
+                            <!-- Slot Duration -->
+                            <div class="col-span-2 mt-4">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic px-1 mb-2 block">Slot Intensity (Minutes)</label>
+                                <div class="flex items-center gap-3">
+                                    @foreach([15, 30, 45, 60] as $mins)
+                                        <label class="flex-1">
+                                            <input 
+                                                type="radio" 
+                                                name="schedules[{{ $index }}][slot_duration_minutes]" 
+                                                value="{{ $mins }}" 
+                                                {{ (old("schedules.$index.slot_duration_minutes", $daySchedule?->slot_duration_minutes ?? 30) == $mins) ? 'checked' : '' }}
+                                                class="sr-only peer"
+                                            >
+                                            <div class="text-center py-3 rounded-xl bg-slate-50 border-2 border-transparent peer-checked:border-primary peer-checked:bg-white text-xs font-black italic text-slate-400 peer-checked:text-slate-900 transition-all cursor-pointer">
+                                                {{ $mins }}m
+                                            </div>
+                                        </label>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
 
-                <div class="mt-8 flex justify-end">
-                    <button type="submit" class="bg-primary hover:bg-primary-hover text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
-                        Save Schedule
-                    </button>
-                </div>
-            </form>
-        </div>
+                        <!-- Empty State Icon -->
+                        <div x-show="!enabled" class="flex items-center justify-center py-8">
+                            <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </form>
     </div>
-</x-app-layout>
+</x-doctor-layout>

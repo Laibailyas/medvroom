@@ -76,7 +76,22 @@ Route::middleware(['auth', 'verified', 'doctor'])->prefix('doctor')->as('doctor.
     Route::post('/appointments/{appointment}/status', [\App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('appointments.status');
     Route::post('/appointments/{appointment}/reschedule', [\App\Http\Controllers\Doctor\AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
 
+    Route::get('/patients', [\App\Http\Controllers\Doctor\PatientController::class, 'index'])->name('patients.index');
     Route::get('/patients/{patient}', [\App\Http\Controllers\Doctor\PatientController::class, 'show'])->name('patients.show');
+
+    Route::get('/chat', [\App\Http\Controllers\ConversationController::class, 'doctorIndex'])->name('chat.index');
+    Route::get('/chat/{conversation}', [\App\Http\Controllers\ConversationController::class, 'doctorIndex'])->name('chat.show');
+
+    Route::get('/payouts', [\App\Http\Controllers\Doctor\PayoutController::class, 'index'])->name('payouts.index');
+    Route::post('/payouts/connect', [\App\Http\Controllers\Doctor\PayoutController::class, 'connect'])->name('payouts.connect');
+
+    Route::get('/profile', [\App\Http\Controllers\Doctor\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [\App\Http\Controllers\Doctor\ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('/insurance', [\App\Http\Controllers\Doctor\InsuranceController::class, 'index'])->name('insurance.index');
+    Route::patch('/insurance', [\App\Http\Controllers\Doctor\InsuranceController::class, 'update'])->name('insurance.update');
+
+    Route::get('/reviews', [\App\Http\Controllers\Doctor\ReviewController::class, 'index'])->name('reviews.index');
 });
 
 // Common Authenticated Routes (API Chat endpoints)

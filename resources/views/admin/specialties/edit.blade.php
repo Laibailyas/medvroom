@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.specialties.update', $specialty) }}" method="POST">
+        <form action="{{ route('admin.specialties.update', $specialty) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
             
@@ -29,17 +29,37 @@
                     <div class="p-6 space-y-6">
                         <div class="grid md:grid-cols-4 gap-6">
                             <div class="md:col-span-1">
-                                <label for="icon" class="block text-sm font-bold text-slate-700 mb-1">Icon (Emoji/SVG)</label>
+                                <label for="icon" class="block text-sm font-bold text-slate-700 mb-1">Emoji</label>
                                 <input 
                                     type="text" 
                                     name="icon" 
                                     id="icon" 
-                                    value="{{ old('icon', $specialty->icon) }}"
-                                    placeholder="e.g. 🩺"
+                                    value="{{ old('icon', $specialty->is_emoji ? $specialty->icon : '') }}"
+                                    placeholder="🩺"
                                     class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg text-center"
                                 >
                             </div>
-                            <div class="md:col-span-3">
+                            <div class="md:col-span-2">
+                                <label for="icon_file" class="block text-sm font-bold text-slate-700 mb-1">Upload New Icon</label>
+                                <div class="flex items-center space-x-4">
+                                    @if(!$specialty->is_emoji)
+                                        <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+                                            <img src="{{ $specialty->icon_url }}" alt="Current icon" class="w-full h-full object-contain p-1">
+                                        </div>
+                                    @endif
+                                    <div class="flex-1">
+                                        <input 
+                                            type="file" 
+                                            name="icon_file" 
+                                            id="icon_file" 
+                                            class="w-full px-4 py-1.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-xs font-semibold bg-white"
+                                            accept="image/*"
+                                        >
+                                    </div>
+                                </div>
+                                <p class="mt-1 text-[10px] text-slate-400 font-medium tracking-tight uppercase">SVG, PNG, JPG (SVG preferred, Max 2MB)</p>
+                            </div>
+                            <div class="md:col-span-1">
                                 <label for="name" class="block text-sm font-bold text-slate-700 mb-1">Specialty Name</label>
                                 <input 
                                     type="text" 

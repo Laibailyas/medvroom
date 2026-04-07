@@ -11,7 +11,7 @@
             </a>
         </div>
 
-        <form action="{{ route('admin.specialties.store') }}" method="POST">
+        <form action="{{ route('admin.specialties.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
             <div class="space-y-6">
@@ -23,24 +23,35 @@
                     <div class="p-6 space-y-6">
                         <div class="grid md:grid-cols-4 gap-6">
                             <div class="md:col-span-1">
-                                <label for="icon" class="block text-sm font-bold text-slate-700 mb-1">Icon (Emoji/SVG)</label>
+                                <label for="icon" class="block text-sm font-bold text-slate-700 mb-1">Emoji</label>
                                 <input 
                                     type="text" 
                                     name="icon" 
                                     id="icon" 
                                     value="{{ old('icon') }}"
-                                    placeholder="e.g. 🩺"
+                                    placeholder="🩺"
                                     class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg text-center"
                                 >
                             </div>
-                            <div class="md:col-span-3">
+                            <div class="md:col-span-2">
+                                <label for="icon_file" class="block text-sm font-bold text-slate-700 mb-1">Or Upload Icon (SVG/PNG)</label>
+                                <input 
+                                    type="file" 
+                                    name="icon_file" 
+                                    id="icon_file" 
+                                    class="w-full px-4 py-1.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-xs font-semibold bg-white"
+                                    accept="image/*"
+                                >
+                                <p class="mt-1 text-[10px] text-slate-400 font-medium tracking-tight uppercase">SVG, PNG, JPG (Max 2MB)</p>
+                            </div>
+                            <div class="md:col-span-1">
                                 <label for="name" class="block text-sm font-bold text-slate-700 mb-1">Specialty Name</label>
                                 <input 
                                     type="text" 
                                     name="name" 
                                     id="name" 
                                     value="{{ old('name') }}"
-                                    placeholder="e.g. Cardiology, Dermatology"
+                                    placeholder="e.g. Cardiology"
                                     class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-semibold"
                                     required
                                 >

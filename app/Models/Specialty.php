@@ -13,6 +13,30 @@ class Specialty extends Model
     protected $fillable = ['name', 'slug', 'icon'];
 
     /**
+     * Get the URL for the icon or the emoji itself.
+     */
+    public function getIconUrlAttribute(): string
+    {
+        if (empty($this->icon)) {
+            return '🩺';
+        }
+
+        if (str_starts_with($this->icon, 'specialties/')) {
+            return asset('storage/'.$this->icon);
+        }
+
+        return $this->icon;
+    }
+
+    /**
+     * Determine if the icon is an emoji.
+     */
+    public function getIsEmojiAttribute(): bool
+    {
+        return ! str_starts_with($this->icon, 'specialties/');
+    }
+
+    /**
      * Get the route key for the model.
      */
     public function getRouteKeyName(): string

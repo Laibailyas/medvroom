@@ -44,6 +44,33 @@ class ConversationController extends Controller
     }
 
     /**
+     * Display the Messenger interface for the Doctor Portal.
+     */
+    public function doctorIndex(Request $request, ?Conversation $conversation = null): View
+    {
+        $user = $request->user();
+        
+        $conversations = Conversation::where('doctor_id', $user->id)
+            ->with(['patient', 'doctor', 'messages' => function($q) {
+                $q->latest()->limit(1);
+            }])
+            ->orderByDesc('last_message_at')
+            ->get()
+            ->map(function ($conv) use ($user) {
+                $conv->partner = $conv->patient;
+                return $conv;
+            });
+
+        if ($conversation) {
+            $conversation->load(['patient', 'doctor']);
+            $conversation->partner = $conversation->patient;
+            $conversation->is_active = $conversation->isActive();
+        }
+
+        return view('doctor.chat.index', compact('conversations', 'conversation'));
+    }
+
+    /**
      * Fetch messages for a conversation
      */
     public function fetchMessages(Request $request, Conversation $conversation): JsonResponse
