@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('policy_number')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             $table->unique(['patient_profile_id', 'insurance_plan_id'], 'pat_plan_unique');
         });
     }

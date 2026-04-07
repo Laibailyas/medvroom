@@ -1,19 +1,47 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-brand-blue: #2563eb;
-    --color-brand-green: #10b981;
-    --color-surface-muted: #f8fafc;
+    /* MedVroom Brand Colors */
+    --color-primary: #ea580c; /* orange-600 */
+    --color-primary-hover: #f97316; /* orange-500 */
+    
+    --color-secondary: #059669; /* emerald-600 */
+    --color-secondary-hover: #10b981; /* emerald-500 */
+    
+    --color-neutral-dark: #0f172a; /* slate-900 */
+    --color-neutral-light: #f8fafc; /* slate-50 */
+
     --color-surface-white: #ffffff;
     
     --radius-doc: 0.75rem;
     --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+
+[x-cloak] { display: none !important; }
+
+@layer utilities {
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    .animate-float {
+        animation: float 4s ease-in-out infinite;
+    }
+    .animate-float-delayed {
+        animation: float 4s ease-in-out 2s infinite;
+    }
+    
+    @keyframes fade-in-down {
+        0% { opacity: 0; transform: translateY(-10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-down {
+        animation: fade-in-down 0.8s ease-out forwards;
+    }
 }

@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('doctor_profile_id')->constrained()->onDelete('cascade');
             $table->foreignId('insurance_plan_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            
+
             // Unique constraint to prevent duplicate mappings
             $table->unique(['doctor_profile_id', 'insurance_plan_id'], 'doc_plan_unique');
-            
+
             // Index for fast search by plan
             $table->index('insurance_plan_id');
         });

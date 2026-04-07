@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InsuranceProvider extends Model
@@ -16,6 +15,15 @@ class InsuranceProvider extends Model
     protected $casts = [
         'is_featured' => 'boolean',
     ];
+
+    public function getLogoUrlAttribute(): string
+    {
+        if (str_starts_with($this->logo, 'http')) {
+            return $this->logo;
+        }
+
+        return asset('storage/'.$this->logo);
+    }
 
     public function plans(): HasMany
     {

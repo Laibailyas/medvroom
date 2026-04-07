@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Review extends Model
@@ -12,11 +11,11 @@ class Review extends Model
     use HasFactory;
 
     protected $fillable = [
-        'appointment_id', 
-        'doctor_profile_id', 
-        'patient_profile_id', 
-        'rating', 
-        'comment'
+        'appointment_id',
+        'doctor_profile_id',
+        'patient_profile_id',
+        'rating',
+        'comment',
     ];
 
     protected $casts = [

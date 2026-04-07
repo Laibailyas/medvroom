@@ -23,9 +23,15 @@ return new class extends Migration
             $table->decimal('longitude', 11, 8)->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->boolean('is_verified')->default(false);
+            $table->string('practice_name')->nullable();
+            $table->string('practice_specialty')->nullable();
+            $table->string('practice_size')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('practice_zip_code')->nullable();
+            $table->string('referral_source')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['latitude', 'longitude']);
         });
     }
