@@ -1,13 +1,23 @@
+@php
+    $siteSettings = \App\Models\SystemSetting::where('key', 'site_settings')->first()?->value ?? [];
+    $siteName = !empty($siteSettings['site_name']) ? $siteSettings['site_name'] : 'MedVroom Admin';
+    $logoUrl = !empty($siteSettings['logo_url']) ? Storage::url($siteSettings['logo_url']) : null;
+@endphp
 <div class="flex flex-col z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto !h-screen !min-h-screen bg-white border-r border-slate-200 w-64 transition-all duration-200 ease-in-out shrink-0"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-64 lg:translate-x-0'" @click.outside="sidebarOpen = false"
     @keydown.escape.window="sidebarOpen = false">
     <!-- Sidebar Header -->
     <div class="flex items-center justify-between px-6 h-16 border-b border-slate-100">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <span class="text-white font-bold text-lg">M</span>
-            </div>
-            <span class="text-lg font-bold text-slate-800 tracking-tight">MedVroom Admin</span>
+            @if($logoUrl)
+                <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-8 object-contain">
+                <span class="text-lg font-bold text-slate-800 tracking-tight">{{ $siteName }}</span>
+            @else
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">M</span>
+                </div>
+                <span class="text-lg font-bold text-slate-800 tracking-tight">MedVroom Admin</span>
+            @endif
         </a>
     </div>
 
