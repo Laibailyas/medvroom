@@ -34,6 +34,9 @@
                 <x-admin.sidebar-link :href="route('admin.site-settings.index')" :active="request()->routeIs('admin.site-settings.*')" icon="settings">
                     Site Settings
                 </x-admin.sidebar-link>
+                <x-admin.sidebar-link :href="route('admin.content-settings.index')" :active="request()->routeIs('admin.content-settings.*')" icon="article">
+                    Content Settings
+                </x-admin.sidebar-link>
             </div>
         </div>
 

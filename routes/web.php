@@ -124,6 +124,7 @@ use App\Http\Controllers\Admin\InsuranceProviderController;
 use App\Http\Controllers\Admin\MailLogController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\ContentSettingController;
 use App\Http\Controllers\Admin\SmsLogController;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\SymptomController;
@@ -154,6 +155,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::patch('settings/{setting}', [SystemSettingController::class, 'update'])->name('settings.update');
     Route::get('site-settings', [SiteSettingController::class, 'index'])->name('site-settings.index');
     Route::post('site-settings', [SiteSettingController::class, 'update'])->name('site-settings.update');
+    Route::get('content-settings', [ContentSettingController::class, 'index'])->name('content-settings.index');
+    Route::put('content-settings', [ContentSettingController::class, 'update'])->name('content-settings.update');
 
     // Help Center Management
     Route::prefix('help')->name('help.')->group(function () {

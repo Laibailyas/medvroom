@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SystemSetting;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -27,7 +28,12 @@ class PageController extends Controller
      */
     public function privacy(): View
     {
-        return view('privacy');
+        $setting = SystemSetting::where('key', 'privacy_policy')->first()?->value ?? [
+            'title' => 'Privacy Policy',
+            'content' => '<p>Please check back later.</p>'
+        ];
+
+        return view('privacy', compact('setting'));
     }
 
     /**
@@ -35,6 +41,11 @@ class PageController extends Controller
      */
     public function terms(): View
     {
-        return view('terms');
+        $setting = SystemSetting::where('key', 'terms_conditions')->first()?->value ?? [
+            'title' => 'Terms & Conditions',
+            'content' => '<p>Please check back later.</p>'
+        ];
+
+        return view('terms', compact('setting'));
     }
 }
