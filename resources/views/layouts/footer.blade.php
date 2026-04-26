@@ -66,7 +66,7 @@
                 <ul class="space-y-3 mb-8">
                     <li><a href="{{ route('register.doctor') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">List your practice</a></li>
                     <li><a href="{{ route('provider-agreement') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider Agreement</a></li>
-                    <li><a href="{{ route('login') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider sign in</a></li>
+                    <li><a href="{{ route('provider.login') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider sign in</a></li>
                 </ul>
             </div>
         </div>

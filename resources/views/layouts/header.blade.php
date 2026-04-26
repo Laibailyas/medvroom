@@ -56,7 +56,7 @@
                         <p class="text-[11px] text-slate-400">Manage appointments</p>
                     </div>
                 </a>
-                <a href="{{ route('login') }}?role=doctor" class="flex items-center space-x-3 px-4 py-3 hover:bg-slate-50 transition-colors group">
+                <a href="{{ route('provider.login') }}" class="flex items-center space-x-3 px-4 py-3 hover:bg-slate-50 transition-colors group">
                     <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     </div>
@@ -192,7 +192,7 @@
         <div x-show="open" class="absolute top-full left-0 right-0 bg-white border-b border-slate-100 shadow-lg px-6 py-6 space-y-4" style="display:none;" @click.outside="open = false">
             @guest
                 <a href="{{ route('login') }}" class="block text-sm font-bold text-slate-700 py-2">Patient Sign in</a>
-                <a href="{{ route('login') }}?role=doctor" class="block text-sm font-bold text-slate-700 py-2">Provider Sign in</a>
+                <a href="{{ route('provider.login') }}" class="block text-sm font-bold text-slate-700 py-2">Provider Sign in</a>
                 <a href="{{ route('register') }}" class="block text-sm font-bold text-slate-700 py-2">Patient Sign up</a>
                 <a href="{{ route('register.doctor') }}" class="block w-full py-3 bg-primary text-white rounded-md text-sm font-bold text-center">Provider Sign up</a>
             @else
