@@ -30,8 +30,8 @@
                 <ul class="space-y-3">
                     <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Health Blog</a></li>
                     <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider Resources</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Community Standards</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Data and privacy</a></li>
+                    <li><a href="{{ route('review-policy') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Review & Content Policy</a></li>
+                    <li><a href="{{ route('telehealth-consent') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Telehealth Consent</a></li>
                     <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Verified reviews</a></li>
                 </ul>
             </div>
@@ -65,7 +65,7 @@
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-5">For Providers</h3>
                 <ul class="space-y-3 mb-8">
                     <li><a href="{{ route('register.doctor') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">List your practice</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Become an EHR partner</a></li>
+                    <li><a href="{{ route('provider-agreement') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider Agreement</a></li>
                     <li><a href="{{ route('login') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider sign in</a></li>
                 </ul>
             </div>
@@ -77,7 +77,7 @@
                 <span class="text-[11px] text-slate-500">&copy; {{ date('Y') }} {{ $siteName }}</span>
                 <a href="{{ route('terms') }}" class="text-[11px] text-slate-500 hover:text-white transition">Terms</a>
                 <a href="{{ route('privacy') }}" class="text-[11px] text-slate-500 hover:text-white transition">Privacy</a>
-                <a href="#" class="text-[11px] text-slate-500 hover:text-white transition">Your privacy choices</a>
+                <button type="button" x-data @click="$dispatch('open-cookie-preferences')" class="text-[11px] text-slate-500 hover:text-white transition cursor-pointer">Your privacy choices</button>
                 <a href="#" class="text-[11px] text-slate-500 hover:text-white transition">Sitemap</a>
             </div>
             <div class="flex items-center space-x-4 text-slate-500">

@@ -245,6 +245,12 @@
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
 
+            <div class="pt-2 text-center">
+                <p class="text-xs text-slate-500">
+                    By signing up, you agree to our <a href="{{ route('acceptable-use-policy') }}" class="text-primary hover:underline font-medium">Acceptable Use Policy</a>.
+                </p>
+            </div>
+
             <div class="pt-4">
                 <x-button size="full">
                     Continue

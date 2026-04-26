@@ -61,6 +61,8 @@
 
         @include('layouts.footer')
 
+        <x-cookie-banner />
+
         @stack('scripts')
     </body>
 </html>

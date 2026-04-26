@@ -37,6 +37,11 @@ Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+Route::get('/review-policy', [PageController::class, 'reviewPolicy'])->name('review-policy');
+Route::get('/telehealth-consent', [PageController::class, 'telehealthConsent'])->name('telehealth-consent');
+Route::get('/provider-agreement', [PageController::class, 'providerAgreement'])->name('provider-agreement');
+Route::get('/acceptable-use-policy', [PageController::class, 'acceptableUsePolicy'])->name('acceptable-use-policy');
+Route::get('/cookie-policy', [PageController::class, 'cookiePolicy'])->name('cookie-policy');
 
 // Help Center (Frontend)
 Route::prefix('help')->name('help.')->group(function () {
