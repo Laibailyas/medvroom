@@ -127,17 +127,30 @@
                         </div>
                     </div>
 
-                    <div
-                        class="flex items-start gap-4 mb-10 bg-slate-50/80 p-6 rounded-[1.5rem] border border-slate-100">
-                        <div class="relative flex items-center justify-center">
-                            <input type="checkbox" id="terms" required
-                                class="w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                    <div class="space-y-4 mb-10">
+                        <div class="flex items-start gap-4 bg-slate-50/80 p-6 rounded-[1.5rem] border border-slate-100">
+                            <div class="relative flex items-center justify-center mt-0.5">
+                                <input type="checkbox" id="telehealth_consent" required
+                                    class="w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            </div>
+                            <label for="telehealth_consent" class="text-[11px] font-bold text-slate-500 leading-relaxed italic">
+                                I have read and agree to the <a href="{{ route('telehealth-consent') }}" target="_blank"
+                                    class="text-primary hover:underline font-black not-italic">Telehealth Informed Consent</a>. I understand that I am consenting to receive care via telehealth.
+                            </label>
                         </div>
-                        <label for="terms" class="text-[11px] font-bold text-slate-500 leading-relaxed italic">
-                            I certify that the information provided is correct and I agree to the <a href="#"
-                                class="text-primary hover:underline font-black not-italic">terms of use</a>. I
-                            understand that the platform handles payments securely via Stripe.
-                        </label>
+
+                        <div class="flex items-start gap-4 bg-slate-50/80 p-6 rounded-[1.5rem] border border-slate-100">
+                            <div class="relative flex items-center justify-center mt-0.5">
+                                <input type="checkbox" id="terms" required
+                                    class="w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            </div>
+                            <label for="terms" class="text-[11px] font-bold text-slate-500 leading-relaxed italic">
+                                I certify that the information provided is correct and I agree to the <a href="{{ route('terms') }}" target="_blank"
+                                    class="text-primary hover:underline font-black not-italic">Terms of Use</a> and <a href="{{ route('privacy') }}" target="_blank"
+                                    class="text-primary hover:underline font-black not-italic">Privacy Policy</a>. I
+                                understand that the platform handles payments securely via Stripe.
+                            </label>
+                        </div>
                     </div>
 
                     <button type="submit"
