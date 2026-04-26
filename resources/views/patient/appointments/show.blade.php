@@ -41,7 +41,7 @@
                 <!-- Left Column: Main Info -->
                 <div class="lg:col-span-2 space-y-8">
                     
-                    <!-- Doctor Info Card -->
+                    <!-- Provider Info Card -->
                     <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 flex items-start gap-6 relative overflow-hidden group">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-colors"></div>
                         <div class="w-24 h-24 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-inner shrink-0 relative z-10 transition-transform duration-500 group-hover:scale-105">
@@ -156,7 +156,7 @@
                         <div class="space-y-4">
                             @if($appointment->status === 'reschedule_requested')
                                 <div class="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-2xl text-center mb-4">
-                                    <p class="text-xs font-bold text-yellow-500 uppercase tracking-widest">Doctor proposed a new time</p>
+                                    <p class="text-xs font-bold text-yellow-500 uppercase tracking-widest">Provider proposed a new time</p>
                                 </div>
                                 <form action="{{ route('patient.appointments.reply-reschedule', $appointment) }}" method="POST">
                                     @csrf

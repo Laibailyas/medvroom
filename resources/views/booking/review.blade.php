@@ -11,7 +11,7 @@
                 <h1 class="text-4xl font-black text-slate-900 tracking-tighter leading-none">Review and book</h1>
             </div>
 
-            <!-- Doctor Summary Card -->
+            <!-- Provider Summary Card -->
             <div
                 class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-8 flex items-start gap-6 relative overflow-hidden group">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-50/50 rounded-full -mr-16 -mt-16 blur-3xl"></div>

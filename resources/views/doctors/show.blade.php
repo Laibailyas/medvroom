@@ -4,10 +4,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                 
-                <!-- Left Column: Doctor Info & Tabs -->
+                <!-- Left Column: Provider Info & Tabs -->
                 <div class="lg:col-span-2 space-y-10">
                     
-                    <!-- 1. Header: Doctor Identity -->
+                    <!-- 1. Header: Provider Identity -->
                     <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
                         <div class="w-32 h-32 md:w-36 md:h-36 bg-white rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden border shadow-sm">
                             @if($doctor->user->getProfilePhotoUrl())
@@ -52,7 +52,7 @@
                                 </div>
                             @else
                                 <div class="flex h-full items-center text-slate-400 font-bold italic">
-                                    New doctor on MedVroom. Be the first to write a review!
+                                    New provider on MedVroom. Be the first to write a review!
                                 </div>
                             @endif
                         </div>
@@ -111,9 +111,9 @@
 
                         <!-- About Tab -->
                         <div x-show="tab === 'about'" x-cloak class="space-y-8 animate-in fade-in duration-300">
-                            <h3 class="text-xl font-black text-slate-800 italic uppercase">About the doctor</h3>
+                            <h3 class="text-xl font-black text-slate-800 italic uppercase">About the provider</h3>
                             <p class="text-lg font-bold text-slate-500 leading-relaxed max-w-2xl italic">
-                                {{ $doctor->bio ?? 'Dr. ' . $doctor->user->name . ' is a dedicated healthcare professional specializing in ' . ($doctor->specialties->first()?->name ?? 'medical care') . '. They are committed to providing personalized and high-quality treatment to all patients.' }}
+                                {{ $doctor->bio ?? 'The provider is a dedicated healthcare professional specializing in ' . ($doctor->specialties->first()?->name ?? 'medical care') . '. They are committed to providing personalized and high-quality treatment to all patients.' }}
                             </p>
                             
                             <div class="grid grid-cols-2 gap-8 pt-8 border-t border-slate-100">
@@ -216,7 +216,7 @@
                                     <div class="w-10 h-10 bg-green-500/10 text-green-600 rounded-full flex items-center justify-center shrink-0">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                     </div>
-                                    <div class="text-xs font-black text-green-700/80 uppercase tracking-tight">This doctor is in-network</div>
+                                    <div class="text-xs font-black text-green-700/80 uppercase tracking-tight">This provider is in-network</div>
                                 </div>
 
                                 <!-- Patient Type Toggle -->

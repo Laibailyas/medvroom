@@ -2,26 +2,29 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
         <!-- Hero / Search Section -->
-        <div class="bg-primary/5 rounded-3xl p-8 md:p-12 mb-10 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Book local doctors who take your insurance</h1>
-            
-            <form action="{{ route('search') }}" method="GET" class="max-w-4xl mx-auto bg-white rounded-2xl p-2 shadow-sm border border-slate-100 flex flex-col md:flex-row items-stretch gap-2 transition-all hover:shadow-md">
-                <div class="flex-1 flex items-center px-4 border-r border-slate-100 py-2">
-                    <svg class="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input type="text" name="q" placeholder="Condition, procedure, doctor name..." class="w-full border-none focus:ring-0 text-slate-700 placeholder-slate-400">
-                </div>
-                <div class="flex-1 flex items-center px-4 border-r border-slate-100 py-2">
-                    <svg class="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    <input type="text" name="location" placeholder="City, state, or zip code" class="w-full border-none focus:ring-0 text-slate-700 placeholder-slate-400">
-                </div>
-                <div class="flex-1 flex items-center px-4 py-2">
-                    <svg class="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    <input type="text" placeholder="Insurance carrier and plan" class="w-full border-none focus:ring-0 text-slate-700 placeholder-slate-400">
-                </div>
-                <button type="submit" class="bg-primary text-white p-4 rounded-xl hover:bg-primary-dark transition shadow-lg shadow-primary/20">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                </button>
-            </form>
+        <div class="mb-12">
+            <div class="bg-white rounded-[3rem] p-12 shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden relative group">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full -mr-48 -mt-48 blur-3xl group-hover:bg-primary/20 transition-colors duration-1000"></div>
+                <h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-8 tracking-tighter leading-none relative z-10">Book local <span class="text-primary italic">providers</span> <br>who take your insurance</h1>
+                
+                <form action="{{ route('search') }}" method="GET" class="max-w-4xl mx-auto bg-white rounded-2xl p-2 shadow-sm border border-slate-100 flex flex-col md:flex-row items-stretch gap-2 transition-all hover:shadow-md">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 px-1">Find</label>
+                        <input type="text" name="q" placeholder="Condition, procedure, provider name..." class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all">
+                    </div>
+                    <div class="flex-1 flex items-center px-4 border-r border-slate-100 py-2">
+                        <svg class="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <input type="text" name="location" placeholder="City, state, or zip code" class="w-full border-none focus:ring-0 text-slate-700 placeholder-slate-400">
+                    </div>
+                    <div class="flex-1 flex items-center px-4 py-2">
+                        <svg class="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <input type="text" placeholder="Insurance carrier and plan" class="w-full border-none focus:ring-0 text-slate-700 placeholder-slate-400">
+                    </div>
+                    <button type="submit" class="bg-primary text-white p-4 rounded-xl hover:bg-primary-dark transition shadow-lg shadow-primary/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </button>
+                </form>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -265,11 +268,11 @@
                     <div class="space-y-6">
                         <!-- Example Team Member -->
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                                 </div>
-                                <span class="text-sm font-medium text-slate-600">Find a primary care doctor</span>
+                                <span class="text-sm font-bold text-slate-600">Find a primary care provider</span>
                             </div>
                             <a href="{{ route('search', ['q' => 'Primary Care']) }}" class="text-sm font-bold text-slate-800 border border-slate-200 px-3 py-1 rounded shadow-sm hover:bg-slate-50 transition">Add</a>
                         </div>

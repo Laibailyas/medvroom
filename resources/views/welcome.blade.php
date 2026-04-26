@@ -1,9 +1,8 @@
 <?php
     $siteSettings = \App\Models\SystemSetting::where('key', 'site_settings')->first()?->value ?? [];
-    $siteName = !empty($siteSettings['site_name']) ? $siteSettings['site_name'] : 'MedVroom';
-    
-    $title = 'Book local doctors who take your insurance';
-    $description = 'Find and book top-rated doctors, dentists, and specialists who take your insurance. Read verified patient reviews and book appointments online instantly with ' . $siteName . '.';
+    $siteName = $siteSettings['site_name'] ?? config('app.name', 'MedVroom');
+    $title = 'Book local providers who take your insurance';
+    $description = 'Find and book top-rated providers, dentists, and specialists who take your insurance. Read verified patient reviews and book appointments online instantly with ' . $siteName . '.';
 ?>
 <x-app-layout :title="$title" :description="$description">
     <!-- Hero Section -->
@@ -23,7 +22,7 @@
 
                     <h1 class="text-6xl md:text-7xl font-black tracking-tighter text-slate-800 mb-8 leading-[1]">
                         Find & book <br />
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-500">top-rated doctors</span> <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-500">top-rated providers</span> <br />
                         who take your <span class="text-secondary italic underline decoration-yellow-300 decoration-8 underline-offset-4">insurance</span>
                     </h1>
 
@@ -172,11 +171,11 @@
                 <!-- Feature 1 -->
                 <div class="group bg-white rounded-[3rem] p-2 shadow-2xl shadow-indigo-900/5 border border-slate-100 flex flex-col transition-all duration-500 hover:shadow-indigo-900/15 hover:-translate-y-2">
                     <div class="bg-[#f0f9ff] h-72 rounded-[2.8rem] flex items-center justify-center overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=800&auto=format&fit=crop" alt="Caring Doctors" class="group-hover:scale-110 transition-transform duration-1000 object-cover w-full h-full">
+                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=800&auto=format&fit=crop" alt="Caring Providers" class="group-hover:scale-110 transition-transform duration-1000 object-cover w-full h-full">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#f0f9ff]/50 to-transparent"></div>
                     </div>
                     <div class="p-12 text-center flex-1 flex flex-col items-center">
-                        <h3 class="text-2xl font-black text-slate-800 mb-6 leading-tight tracking-tight">Find a doctor who <br/>takes your insurance</h3>
+                        <h3 class="text-2xl font-black text-slate-800 mb-6 leading-tight tracking-tight">Find a provider who <br/>takes your insurance</h3>
                         <a href="{{ route('search') }}" class="mt-auto inline-flex flex-col items-center group/btn">
                             <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover/btn:text-slate-900 transition-colors uppercase">Start searching</span>
                             <div class="h-1 w-12 bg-[#fff04b] mt-2 group-hover/btn:w-20 transition-all duration-500 rounded-full"></div>
@@ -191,7 +190,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-[#fff7ed]/50 to-transparent"></div>
                     </div>
                     <div class="p-12 text-center flex-1 flex flex-col items-center">
-                        <h3 class="text-2xl font-black text-slate-800 mb-6 leading-tight tracking-tight">See doctors from <br/>our verified network</h3>
+                        <h3 class="text-2xl font-black text-slate-800 mb-6 leading-tight tracking-tight">See providers from <br/>our verified network</h3>
                         <a href="{{ route('search', ['sort' => 'reviews']) }}" class="mt-auto inline-flex flex-col items-center group/btn">
                             <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover/btn:text-slate-900 transition-colors uppercase">Read reviews</span>
                             <div class="h-1 w-12 bg-secondary mt-2 group-hover/btn:w-20 transition-all duration-500 rounded-full"></div>
@@ -297,7 +296,7 @@
             <div class="grid md:grid-cols-2 gap-16">
                 <!-- Find by City -->
                 <div>
-                    <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-10 border-l-4 border-[#fff04b] pl-4">Find doctors and dentists by city</h2>
+                    <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-10 border-l-4 border-[#fff04b] pl-4">Find providers and dentists by city</h2>
                     <div class="grid grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
                         @foreach(['New York City', 'Houston', 'Los Angeles', 'Atlanta', 'Chicago', 'Dallas', 'Philadelphia', 'Austin', 'Miami', 'San Francisco', 'Phoenix', 'San Diego'] as $city)
                             <a href="#" class="text-xs font-bold text-slate-500 hover:text-primary transition-colors">{{ $city }}</a>

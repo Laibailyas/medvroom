@@ -85,7 +85,7 @@
                     </p>
                     
                     <p class="text-xs font-bold text-slate-400">
-                        Are you a doctor? 
+                        Are you a healthcare provider? 
                         <a href="{{ route('register.doctor') }}" class="ml-1 text-slate-700 hover:text-primary transition-colors font-bold">
                             Join as a Provider &rarr;
                         </a>
