@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageDeleted;
 use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -18,10 +18,10 @@ class ConversationController extends Controller
     public function index(Request $request, ?Conversation $conversation = null): View
     {
         $user = $request->user();
-        
+
         $conversations = Conversation::where('patient_id', $user->id)
             ->orWhere('doctor_id', $user->id)
-            ->with(['patient', 'doctor', 'messages' => function($q) {
+            ->with(['patient', 'doctor', 'messages' => function ($q) {
                 $q->latest()->limit(1);
             }])
             ->orderByDesc('last_message_at')
@@ -30,6 +30,7 @@ class ConversationController extends Controller
                 // Determine who the partner is
                 $partner = ($conv->patient_id === $user->id) ? $conv->doctor : $conv->patient;
                 $conv->partner = $partner;
+
                 return $conv;
             });
 
@@ -49,15 +50,16 @@ class ConversationController extends Controller
     public function doctorIndex(Request $request, ?Conversation $conversation = null): View
     {
         $user = $request->user();
-        
+
         $conversations = Conversation::where('doctor_id', $user->id)
-            ->with(['patient', 'doctor', 'messages' => function($q) {
+            ->with(['patient', 'doctor', 'messages' => function ($q) {
                 $q->latest()->limit(1);
             }])
             ->orderByDesc('last_message_at')
             ->get()
-            ->map(function ($conv) use ($user) {
+            ->map(function ($conv) {
                 $conv->partner = $conv->patient;
+
                 return $conv;
             });
 
@@ -110,12 +112,12 @@ class ConversationController extends Controller
             abort(403, 'Unauthorized.');
         }
 
-        if (!$conversation->isActive()) {
+        if (! $conversation->isActive()) {
             return response()->json(['message' => 'Chatting is only available for confirmed appointments.'], 403);
         }
 
         $request->validate([
-            'message' => 'required|string|max:2000'
+            'message' => 'required|string|max:2000',
         ]);
 
         $message = $conversation->messages()->create([
@@ -157,7 +159,7 @@ class ConversationController extends Controller
             abort(404, 'Message not found in this conversation.');
         }
 
-        if (!$conversation->isActive()) {
+        if (! $conversation->isActive()) {
             return response()->json(['message' => 'Cannot delete messages in read-only mode.'], 403);
         }
 
@@ -165,15 +167,15 @@ class ConversationController extends Controller
         $message->update([
             'is_deleted' => true,
             'message_body' => 'This message was deleted.',
-            'metadata' => array_merge($message->metadata ?? [], ['is_deleted' => true])
+            'metadata' => array_merge($message->metadata ?? [], ['is_deleted' => true]),
         ]);
 
-        broadcast(new \App\Events\MessageDeleted($message))->toOthers();
+        broadcast(new MessageDeleted($message))->toOthers();
 
         return response()->json([
             'id' => $message->id,
             'is_deleted' => true,
-            'message_body' => 'This message was deleted.'
+            'message_body' => 'This message was deleted.',
         ]);
     }
 }

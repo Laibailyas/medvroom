@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Conversation;
 use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
@@ -7,8 +8,8 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('conversation.{id}', function ($user, $id) {
-    $conversation = \App\Models\Conversation::find($id);
-    if (!$conversation) {
+    $conversation = Conversation::find($id);
+    if (! $conversation) {
         return false;
     }
 

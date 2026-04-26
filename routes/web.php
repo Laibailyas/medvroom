@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\BlogCategoryController as AdminBlogCategoryController;
-use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Admin\BlogPostController as AdminBlogPostController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HelpArticleController;
 use App\Http\Controllers\Admin\HelpCategoryController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Patient\DashboardController as PatientDashboardController;
@@ -67,39 +67,39 @@ Route::get('/dashboard', function () {
 
 // Doctor Portal Routes
 Route::middleware(['auth', 'verified', 'doctor'])->prefix('doctor')->as('doctor.')->group(function () {
-    Route::get('/dashboard', \App\Http\Controllers\Doctor\DashboardController::class)->name('dashboard');
-    Route::get('/appointments', [\App\Http\Controllers\Doctor\AppointmentController::class, 'index'])->name('appointments.index');
-    Route::get('/appointments/{appointment}', [\App\Http\Controllers\Doctor\AppointmentController::class, 'show'])->name('appointments.show');
-    Route::get('/schedule', [\App\Http\Controllers\Doctor\ScheduleController::class, 'index'])->name('schedule.index');
-    Route::post('/schedule', [\App\Http\Controllers\Doctor\ScheduleController::class, 'store'])->name('schedule.store');
-    
-    Route::post('/appointments/{appointment}/status', [\App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('appointments.status');
-    Route::post('/appointments/{appointment}/reschedule', [\App\Http\Controllers\Doctor\AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
+    Route::get('/dashboard', App\Http\Controllers\Doctor\DashboardController::class)->name('dashboard');
+    Route::get('/appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/appointments/{appointment}', [App\Http\Controllers\Doctor\AppointmentController::class, 'show'])->name('appointments.show');
+    Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule.index');
+    Route::post('/schedule', [ScheduleController::class, 'store'])->name('schedule.store');
 
-    Route::get('/patients', [\App\Http\Controllers\Doctor\PatientController::class, 'index'])->name('patients.index');
-    Route::get('/patients/{patient}', [\App\Http\Controllers\Doctor\PatientController::class, 'show'])->name('patients.show');
+    Route::post('/appointments/{appointment}/status', [App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('appointments.status');
+    Route::post('/appointments/{appointment}/reschedule', [App\Http\Controllers\Doctor\AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
 
-    Route::get('/chat', [\App\Http\Controllers\ConversationController::class, 'doctorIndex'])->name('chat.index');
-    Route::get('/chat/{conversation}', [\App\Http\Controllers\ConversationController::class, 'doctorIndex'])->name('chat.show');
+    Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
+    Route::get('/patients/{patient}', [PatientController::class, 'show'])->name('patients.show');
 
-    Route::get('/payouts', [\App\Http\Controllers\Doctor\PayoutController::class, 'index'])->name('payouts.index');
-    Route::post('/payouts/connect', [\App\Http\Controllers\Doctor\PayoutController::class, 'connect'])->name('payouts.connect');
+    Route::get('/chat', [ConversationController::class, 'doctorIndex'])->name('chat.index');
+    Route::get('/chat/{conversation}', [ConversationController::class, 'doctorIndex'])->name('chat.show');
 
-    Route::get('/profile', [\App\Http\Controllers\Doctor\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [\App\Http\Controllers\Doctor\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/payouts', [PayoutController::class, 'index'])->name('payouts.index');
+    Route::post('/payouts/connect', [PayoutController::class, 'connect'])->name('payouts.connect');
 
-    Route::get('/insurance', [\App\Http\Controllers\Doctor\InsuranceController::class, 'index'])->name('insurance.index');
-    Route::patch('/insurance', [\App\Http\Controllers\Doctor\InsuranceController::class, 'update'])->name('insurance.update');
+    Route::get('/profile', [App\Http\Controllers\Doctor\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [App\Http\Controllers\Doctor\ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('/reviews', [\App\Http\Controllers\Doctor\ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/insurance', [InsuranceController::class, 'index'])->name('insurance.index');
+    Route::patch('/insurance', [InsuranceController::class, 'update'])->name('insurance.update');
+
+    Route::get('/reviews', [App\Http\Controllers\Doctor\ReviewController::class, 'index'])->name('reviews.index');
 });
 
 // Common Authenticated Routes (API Chat endpoints)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/messages/{conversation?}', [\App\Http\Controllers\ConversationController::class, 'index'])->name('messages.index');
-    Route::get('/conversations/{conversation}/messages', [\App\Http\Controllers\ConversationController::class, 'fetchMessages'])->name('conversations.messages.index');
-    Route::post('/conversations/{conversation}/messages', [\App\Http\Controllers\ConversationController::class, 'sendMessage'])->name('conversations.messages.store');
-    Route::delete('/conversations/{conversation}/messages/{message}', [\App\Http\Controllers\ConversationController::class, 'deleteMessage'])->name('conversations.messages.destroy');
+    Route::get('/messages/{conversation?}', [ConversationController::class, 'index'])->name('messages.index');
+    Route::get('/conversations/{conversation}/messages', [ConversationController::class, 'fetchMessages'])->name('conversations.messages.index');
+    Route::post('/conversations/{conversation}/messages', [ConversationController::class, 'sendMessage'])->name('conversations.messages.store');
+    Route::delete('/conversations/{conversation}/messages/{message}', [ConversationController::class, 'deleteMessage'])->name('conversations.messages.destroy');
 });
 
 Route::middleware(['auth', 'verified', 'patient'])->prefix('patient')->as('patient.')->group(function () {
@@ -123,11 +123,17 @@ use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\InsuranceProviderController;
 use App\Http\Controllers\Admin\MailLogController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\SmsLogController;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\SymptomController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\Doctor\InsuranceController;
+use App\Http\Controllers\Doctor\PatientController;
+use App\Http\Controllers\Doctor\PayoutController;
+use App\Http\Controllers\Doctor\ScheduleController;
 use App\Models\User;
 
 // Admin Routes
@@ -146,6 +152,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::resource('sms-logs', SmsLogController::class)->only(['index', 'show']);
     Route::get('settings', [SystemSettingController::class, 'index'])->name('settings.index');
     Route::patch('settings/{setting}', [SystemSettingController::class, 'update'])->name('settings.update');
+    Route::get('site-settings', [SiteSettingController::class, 'index'])->name('site-settings.index');
+    Route::post('site-settings', [SiteSettingController::class, 'update'])->name('site-settings.update');
 
     // Help Center Management
     Route::prefix('help')->name('help.')->group(function () {

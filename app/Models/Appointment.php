@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Events\MessageSent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Appointment extends Model
 {
@@ -69,29 +71,30 @@ class Appointment extends Model
         $this->statusHistories()->create([
             'status' => $newStatus,
             'comment' => $comment,
-            'changed_by_id' => $changedById ?? \Illuminate\Support\Facades\Auth::id(),
+            'changed_by_id' => $changedById ?? Auth::id(),
         ]);
 
         try {
-            $conversation = \App\Models\Conversation::firstOrCreate([
+            $conversation = Conversation::firstOrCreate([
                 'patient_id' => $this->patientProfile->user_id,
                 'doctor_id' => $this->doctorProfile->user_id,
             ]);
 
-            $messageText = "System: Appointment status updated to " . str_replace('_', ' ', $newStatus) . ".";
+            $messageText = 'System: Appointment status updated to '.str_replace('_', ' ', $newStatus).'.';
             if ($comment) {
                 $messageText .= " Reason/Note: {$comment}";
             }
 
             $message = $conversation->messages()->create([
-                'sender_id' => $changedById ?? \Illuminate\Support\Facades\Auth::id() ?? $this->patientProfile->user_id,
+                'sender_id' => $changedById ?? Auth::id() ?? $this->patientProfile->user_id,
                 'message_body' => $messageText,
                 'metadata' => ['is_system' => true, 'status' => $newStatus],
             ]);
 
             $conversation->update(['last_message_at' => now()]);
-            broadcast(new \App\Events\MessageSent($message))->toOthers();
-        } catch (\Throwable $e) {}
+            broadcast(new MessageSent($message))->toOthers();
+        } catch (\Throwable $e) {
+        }
     }
 
     public function review(): HasOne

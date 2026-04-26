@@ -21,6 +21,9 @@
                 <x-admin.sidebar-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" icon="dashboard">
                     Dashboard
                 </x-admin.sidebar-link>
+                <x-admin.sidebar-link :href="route('admin.site-settings.index')" :active="request()->routeIs('admin.site-settings.*')" icon="settings">
+                    Site Settings
+                </x-admin.sidebar-link>
             </div>
         </div>
 
@@ -101,7 +104,7 @@
                 <x-admin.sidebar-link :href="route('admin.sms-logs.index')" :active="request()->routeIs('admin.sms-logs.*')" icon="phone">
                     SMS Logs
                 </x-admin.sidebar-link>
-                <x-admin.sidebar-link :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')" icon="settings">
+                <x-admin.sidebar-link :href="route('admin.settings.index', ['tab' => 'Email'])" :active="request()->routeIs('admin.settings.*') && request('tab') !== 'Site'" icon="settings">
                     System Settings
                 </x-admin.sidebar-link>
             </div>

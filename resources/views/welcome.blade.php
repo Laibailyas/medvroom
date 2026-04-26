@@ -1,6 +1,9 @@
 <?php
+    $siteSettings = \App\Models\SystemSetting::where('key', 'site_settings')->first()?->value ?? [];
+    $siteName = !empty($siteSettings['site_name']) ? $siteSettings['site_name'] : 'MedVroom';
+    
     $title = 'Book local doctors who take your insurance';
-    $description = 'Find and book top-rated doctors, dentists, and specialists who take your insurance. Read verified patient reviews and book appointments online instantly with MedVroom.';
+    $description = 'Find and book top-rated doctors, dentists, and specialists who take your insurance. Read verified patient reviews and book appointments online instantly with ' . $siteName . '.';
 ?>
 <x-app-layout :title="$title" :description="$description">
     <!-- Hero Section -->
@@ -121,7 +124,7 @@
     <!-- Insurance Carriers -->
     <section class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Featured insurance carriers on MedVroom</p>
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Featured insurance carriers on {{ $siteName }}</p>
             <div class="flex flex-wrap items-center justify-between gap-8 opacity-60 hover:opacity-100 transition-opacity duration-500">
                 @foreach($featuredInsurances as $insurance)
                     <img src="{{ $insurance->logo_url }}" alt="{{ $insurance->name }}" class="h-8 md:h-12 w-auto grayscale hover:grayscale-0 transition-all duration-300 transform hover:scale-105">
@@ -160,7 +163,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-24">
                 <h2 class="text-4xl font-black text-slate-800 uppercase tracking-tighter italic leading-none">
-                    MedVroom helps you <br/>
+                    {{ $siteName }} helps you <br/>
                     <span class="text-secondary not-italic text-5xl">get the care you need</span>
                 </h2>
             </div>
@@ -235,7 +238,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row items-center gap-20">
                 <div class="flex-1 relative">
-                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=800&auto=format&fit=crop" alt="Join MedVroom" class="w-full relative z-10 rounded-3xl shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=800&auto=format&fit=crop" alt="Join {{ $siteName }}" class="w-full relative z-10 rounded-3xl shadow-2xl">
                     <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-[#fff04b]/20 rounded-full blur-3xl"></div>
                 </div>
                 <div class="flex-1 space-y-8">
@@ -262,7 +265,7 @@
                         </li>
                     </ul>
                     <a href="{{ route('register.doctor') }}" class="inline-flex items-center px-10 py-4 bg-[#fff04b] hover:bg-[#ffe600] text-slate-900 text-sm font-black uppercase tracking-widest rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                        List your practice on MedVroom
+                        List your practice on {{ $siteName }}
                     </a>
                 </div>
             </div>

@@ -17,7 +17,7 @@ class PageController extends Controller
     /**
      * Display the Contact Us page.
      */
-    public function contact(): \Illuminate\View\View
+    public function contact(): View
     {
         return view('contact');
     }
@@ -25,7 +25,7 @@ class PageController extends Controller
     /**
      * Display the Privacy Policy page.
      */
-    public function privacy(): \Illuminate\View\View
+    public function privacy(): View
     {
         return view('privacy');
     }
@@ -33,7 +33,7 @@ class PageController extends Controller
     /**
      * Display the Terms & Conditions page.
      */
-    public function terms(): \Illuminate\View\View
+    public function terms(): View
     {
         return view('terms');
     }

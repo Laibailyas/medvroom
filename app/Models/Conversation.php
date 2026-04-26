@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Appointment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,15 +39,15 @@ class Conversation extends Model
      */
     public function isActive(): bool
     {
-        return Appointment::where('doctor_profile_id', function($query) {
-                $query->select('id')->from('doctor_profiles')->where('user_id', $this->doctor_id)->limit(1);
-            })
-            ->where('patient_profile_id', function($query) {
+        return Appointment::where('doctor_profile_id', function ($query) {
+            $query->select('id')->from('doctor_profiles')->where('user_id', $this->doctor_id)->limit(1);
+        })
+            ->where('patient_profile_id', function ($query) {
                 $query->select('id')->from('patient_profiles')->where('user_id', $this->patient_id)->limit(1);
             })
-            ->whereHas('statusHistories', function($query) {
+            ->whereHas('statusHistories', function ($query) {
                 $query->whereIn('status', ['confirmed', 'reschedule_requested'])
-                    ->whereIn('id', function($sub) {
+                    ->whereIn('id', function ($sub) {
                         $sub->select(DB::raw('MAX(id)'))
                             ->from('appointment_status_histories')
                             ->groupBy('appointment_id');

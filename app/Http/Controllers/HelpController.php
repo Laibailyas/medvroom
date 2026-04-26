@@ -18,11 +18,11 @@ class HelpController extends Controller
 
         if ($query) {
             $articles = HelpArticle::where('is_published', true)
-                ->where(function($q) use ($query) {
+                ->where(function ($q) use ($query) {
                     $q->where('title', 'like', "%{$query}%")
-                      ->orWhere('content', 'like', "%{$query}%");
+                        ->orWhere('content', 'like', "%{$query}%");
                 })
-                ->whereHas('category', function($q) use ($type) {
+                ->whereHas('category', function ($q) use ($type) {
                     $q->where('type', $type)->orWhere('type', 'both');
                 })
                 ->get();

@@ -17,7 +17,7 @@ class SystemSettingController extends Controller
     {
         $this->ensureDefaultSettings();
 
-        $settings = SystemSetting::orderBy('group')->get()->groupBy('group');
+        $settings = SystemSetting::where('group', '!=', 'Site')->orderBy('group')->get()->groupBy('group');
 
         return view('admin.settings.index', compact('settings'));
     }
@@ -43,6 +43,23 @@ class SystemSettingController extends Controller
     protected function ensureDefaultSettings(): void
     {
         $defaults = [
+            [
+                'key' => 'site_settings',
+                'group' => 'Site',
+                'description' => 'Global website branding, SEO, and basic information.',
+                'value' => [
+                    'site_name' => config('app.name'),
+                    'logo_url' => '',
+                    'favicon_url' => '',
+                    'meta_title' => '',
+                    'meta_description' => '',
+                    'support_email' => '',
+                    'support_phone' => '',
+                    'facebook_url' => '',
+                    'twitter_url' => '',
+                    'instagram_url' => '',
+                ],
+            ],
             [
                 'key' => 'mail_settings',
                 'group' => 'Email',
