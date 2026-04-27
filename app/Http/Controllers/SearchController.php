@@ -72,9 +72,9 @@ class SearchController extends Controller
     /**
      * Display a public doctor profile.
      */
-    public function showDoctor(DoctorProfile $doctor)
+    public function showDoctor(Request $request, DoctorProfile $doctor)
     {
-        $doctor->load(['user', 'specialties', 'reviews.patientProfile.user', 'insurancePlans.provider']);
+        $doctor->load(['user', 'specialties', 'reviews.patientProfile.user', 'insurancePlans.provider', 'schedules', 'appointments']);
 
         $featuredReview = $doctor->reviews()
             ->where('rating', '>=', 4)
@@ -87,6 +87,14 @@ class SearchController extends Controller
                 return $plan->provider->name;
             });
 
-        return view('doctors.show', compact('doctor', 'featuredReview', 'insuranceGroups'));
+        // Timezone and Date Range for Availability
+        $userTimezone = auth()->user()?->timezone ?? $request->query('timezone', 'UTC');
+        $startDate = \Carbon\Carbon::now($userTimezone);
+        $endDate = $startDate->copy()->addDays(6);
+
+        // Calculate availability
+        $doctor->availability = $doctor->getAvailabilityForRange($startDate, $endDate, $userTimezone);
+
+        return view('doctors.show', compact('doctor', 'featuredReview', 'insuranceGroups', 'userTimezone', 'startDate', 'endDate'));
     }
 }

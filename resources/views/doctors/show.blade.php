@@ -237,34 +237,20 @@
                                     </button>
                                 </div>
 
-                                <!-- Visit Type Toggle -->
-                                <div>
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Available appointments</label>
-                                    <div class="flex p-1 bg-slate-50 rounded-2xl">
-                                        <button 
-                                            @click="visitType = 'person'"
-                                            :class="visitType === 'person' ? 'bg-white shadow-sm' : 'text-slate-400'"
-                                            class="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all"
-                                        >
-                                            <span x-show="visitType === 'person'" class="mr-1">✓</span> In-person
-                                        </button>
-                                        <button 
-                                            @click="visitType = 'video'"
-                                            :class="visitType === 'video' ? 'bg-white shadow-sm' : 'text-slate-400'"
-                                            class="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all"
-                                        >
-                                            <span x-show="visitType === 'video'" class="mr-1">✓</span> Video visit
-                                        </button>
-                                    </div>
-                                </div>
+                                 <!-- Availability Grid -->
+                                 <div class="pt-2">
+                                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-4">Available appointments</label>
+                                     <div class="bg-slate-50/50 rounded-3xl p-4 border border-slate-100">
+                                         <x-availability-grid :doctor="$doctor" :availability="$doctor->availability" :startDate="$startDate" :endDate="$endDate" />
+                                     </div>
+                                 </div>
 
-                                <!-- CTA Section -->
-                                <div class="pt-8 space-y-4">
-                                    <div class="bg-primary/5 rounded-2xl p-6 text-center space-y-4">
-                                        <p class="text-xs font-bold text-slate-500 leading-relaxed max-w-[200px] mx-auto">At this time, the provider has no available slots meeting your criteria.</p>
-                                        <button class="w-full bg-[#fff04b] hover:bg-[#ffe600] py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-yellow-900/5">Notify me of availability</button>
-                                    </div>
-                                </div>
+                                 <!-- CTA Section -->
+                                 <div class="pt-4">
+                                     <p class="text-[10px] text-slate-400 font-bold leading-relaxed px-1 text-center">
+                                         Select a time above to begin your booking. MedVroom is free to use for all patients.
+                                     </p>
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -273,4 +259,5 @@
             </div>
         </div>
     </div>
+    <x-booking-modal />
 </x-app-layout>
