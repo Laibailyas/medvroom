@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\MobileVerificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\ProviderOnboardingController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
@@ -19,10 +20,52 @@ Route::middleware('guest')->group(function () {
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
-    Route::get('register/doctor', [RegisteredUserController::class, 'createDoctor'])
+    Route::get('register/doctor', fn () => redirect()->route('provider.register.entry'))
         ->name('register.doctor');
 
-    Route::post('register/doctor', [RegisteredUserController::class, 'storeDoctor']);
+    Route::prefix('register/provider')->name('provider.register.')->group(function () {
+        Route::get('/', [ProviderOnboardingController::class, 'entry'])->name('entry');
+
+        // Steps available to guests (account creation)
+        Route::get('/account', [ProviderOnboardingController::class, 'account'])->name('account');
+        Route::post('/account', [ProviderOnboardingController::class, 'storeAccount'])->name('account.store');
+    });
+});
+
+// Authenticated onboarding steps (logged in but not yet done)
+Route::prefix('register/provider')->name('provider.register.')->middleware('auth')->group(function () {
+    Route::get('/verify', [ProviderOnboardingController::class, 'verify'])->name('verify');
+    Route::post('/verify', [ProviderOnboardingController::class, 'storeVerify'])->name('verify.store');
+
+    Route::get('/identity', [ProviderOnboardingController::class, 'identity'])->name('identity');
+    Route::post('/identity', [ProviderOnboardingController::class, 'storeIdentity'])->name('identity.store');
+
+    Route::get('/npi', [ProviderOnboardingController::class, 'npi'])->name('npi');
+    Route::get('/npi-lookup', [ProviderOnboardingController::class, 'npiLookup'])->name('npi.lookup');
+    Route::post('/npi', [ProviderOnboardingController::class, 'storeNpi'])->name('npi.store');
+
+    Route::get('/license', [ProviderOnboardingController::class, 'license'])->name('license');
+    Route::post('/license', [ProviderOnboardingController::class, 'storeLicense'])->name('license.store');
+
+    Route::get('/services', [ProviderOnboardingController::class, 'services'])->name('services');
+    Route::post('/services', [ProviderOnboardingController::class, 'storeServices'])->name('services.store');
+
+    Route::get('/schedule', [ProviderOnboardingController::class, 'schedule'])->name('schedule');
+    Route::post('/schedule', [ProviderOnboardingController::class, 'storeSchedule'])->name('schedule.store');
+
+    Route::get('/documents', [ProviderOnboardingController::class, 'documents'])->name('documents');
+    Route::post('/documents', [ProviderOnboardingController::class, 'storeDocuments'])->name('documents.store');
+
+    Route::get('/agreements', [ProviderOnboardingController::class, 'agreements'])->name('agreements');
+    Route::post('/agreements', [ProviderOnboardingController::class, 'storeAgreements'])->name('agreements.store');
+
+    Route::get('/review', [ProviderOnboardingController::class, 'review'])->name('review');
+    Route::post('/review', [ProviderOnboardingController::class, 'submit'])->name('submit');
+
+    Route::get('/success', [ProviderOnboardingController::class, 'success'])->name('success');
+});
+
+Route::middleware('guest')->group(function () {
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');

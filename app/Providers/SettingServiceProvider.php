@@ -72,6 +72,17 @@ class SettingServiceProvider extends ServiceProvider
                     'cashier.webhook.secret' => $stripeSettings->value['webhook_secret'] ?? config('cashier.webhook.secret'),
                 ]);
             }
+
+            // Load site settings from database
+            $siteSettings = SystemSetting::where('key', 'site_settings')->first();
+            if ($siteSettings) {
+                config([
+                    'app.name' => $siteSettings->value['site_name'] ?? config('app.name'),
+                    'site.logo' => $siteSettings->value['logo_url'] ?? null,
+                    'site.favicon' => $siteSettings->value['favicon_url'] ?? null,
+                    'site.og_image' => $siteSettings->value['og_image_url'] ?? null,
+                ]);
+            }
         } catch (\Exception $e) {
             // Silently fail if DB is not ready
         }
