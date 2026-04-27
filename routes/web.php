@@ -5,8 +5,25 @@ use App\Http\Controllers\Admin\BlogPostController as AdminBlogPostController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HelpArticleController;
 use App\Http\Controllers\Admin\HelpCategoryController;
+use App\Http\Controllers\Admin\AppointmentController;
+use App\Http\Controllers\Admin\ProviderController;
+use App\Http\Controllers\Admin\InsuranceProviderController;
+use App\Http\Controllers\Admin\MailLogController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\ContentSettingController;
+use App\Http\Controllers\Admin\SmsLogController;
+use App\Http\Controllers\Admin\SpecialtyController;
+use App\Http\Controllers\Admin\SymptomController;
+use App\Http\Controllers\Admin\SystemSettingController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\Doctor\InsuranceController;
+use App\Http\Controllers\Doctor\PatientController;
+use App\Http\Controllers\Doctor\PayoutController;
+use App\Http\Controllers\Doctor\ScheduleController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Patient\DashboardController as PatientDashboardController;
@@ -14,6 +31,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Models\InsuranceProvider;
 use App\Models\Specialty;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -123,24 +141,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-use App\Http\Controllers\Admin\AppointmentController;
-use App\Http\Controllers\Admin\ProviderController;
-use App\Http\Controllers\Admin\InsuranceProviderController;
-use App\Http\Controllers\Admin\MailLogController;
-use App\Http\Controllers\Admin\ReviewController;
-use App\Http\Controllers\Admin\SiteSettingController;
-use App\Http\Controllers\Admin\ContentSettingController;
-use App\Http\Controllers\Admin\SmsLogController;
-use App\Http\Controllers\Admin\SpecialtyController;
-use App\Http\Controllers\Admin\SymptomController;
-use App\Http\Controllers\Admin\SystemSettingController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ConversationController;
-use App\Http\Controllers\Doctor\InsuranceController;
-use App\Http\Controllers\Doctor\PatientController;
-use App\Http\Controllers\Doctor\PayoutController;
-use App\Http\Controllers\Doctor\ScheduleController;
-use App\Models\User;
+
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(function () {
