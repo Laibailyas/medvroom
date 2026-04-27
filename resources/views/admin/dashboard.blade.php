@@ -19,14 +19,14 @@
             </div>
         </div>
 
-        <!-- Total Doctors -->
+        <!-- Total Providers -->
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
             <div class="flex items-center">
                 <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg mr-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h1a.3.3 0 1 0 .2-.3Z"/><path d="M13 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><circle cx="8" cy="9" r="4"/><path d="M22 13.1V11a2 2 0 0 0-2-2"/></svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-slate-500">Active Doctors</p>
+                    <p class="text-sm font-medium text-slate-500">Active Providers</p>
                     <h3 class="text-2xl font-bold text-slate-900">{{ number_format($stats['total_doctors']) }}</h3>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-semibold text-slate-900 truncate">{{ $appointment->patientProfile->user->name }}</p>
-                            <p class="text-xs text-slate-500 truncate">with Dr. {{ $appointment->doctorProfile->user->name }}</p>
+                            <p class="text-xs text-slate-500 truncate">with Provider {{ $appointment->doctorProfile->user->name }}</p>
                         </div>
                         <div class="text-right">
                             <p class="text-xs font-medium text-slate-700">{{ $appointment->appointment_datetime->format('M d') }}</p>

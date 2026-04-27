@@ -22,6 +22,10 @@
     --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
 
+.ql-editor {
+    min-height: 300px;
+}
+
 @layer components {
     .rich-text-content {
         @apply text-slate-700 leading-relaxed text-base;

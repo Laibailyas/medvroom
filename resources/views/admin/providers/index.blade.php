@@ -6,20 +6,20 @@
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <!-- Filter Tabs -->
         <div class="flex items-center space-x-1 p-1 bg-slate-100 rounded-xl overflow-hidden">
-            <a href="{{ route('admin.doctors.index') }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest leading-none transition-all rounded-lg {{ !request('verified') ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
+            <a href="{{ route('admin.providers.index') }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest leading-none transition-all rounded-lg {{ !request('verified') ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
                 ALL
             </a>
-            <a href="{{ route('admin.doctors.index', ['verified' => '0']) }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest leading-none transition-all rounded-lg {{ request('verified') === '0' ? 'bg-white text-rose-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
+            <a href="{{ route('admin.providers.index', ['verified' => '0']) }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest leading-none transition-all rounded-lg {{ request('verified') === '0' ? 'bg-white text-rose-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
                 PENDING
             </a>
-            <a href="{{ route('admin.doctors.index', ['verified' => '1']) }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest leading-none transition-all rounded-lg {{ request('verified') === '1' ? 'bg-white text-emerald-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
+            <a href="{{ route('admin.providers.index', ['verified' => '1']) }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest leading-none transition-all rounded-lg {{ request('verified') === '1' ? 'bg-white text-emerald-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
                 VERIFIED
             </a>
         </div>
 
         <!-- Search Bar -->
         <div class="relative max-w-sm w-full">
-            <form action="{{ route('admin.doctors.index') }}" method="GET">
+            <form action="{{ route('admin.providers.index') }}" method="GET">
                 <input 
                     type="text" 
                     name="search" 
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <!-- Doctors Table -->
+    <!-- Providers Table -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left">
@@ -73,7 +73,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <form action="{{ route('admin.doctors.toggle-verify', $doctor) }}" method="POST">
+                                <form action="{{ route('admin.providers.toggle-verify', $doctor) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest leading-none shadow-sm transition {{ $doctor->is_verified ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' : 'bg-rose-100 text-rose-800 hover:bg-rose-200' }}">
                                         {{ $doctor->is_verified ? 'VERIFIED' : 'PENDING' }}
@@ -84,17 +84,25 @@
                                 0
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center justify-end space-x-2">
-                                    <a href="{{ route('admin.doctors.edit', $doctor) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Manage Profile">
+                                <div class="flex items-center justify-end space-x-1">
+                                    <a href="{{ route('admin.providers.edit', $doctor) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Manage Profile">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                                     </a>
+                                    <form action="{{ route('admin.providers.destroy', $doctor) }}" method="POST"
+                                          onsubmit="return confirm('Delete provider {{ addslashes($doctor->user->name) }}? This cannot be undone.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Delete Provider">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="m19 6-.867 12.142A2 2 0 0 1 16.138 20H7.862a2 2 0 0 1-1.995-1.858L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="5" class="px-6 py-12 text-center text-slate-500 italic">
-                                No doctors found matching your filters.
+                                No providers found matching your filters.
                             </td>
                         </tr>
                     @endforelse
