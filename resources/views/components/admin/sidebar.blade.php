@@ -47,8 +47,8 @@
                 <x-admin.sidebar-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" icon="users">
                     Users & Patients
                 </x-admin.sidebar-link>
-                <x-admin.sidebar-link :href="route('admin.doctors.index')" :active="request()->routeIs('admin.doctors.*')" icon="doctor">
-                    Doctors
+                <x-admin.sidebar-link :href="route('admin.providers.index')" :active="request()->routeIs('admin.providers.*')" icon="doctor">
+                    Providers
                 </x-admin.sidebar-link>
             </div>
         </div>
@@ -108,7 +108,7 @@
                 <x-admin.sidebar-link :href="route('admin.appointments.index')" :active="request()->routeIs('admin.appointments.*')" icon="appointment">
                     Appointments
                 </x-admin.sidebar-link>
-                <x-admin.sidebar-link :href="route('admin.reviews.index')" :active="request()->routeIs('admin.reviews.*')" icon="reviews">
+                <x-admin.sidebar-link :href="route('admin.reviews.index')" :active="request()->routeIs('admin.reviews.*')" icon="moderation">
                     Moderation
                 </x-admin.sidebar-link>
                 <x-admin.sidebar-link :href="route('admin.mail-logs.index')" :active="request()->routeIs('admin.mail-logs.*')" icon="mail">

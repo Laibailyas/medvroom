@@ -124,7 +124,7 @@ Route::middleware('auth')->group(function () {
 });
 
 use App\Http\Controllers\Admin\AppointmentController;
-use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\InsuranceProviderController;
 use App\Http\Controllers\Admin\MailLogController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -147,8 +147,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('insurance-providers', InsuranceProviderController::class);
     Route::resource('users', UserController::class);
-    Route::resource('doctors', DoctorController::class);
-    Route::post('doctors/{doctor}/toggle-verify', [DoctorController::class, 'toggleVerification'])->name('doctors.toggle-verify');
+    Route::resource('providers', ProviderController::class)->parameters(['providers' => 'doctor']);
+    Route::post('providers/{doctor}/toggle-verify', [ProviderController::class, 'toggleVerification'])->name('providers.toggle-verify');
+    Route::post('providers/{doctor}/decide', [ProviderController::class, 'decide'])->name('providers.decide');
     Route::resource('appointments', AppointmentController::class);
     Route::post('appointments/{appointment}/transition', [AppointmentController::class, 'transition'])->name('appointments.transition');
     Route::resource('specialties', SpecialtyController::class);

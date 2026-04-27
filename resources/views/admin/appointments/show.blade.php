@@ -68,10 +68,10 @@
                         <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Healthcare Provider</p>
                         <div class="flex items-center mb-4">
                             <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm shadow-inner shrink-0">
-                                DR
+                                PR
                             </div>
                             <div class="ml-4 overflow-hidden">
-                                <p class="text-sm font-black text-slate-900 truncate">Dr. {{ $appointment->doctorProfile->user->name }}</p>
+                                <p class="text-sm font-black text-slate-900 truncate">Provider {{ $appointment->doctorProfile->user->name }}</p>
                                 <p class="text-xs text-slate-500 truncate">{{ $appointment->doctorProfile->clinic_name ?: 'Specialist' }}</p>
                             </div>
                         </div>

@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class DoctorController extends Controller
+class ProviderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,7 +30,7 @@ class DoctorController extends Controller
 
         $doctors = $query->latest()->paginate(10);
 
-        return view('admin.doctors.index', compact('doctors'));
+        return view('admin.providers.index', compact('doctors'));
     }
 
     /**
@@ -40,7 +40,7 @@ class DoctorController extends Controller
     {
         $specialties = Specialty::all();
 
-        return view('admin.doctors.edit', compact('doctor', 'specialties'));
+        return view('admin.providers.edit', compact('doctor', 'specialties'));
     }
 
     /**
@@ -63,7 +63,7 @@ class DoctorController extends Controller
             $doctor->specialties()->sync($request->specialties);
         }
 
-        return redirect()->route('admin.doctors.index')->with('success', 'Doctor profile updated successfully.');
+        return redirect()->route('admin.providers.index')->with('success', 'Provider profile updated successfully.');
     }
 
     /**
@@ -75,7 +75,43 @@ class DoctorController extends Controller
 
         $status = $doctor->is_verified ? 'verified' : 'unverified';
 
-        return back()->with('success', "Doctor marked as {$status} successfully.");
+        return back()->with('success', "Provider marked as {$status} successfully.");
+    }
+
+    /**
+     * 1-click verification decision: approve, reject, or request info.
+     */
+    public function decide(Request $request, DoctorProfile $doctor): RedirectResponse
+    {
+        $validated = $request->validate([
+            'decision' => 'required|in:approve,reject,request_info',
+            'note' => 'nullable|string|max:1000',
+        ]);
+
+        $messages = [
+            'approve' => ['is_verified' => true,  'flash' => 'success', 'text' => "Provider {$doctor->user->name} has been approved and verified."],
+            'reject' => ['is_verified' => false, 'flash' => 'error',   'text' => "Provider {$doctor->user->name} has been rejected."],
+            'request_info' => ['is_verified' => false, 'flash' => 'info',    'text' => "Additional information has been requested from {$doctor->user->name}."],
+        ];
+
+        $outcome = $messages[$validated['decision']];
+
+        // Update verification status (request_info keeps current state = unverified)
+        if ($validated['decision'] !== 'request_info') {
+            $doctor->update([
+                'is_verified' => $outcome['is_verified'],
+                'verification_decided_at' => now(),
+            ]);
+        }
+
+        // Store the admin note on the profile if provided
+        if (! empty($validated['note'])) {
+            $doctor->update(['admin_note' => $validated['note']]);
+        }
+
+        return redirect()
+            ->route('admin.providers.edit', $doctor)
+            ->with($outcome['flash'], $outcome['text']);
     }
 
     /**
@@ -85,6 +121,6 @@ class DoctorController extends Controller
     {
         $doctor->delete();
 
-        return redirect()->route('admin.doctors.index')->with('success', 'Doctor profile removed successfully.');
+        return redirect()->route('admin.providers.index')->with('success', 'Provider profile removed successfully.');
     }
 }

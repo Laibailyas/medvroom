@@ -4,12 +4,16 @@
         date: '', 
         slots: [],
         selectedTime: '',
-        specialty: ''
+        specialty: '',
+        patientType: 'new',
+        visitType: 'person'
     }"
     x-on:open-booking-modal.window="
         doctor = $event.detail.doctor;
         date = $event.detail.date;
         slots = $event.detail.slots;
+        patientType = $event.detail.patientType || 'new';
+        visitType = $event.detail.visitType || 'person';
         isOpen = true;
         selectedTime = '';
         specialty = '';
@@ -92,7 +96,7 @@
 
                 <div class="pt-4">
                     <button 
-                        @click="if(selectedTime && specialty) window.location.href = `/booking/review?doctor_id=${doctor.id}&date=${date}&time=${selectedTime}&specialty_id=${specialty}`"
+                        @click="if(selectedTime && specialty) window.location.href = `/booking/review?doctor_id=${doctor.id}&date=${date}&time=${selectedTime}&specialty_id=${specialty}&patient_type=${patientType}&visit_type=${visitType}`"
                         :disabled="!selectedTime || !specialty"
                         class="w-full bg-primary disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed text-slate-900 py-6 rounded-[1.5rem] font-black uppercase tracking-[0.2em] shadow-2xl shadow-yellow-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
                     >

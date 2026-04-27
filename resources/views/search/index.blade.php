@@ -186,14 +186,15 @@
                             className: 'custom-marker',
                             html: `
                             <div class="relative group pointer-events-auto">
-                                <div class="bg-slate-900 group-hover:bg-primary transition-all duration-300 text-white group-hover:text-slate-900 text-[11px] font-black px-4 py-2 rounded-2xl shadow-2xl border-2 border-white transform hover:scale-110 active:scale-95 whitespace-nowrap">
-                                    $${doctor.consultation_fee || '150'}
+                                <div class="bg-slate-900 group-hover:bg-primary transition-all duration-300 text-white group-hover:text-slate-900 p-2 px-3 rounded-xl shadow-2xl border-2 border-white transform hover:scale-110 active:scale-95 flex flex-col items-center min-w-[140px]">
+                                    <div class="text-[10px] font-black truncate max-w-[120px]">Dr. ${doctor.user.name}</div>
+                                    <div class="text-[8px] font-bold uppercase tracking-widest opacity-80">${doctor.specialties[0]?.name || 'Specialist'}</div>
                                 </div>
                                 <div class="w-3 h-3 bg-slate-900 mx-auto -mt-2 rounded-sm rotate-45 border-r-2 border-b-2 border-white group-hover:bg-primary group-hover:border-white transition-all duration-300"></div>
                             </div>
                         `,
-                            iconSize: [70, 45],
-                            iconAnchor: [35, 45]
+                            iconSize: [140, 50],
+                            iconAnchor: [70, 50]
                         });
 
                         const marker = L.marker([doctor.latitude, doctor.longitude], {

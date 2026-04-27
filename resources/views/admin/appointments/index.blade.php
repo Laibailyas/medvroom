@@ -67,7 +67,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <p class="text-sm font-semibold text-slate-900 leading-none">Dr. {{ $app->doctorProfile->user->name }}</p>
+                                <p class="text-sm font-semibold text-slate-900 leading-none">Provider {{ $app->doctorProfile->user->name }}</p>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Provider</p>
                             </td>
                             <td class="px-6 py-4 text-center">

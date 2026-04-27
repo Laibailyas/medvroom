@@ -1,4 +1,4 @@
-@props(['availability', 'startDate', 'endDate', 'doctor'])
+@props(['availability', 'startDate', 'endDate', 'doctor', 'extra' => []])
 
 <div class="availability-grid flex gap-1 py-2 overflow-x-auto scrollbar-hide">
     @php
@@ -23,7 +23,14 @@
             
             <!-- Availability Box -->
             @if ($count > 0)
-                <div @click="$dispatch('open-booking-modal', { doctor: @js($doctor), date: '{{ $dateKey }}', slots: @js($slots) })" 
+                <div @click="$dispatch('open-booking-modal', { 
+                        doctor: @js($doctor), 
+                        date: '{{ $dateKey }}', 
+                        slots: @js($slots), 
+                        patientType: (typeof patientType !== 'undefined' ? patientType : 'new'),
+                        visitType: (typeof visitType !== 'undefined' ? visitType : 'person'),
+                        ...@js($extra) 
+                     })" 
                      class="group cursor-pointer transform active:scale-95 transition-all duration-200">
                     <div class="bg-[#faffb8] hover:bg-[#fff952] rounded-xl p-1.5 h-[52px] flex flex-col items-center justify-center border border-yellow-100 shadow-sm transition-colors">
                         <span class="text-xs font-black text-slate-900 leading-none mb-0.5">{{ $count }}</span>

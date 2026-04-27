@@ -32,12 +32,42 @@ class DoctorProfile extends Model
         'practice_zip_code',
         'referral_source',
         'timezone',
+        // Onboarding
+        'provider_type',
+        'entity_type',
+        'date_of_birth',
+        'npi_number',
+        'npi_data',
+        'license_states',
+        'telehealth_available',
+        'visit_types',
+        'document_license_path',
+        'document_id_path',
+        'document_malpractice_path',
+        'onboarding_step',
+        'application_submitted_at',
+        'agreed_provider_agreement',
+        'agreed_baa',
+        'agreed_license_validity',
+        // Admin
+        'admin_note',
+        'verification_decided_at',
     ];
 
     protected $casts = [
         'is_verified' => 'boolean',
         'experience_years' => 'integer',
         'consultation_fee' => 'decimal:2',
+        'npi_data' => 'array',
+        'license_states' => 'array',
+        'visit_types' => 'array',
+        'telehealth_available' => 'boolean',
+        'agreed_provider_agreement' => 'boolean',
+        'agreed_baa' => 'boolean',
+        'agreed_license_validity' => 'boolean',
+        'application_submitted_at' => 'datetime',
+        'verification_decided_at' => 'datetime',
+        'date_of_birth' => 'date',
     ];
 
     public function user(): BelongsTo
