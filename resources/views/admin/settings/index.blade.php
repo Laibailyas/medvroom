@@ -25,7 +25,7 @@
         </div>
     @endif
 
-    <div x-data="{ activeTab: '{{ $settings->keys()->first() }}' }" class="grid lg:grid-cols-4 gap-8">
+    <div x-data="{ activeTab: '{{ request('tab', $settings->keys()->first()) }}' }" class="grid lg:grid-cols-4 gap-8">
         <!-- Sidebar Navigation -->
         <div class="lg:col-span-1">
             <nav class="space-y-2">

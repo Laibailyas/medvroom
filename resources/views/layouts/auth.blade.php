@@ -30,5 +30,7 @@
 
         @include('layouts.footer')
 
+        <x-cookie-banner />
+
     </body>
 </html>

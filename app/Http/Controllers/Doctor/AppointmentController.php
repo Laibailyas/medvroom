@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Conversation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
@@ -17,7 +17,7 @@ class AppointmentController extends Controller
         $user = $request->user();
         $doctorProfile = $user->doctorProfile;
 
-        if (!$doctorProfile) {
+        if (! $doctorProfile) {
             return redirect()->route('dashboard')->with('error', 'Doctor profile not found.');
         }
 
@@ -34,7 +34,7 @@ class AppointmentController extends Controller
             $query->whereHas('latestStatusHistory', function ($q) {
                 $q->where('status', 'confirmed');
             })->where('appointment_datetime', '>', now())
-              ->orderBy('appointment_datetime', 'asc');
+                ->orderBy('appointment_datetime', 'asc');
         } elseif ($tab === 'past') {
             $query->where(function ($q) {
                 $q->whereHas('latestStatusHistory', function ($q2) {
@@ -58,14 +58,14 @@ class AppointmentController extends Controller
     public function show(Appointment $appointment)
     {
         $doctorProfile = auth()->user()->doctorProfile;
-        
+
         if ($appointment->doctor_profile_id !== $doctorProfile->id) {
             abort(403);
         }
 
         $appointment->load(['patientProfile.user', 'latestStatusHistory', 'statusHistories', 'review']);
 
-        $conversation = \App\Models\Conversation::firstOrCreate([
+        $conversation = Conversation::firstOrCreate([
             'patient_id' => $appointment->patientProfile->user_id,
             'doctor_id' => $doctorProfile->user_id,
         ]);
@@ -79,7 +79,7 @@ class AppointmentController extends Controller
         $doctorProfile = $user->doctorProfile;
 
         // Ensure this appointment belongs to the logged-in doctor
-        if (!$doctorProfile || $appointment->doctor_profile_id !== $doctorProfile->id) {
+        if (! $doctorProfile || $appointment->doctor_profile_id !== $doctorProfile->id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -94,7 +94,7 @@ class AppointmentController extends Controller
             $user->id
         );
 
-        return back()->with('success', 'Appointment status updated to ' . $validated['status']);
+        return back()->with('success', 'Appointment status updated to '.$validated['status']);
     }
 
     /**
@@ -106,7 +106,7 @@ class AppointmentController extends Controller
         $doctorProfile = $user->doctorProfile;
 
         // Ensure this appointment belongs to the logged-in doctor
-        if (!$doctorProfile || $appointment->doctor_profile_id !== $doctorProfile->id) {
+        if (! $doctorProfile || $appointment->doctor_profile_id !== $doctorProfile->id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -118,7 +118,7 @@ class AppointmentController extends Controller
         // Keep the old datetime for reference if needed, or update immediately.
         // The requirement is that the patient has to confirm manually.
         // We will update the appointment_datetime and change the status to 'reschedule_requested'.
-        
+
         $appointment->update([
             'appointment_datetime' => $validated['new_datetime'],
         ]);

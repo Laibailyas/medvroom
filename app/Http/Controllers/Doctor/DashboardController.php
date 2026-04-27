@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $user = $request->user();
         $doctorProfile = $user->doctorProfile;
 
-        if (!$doctorProfile) {
+        if (! $doctorProfile) {
             // Handle edge case where a user has doctor role but no profile yet
             return redirect()->route('dashboard')->with('error', 'Doctor profile not found.');
         }
@@ -37,7 +37,7 @@ class DashboardController extends Controller
             ->orderBy('appointment_datetime')
             ->take(5)
             ->get();
-            
+
         $pendingAppointments = $doctorProfile->appointments()
             ->with(['patientProfile.user'])
             ->whereHas('latestStatusHistory', function ($query) {
@@ -45,7 +45,7 @@ class DashboardController extends Controller
             })
             ->orderBy('created_at', 'asc')
             ->get();
-            
+
         $pendingRequests = $pendingAppointments->count();
 
         $totalPatients = $doctorProfile->appointments()

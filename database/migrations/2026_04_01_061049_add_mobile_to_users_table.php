@@ -17,9 +17,9 @@ return new class extends Migration
         });
 
         // Sync existing doctor phone numbers to the new mobile column
-        $doctors = \DB::table('doctor_profiles')->whereNotNull('phone_number')->get();
+        $doctors = DB::table('doctor_profiles')->whereNotNull('phone_number')->get();
         foreach ($doctors as $doctor) {
-            \DB::table('users')
+            DB::table('users')
                 ->where('id', $doctor->user_id)
                 ->update(['mobile' => $doctor->phone_number]);
         }

@@ -17,7 +17,7 @@ class ScheduleController extends Controller
         $user = $request->user();
         $doctorProfile = $user->doctorProfile;
 
-        if (!$doctorProfile) {
+        if (! $doctorProfile) {
             return redirect()->route('dashboard')->with('error', 'Doctor profile not found.');
         }
 
@@ -45,7 +45,7 @@ class ScheduleController extends Controller
         $user = $request->user();
         $doctorProfile = $user->doctorProfile;
 
-        if (!$doctorProfile) {
+        if (! $doctorProfile) {
             return redirect()->route('dashboard')->with('error', 'Doctor profile not found.');
         }
 
@@ -66,7 +66,7 @@ class ScheduleController extends Controller
             $inputSchedules = $validated['schedules'] ?? [];
 
             foreach ($inputSchedules as $day_of_week => $scheduleInput) {
-                $enabled = !empty($scheduleInput['enabled']);
+                $enabled = ! empty($scheduleInput['enabled']);
 
                 if ($enabled) {
                     DoctorSchedule::updateOrCreate(

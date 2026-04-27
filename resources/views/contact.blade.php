@@ -1,3 +1,9 @@
+@php
+    $siteSettings = \App\Models\SystemSetting::where('key', 'site_settings')->first()?->value ?? [];
+    $supportEmail = !empty($siteSettings['support_email']) ? $siteSettings['support_email'] : \App\Constants\Contacts::EMAIL;
+    $supportPhone = !empty($siteSettings['support_phone']) ? $siteSettings['support_phone'] : \App\Constants\Contacts::PHONE;
+    $siteName = $siteSettings['site_name'] ?? 'MedVroom';
+@endphp
 <x-app-layout>
     <div class="bg-[#f9f8f1] min-h-screen pb-20">
         <!-- Header Section -->
@@ -45,11 +51,11 @@
                     <div class="space-y-2">
                         <div class="flex items-center gap-2">
                             <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Patient:</span>
-                            <a href="tel:{{ \App\Constants\Contacts::PHONE }}" class="text-sm font-black text-primary hover:underline">{{ \App\Constants\Contacts::PHONE }}</a>
+                            <a href="tel:{{ $supportPhone }}" class="text-sm font-black text-primary hover:underline">{{ $supportPhone }}</a>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Provider:</span>
-                            <a href="tel:{{ \App\Constants\Contacts::PHONE }}" class="text-sm font-black text-primary hover:underline">{{ \App\Constants\Contacts::PHONE }}</a>
+                            <a href="tel:{{ $supportPhone }}" class="text-sm font-black text-primary hover:underline">{{ $supportPhone }}</a>
                         </div>
                     </div>
                 </div>
@@ -108,7 +114,7 @@
         <!-- Practice CTA Banner -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
             <div class="bg-[#ebeae2] rounded-xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
-                <h3 class="text-xl font-black text-slate-800 tracking-tight italic">Are you a practice interested in joining MedVroom?</h3>
+                <h3 class="text-xl font-black text-slate-800 tracking-tight italic">Are you a practice interested in joining {{ $siteName }}?</h3>
                 <a href="{{ route('register.doctor') }}" class="px-8 py-3 bg-transparent border-2 border-slate-400 font-black text-slate-600 text-xs uppercase tracking-widest rounded transition-colors hover:bg-slate-400 hover:text-white">
                     Get started
                 </a>
@@ -118,7 +124,7 @@
         <!-- Email Footer -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-[13px] font-bold text-slate-500 mb-2">For non-urgent questions, email us. We respond within one business day.</p>
-            <a href="mailto:{{ \App\Constants\Contacts::EMAIL }}" class="text-[13px] font-black text-primary hover:underline">{{ \App\Constants\Contacts::EMAIL }}</a>
+            <a href="mailto:{{ $supportEmail }}" class="text-[13px] font-black text-primary hover:underline">{{ $supportEmail }}</a>
         </div>
     </div>
 </x-app-layout>

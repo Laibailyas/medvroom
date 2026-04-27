@@ -16,13 +16,13 @@ class PatientController extends Controller
     {
         $doctorProfile = $request->user()->doctorProfile;
 
-        if (!$doctorProfile) {
+        if (! $doctorProfile) {
             abort(403, 'Doctor profile not found.');
         }
 
         $patients = PatientProfile::whereHas('appointments', function ($query) use ($doctorProfile) {
-                $query->where('doctor_profile_id', $doctorProfile->id);
-            })
+            $query->where('doctor_profile_id', $doctorProfile->id);
+        })
             ->with(['user'])
             ->withCount(['appointments' => function ($query) use ($doctorProfile) {
                 $query->where('doctor_profile_id', $doctorProfile->id);
@@ -40,7 +40,7 @@ class PatientController extends Controller
     {
         $doctorProfile = $request->user()->doctorProfile;
 
-        if (!$doctorProfile) {
+        if (! $doctorProfile) {
             abort(403, 'Doctor profile not found.');
         }
 

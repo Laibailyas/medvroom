@@ -35,7 +35,7 @@ class Payment extends Model
     {
         $commission = SystemSetting::get('platform_commission', ['percentage' => 15]);
         $percentage = $commission['percentage'] / 100;
-        
+
         $platformFee = $totalAmount * $percentage;
         $providerPayout = $totalAmount - $platformFee;
 

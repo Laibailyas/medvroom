@@ -63,7 +63,6 @@ class SettingServiceProvider extends ServiceProvider
                 ]);
             }
 
-
             // Load stripe settings from database
             $stripeSettings = SystemSetting::where('key', 'stripe_settings')->first();
             if ($stripeSettings) {

@@ -15,7 +15,7 @@ class PayoutController extends Controller
         $user = $request->user();
         $doctorProfile = $user->doctorProfile;
 
-        if (!$doctorProfile) {
+        if (! $doctorProfile) {
             return redirect()->route('dashboard')->with('error', 'Doctor profile not found.');
         }
 
@@ -28,9 +28,9 @@ class PayoutController extends Controller
         $pendingBalance = $doctorProfile->payouts()->where('status', 'pending')->sum('amount');
 
         return view('doctor.payouts.index', compact(
-            'doctorProfile', 
-            'payouts', 
-            'availableBalance', 
+            'doctorProfile',
+            'payouts',
+            'availableBalance',
             'pendingBalance'
         ));
     }
@@ -45,7 +45,7 @@ class PayoutController extends Controller
 
         // In a real implementation, we would use Stripe SDK to create a link.
         // For now, we simulate the redirect to a "Stripe" page.
-        
+
         return back()->with('success', 'Stripe Connect onboarding flow would start here.');
     }
 }

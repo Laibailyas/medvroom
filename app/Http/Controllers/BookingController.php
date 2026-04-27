@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\DoctorProfile;
 use App\Models\Payment;
-use App\Models\SystemSetting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Cashier;
 
@@ -17,9 +17,9 @@ class BookingController extends Controller
         $date = $request->query('date');
         $time = $request->query('time');
         $specialtyId = $request->query('specialty_id');
-        
+
         $doctor = DoctorProfile::with('user', 'specialties')->findOrFail($doctorId);
-        
+
         $amount = $doctor->consultation_fee;
         $split = Payment::calculateSplit($amount);
 
@@ -44,33 +44,33 @@ class BookingController extends Controller
         ]);
 
         $doctor = DoctorProfile::findOrFail($request->doctor_id);
-        
-        /** @var \App\Models\User $user */
+
+        /** @var User $user */
         $user = auth()->user();
 
         // Create a Cashier Checkout Session for a one-off charge
-        return $user->checkoutCharge($doctor->consultation_fee * 100, "Consultation with Dr. " . $doctor->user->name, 1, [
-            'success_url' => route('booking.success') . '?session_id={CHECKOUT_SESSION_ID}&doctor_id=' . $doctor->id . '&date=' . $request->date . '&time=' . $request->time . '&specialty_id=' . $request->specialty_id,
-            'cancel_url' => route('booking.review') . '?doctor_id=' . $doctor->id . '&date=' . $request->date . '&time=' . $request->time . '&specialty_id=' . $request->specialty_id,
+        return $user->checkoutCharge($doctor->consultation_fee * 100, 'Consultation with Dr. '.$doctor->user->name, 1, [
+            'success_url' => route('booking.success').'?session_id={CHECKOUT_SESSION_ID}&doctor_id='.$doctor->id.'&date='.$request->date.'&time='.$request->time.'&specialty_id='.$request->specialty_id,
+            'cancel_url' => route('booking.review').'?doctor_id='.$doctor->id.'&date='.$request->date.'&time='.$request->time.'&specialty_id='.$request->specialty_id,
             'metadata' => [
                 'doctor_id' => $doctor->id,
                 'date' => $request->date,
                 'time' => $request->time,
                 'specialty_id' => $request->specialty_id,
                 'patient_id' => $user->patientProfile->id,
-            ]
+            ],
         ]);
     }
 
     public function success(Request $request)
     {
         $sessionId = $request->get('session_id');
-        
-        if (!$sessionId) {
+
+        if (! $sessionId) {
             return redirect()->route('patient.dashboard');
         }
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $checkoutSession = $user->stripe()->checkout->sessions->retrieve($sessionId);
 
@@ -85,10 +85,10 @@ class BookingController extends Controller
         $specialtyId = $request->specialty_id ?? $checkoutSession->metadata->specialty_id;
 
         // Final safety check for "[object Object]" or empty time
-        if (!$time || str_contains($time, '[object Object]')) {
+        if (! $time || str_contains($time, '[object Object]')) {
             // Check metadata explicitly
             $time = $checkoutSession->metadata->time;
-            if (!$time || str_contains($time, '[object Object]')) {
+            if (! $time || str_contains($time, '[object Object]')) {
                 return redirect()->route('search')->with('error', 'Invalid appointment time selected. Please try again.');
             }
         }

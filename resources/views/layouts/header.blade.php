@@ -1,9 +1,18 @@
+@php
+    $siteSettings = \App\Models\SystemSetting::where('key', 'site_settings')->first()?->value ?? [];
+    $siteName = !empty($siteSettings['site_name']) ? $siteSettings['site_name'] : 'MedVroom';
+    $logoUrl = !empty($siteSettings['logo_url']) ? Storage::url($siteSettings['logo_url']) : null;
+@endphp
 <header class="bg-white border-b border-slate-100 py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50" x-data>
     <!-- Logo -->
     <div class="flex items-center">
         <a href="{{ url('/') }}" class="flex items-center space-x-2 group">
-            <x-application-logo class="w-8 h-8 group-hover:scale-110 transition-transform duration-200" />
-            <span class="text-xl font-black text-neutral-dark tracking-tight">MedVroom</span>
+            @if($logoUrl)
+                <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-8 object-contain group-hover:scale-105 transition-transform duration-200">
+            @else
+                <x-application-logo class="w-8 h-8 group-hover:scale-110 transition-transform duration-200" />
+                <span class="text-xl font-black text-neutral-dark tracking-tight">{{ $siteName }}</span>
+            @endif
             @isset($forProviders)
                 @if($forProviders)
                     <span class="text-sm font-medium text-slate-400 ml-1 pt-0.5">for Providers</span>
@@ -47,12 +56,12 @@
                         <p class="text-[11px] text-slate-400">Manage appointments</p>
                     </div>
                 </a>
-                <a href="{{ route('login') }}?role=doctor" class="flex items-center space-x-3 px-4 py-3 hover:bg-slate-50 transition-colors group">
+                <a href="{{ route('provider.login') }}" class="flex items-center space-x-3 px-4 py-3 hover:bg-slate-50 transition-colors group">
                     <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-slate-800 group-hover:text-neutral-dark">Doctor / Provider</p>
+                        <p class="text-sm font-bold text-slate-800 group-hover:text-neutral-dark">Healthcare Provider</p>
                         <p class="text-[11px] text-slate-400">Access your practice</p>
                     </div>
                 </a>
@@ -95,7 +104,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-slate-800 group-hover:text-neutral-dark">Doctor / Provider</p>
+                        <p class="text-sm font-bold text-slate-800 group-hover:text-neutral-dark">Healthcare Provider</p>
                         <p class="text-[11px] text-slate-400">List your practice</p>
                     </div>
                 </a>
@@ -183,9 +192,9 @@
         <div x-show="open" class="absolute top-full left-0 right-0 bg-white border-b border-slate-100 shadow-lg px-6 py-6 space-y-4" style="display:none;" @click.outside="open = false">
             @guest
                 <a href="{{ route('login') }}" class="block text-sm font-bold text-slate-700 py-2">Patient Sign in</a>
-                <a href="{{ route('login') }}?role=doctor" class="block text-sm font-bold text-slate-700 py-2">Doctor Sign in</a>
+                <a href="{{ route('provider.login') }}" class="block text-sm font-bold text-slate-700 py-2">Provider Sign in</a>
                 <a href="{{ route('register') }}" class="block text-sm font-bold text-slate-700 py-2">Patient Sign up</a>
-                <a href="{{ route('register.doctor') }}" class="block w-full py-3 bg-primary text-white rounded-md text-sm font-bold text-center">Doctor Sign up</a>
+                <a href="{{ route('register.doctor') }}" class="block w-full py-3 bg-primary text-white rounded-md text-sm font-bold text-center">Provider Sign up</a>
             @else
                 <div class="flex items-center space-x-3 pb-4 border-b border-slate-50">
                     <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">

@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Conversation;
 use App\Models\DoctorProfile;
-use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -104,7 +105,7 @@ class DashboardController extends Controller
 
         $appointment->load(['patientProfile.user', 'doctorProfile.user', 'doctorProfile.specialties', 'payment', 'statusHistories', 'insurancePlan.provider']);
 
-        $conversation = \App\Models\Conversation::firstOrCreate([
+        $conversation = Conversation::firstOrCreate([
             'patient_id' => $appointment->patientProfile->user_id,
             'doctor_id' => $appointment->doctorProfile->user_id,
         ]);
@@ -126,11 +127,11 @@ class DashboardController extends Controller
         }
 
         $doctor = $appointment->doctorProfile->load('user', 'specialties');
-        
+
         // Load availability for the next 7 days
         $startDate = now()->startOfDay();
         $endDate = now()->addDays(7)->endOfDay();
-        $userTimezone = config('app.timezone'); 
+        $userTimezone = config('app.timezone');
         $availability = $doctor->getAvailabilityForRange($startDate, $endDate, $userTimezone);
 
         return view('patient.appointments.reschedule', compact('appointment', 'doctor', 'availability'));
@@ -153,7 +154,7 @@ class DashboardController extends Controller
             'time' => 'required|string',
         ]);
 
-        $newDateTime = \Carbon\Carbon::parse("{$request->date} {$request->time}");
+        $newDateTime = Carbon::parse("{$request->date} {$request->time}");
 
         // Simple validation: ensure it's in the future
         if ($newDateTime->isPast()) {
@@ -163,7 +164,7 @@ class DashboardController extends Controller
         $oldDateTime = $appointment->appointment_datetime;
         $appointment->update(['appointment_datetime' => $newDateTime]);
 
-        $appointment->transitionStatus('confirmed', "Rescheduled by patient. Was originally: " . $oldDateTime->format('M d, Y h:i A'));
+        $appointment->transitionStatus('confirmed', 'Rescheduled by patient. Was originally: '.$oldDateTime->format('M d, Y h:i A'));
 
         return redirect()->route('patient.appointments.show', $appointment)
             ->with('success', 'Appointment successfully rescheduled!');
@@ -186,9 +187,11 @@ class DashboardController extends Controller
 
         if ($request->action === 'accept') {
             $appointment->transitionStatus('confirmed', 'Patient accepted the proposed reschedule time.', $request->user()->id);
+
             return back()->with('success', 'You have accepted the new appointment time.');
         } else {
             $appointment->transitionStatus('cancelled', 'Patient rejected the proposed reschedule time.', $request->user()->id);
+
             return back()->with('success', 'You have rejected the reschedule. The appointment is cancelled.');
         }
     }

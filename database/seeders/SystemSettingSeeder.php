@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\SystemSetting;
 use Illuminate\Database\Seeder;
 
 class SystemSettingSeeder extends Seeder
@@ -12,7 +12,7 @@ class SystemSettingSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\SystemSetting::set(
+        SystemSetting::set(
             'platform_commission',
             ['percentage' => 15],
             'financial',

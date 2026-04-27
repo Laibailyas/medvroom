@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -92,11 +93,11 @@ class DoctorProfile extends Model
     /**
      * Get availability for a given date range, adjusted for user timezone.
      */
-    public function getAvailabilityForRange(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate, string $userTimezone = 'UTC'): array
+    public function getAvailabilityForRange(Carbon $startDate, Carbon $endDate, string $userTimezone = 'UTC'): array
     {
         $doctorTimezone = $this->timezone ?? config('app.timezone');
         $schedules = $this->schedules;
-        
+
         // Fetch appointments in the range
         $appointments = $this->appointments()
             ->whereBetween('appointment_datetime', [$startDate->copy()->startOfDay()->setTimezone('UTC'), $endDate->copy()->endOfDay()->setTimezone('UTC')])
@@ -104,7 +105,7 @@ class DoctorProfile extends Model
 
         $availability = [];
         $currentDate = $startDate->copy()->startOfDay();
-        $nowDoctor = \Carbon\Carbon::now($doctorTimezone);
+        $nowDoctor = Carbon::now($doctorTimezone);
 
         while ($currentDate <= $endDate) {
             $dayOfWeek = $currentDate->dayOfWeek; // 0 (Sun) - 6 (Sat)
@@ -114,9 +115,9 @@ class DoctorProfile extends Model
             if ($daySchedule) {
                 $daySlots = [];
                 // Determine doctor's working hours for this date in doctor's timezone
-                $startTimeDoctor = \Carbon\Carbon::createFromFormat('H:i:s', $daySchedule->start_time, $doctorTimezone)
+                $startTimeDoctor = Carbon::createFromFormat('H:i:s', $daySchedule->start_time, $doctorTimezone)
                     ->setDate($currentDate->year, $currentDate->month, $currentDate->day);
-                $endTimeDoctor = \Carbon\Carbon::createFromFormat('H:i:s', $daySchedule->end_time, $doctorTimezone)
+                $endTimeDoctor = Carbon::createFromFormat('H:i:s', $daySchedule->end_time, $doctorTimezone)
                     ->setDate($currentDate->year, $currentDate->month, $currentDate->day);
 
                 $slotDuration = $daySchedule->slot_duration_minutes ?? 30;
@@ -126,17 +127,18 @@ class DoctorProfile extends Model
                     // Skip if slot is in the past
                     if ($currentSlotStart->lte($nowDoctor)) {
                         $currentSlotStart->addMinutes($slotDuration);
+
                         continue;
                     }
 
                     $slotStartUTC = $currentSlotStart->copy()->setTimezone('UTC');
-                    
+
                     // Check if booked
                     $isBooked = $appointments->contains(function ($appointment) use ($slotStartUTC) {
                         return $appointment->appointment_datetime->equalTo($slotStartUTC);
                     });
 
-                    if (!$isBooked) {
+                    if (! $isBooked) {
                         $daySlots[] = $currentSlotStart->copy()->setTimezone($userTimezone)->format('H:i');
                     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DoctorProfile;
 use App\Models\Specialty;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -52,10 +53,10 @@ class SearchController extends Controller
         }
 
         $doctors = $query->paginate(12);
-        
+
         // Timezone and Date Range for Availability
         $userTimezone = auth()->user()?->timezone ?? $request->query('timezone', 'UTC');
-        $startDate = \Carbon\Carbon::now($userTimezone);
+        $startDate = Carbon::now($userTimezone);
         $endDate = $startDate->copy()->addDays(6);
 
         // Pre-calculate availability for the search results
