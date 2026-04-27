@@ -63,7 +63,7 @@
                         placeholder="name@example.com"
                         required 
                         autofocus 
-                        class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-bold text-slate-900 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
@@ -83,7 +83,7 @@
                         name="password" 
                         required 
                         :value="old('password')"
-                        class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-bold text-slate-900 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
