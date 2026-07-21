@@ -20,7 +20,11 @@
                             <h1 class="text-3xl font-black text-slate-800 tracking-tight">Dr. {{ $doctor->user->name }}</h1>
                             <p class="text-lg font-bold text-slate-500">{{ $doctor->specialties->first()?->name ?? 'Specialist' }}</p>
                             <div class="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded leading-none">
-                                {{ $doctor->practice_zip_code ?? 'CO' }}
+                                @if($doctor->practice_city && $doctor->practice_state)
+                                    {{ $doctor->practice_city }}, {{ $doctor->practice_state }}
+                                @else
+                                    {{ $doctor->practice_zip_code ?? 'Location not listed' }}
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -97,14 +101,18 @@
                                 <div class="flex-1">
                                     <h3 class="text-lg font-black text-slate-800 italic uppercase mb-2">In-network insurances</h3>
                                     <div class="text-sm font-bold text-slate-500 leading-relaxed mb-4">
-                                        @foreach($insuranceGroups->take(5) as $provider => $plans)
+                                        @forelse($insuranceGroups->take(5) as $provider => $plans)
                                             {{ $provider }}{{ !$loop->last ? ',' : '' }}
-                                        @endforeach
+                                        @empty
+                                            <span class="text-slate-400 italic">No insurance plans listed yet.</span>
+                                        @endforelse
                                         @if($insuranceGroups->count() > 5)
                                             <span class="text-slate-400">+ {{ $insuranceGroups->count() - 5 }} more</span>
                                         @endif
                                     </div>
-                                    <button @click="tab = 'insurances'" class="text-xs font-black text-primary underline decoration-primary/30 underline-offset-4 uppercase tracking-widest hover:text-primary-dark">See all in-network plans</button>
+                                    @if($insuranceGroups->count() > 0)
+                                        <button @click="tab = 'insurances'" class="text-xs font-black text-primary underline decoration-primary/30 underline-offset-4 uppercase tracking-widest hover:text-primary-dark">See all in-network plans</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -136,7 +144,7 @@
                         <div x-show="tab === 'insurances'" x-cloak class="space-y-8 animate-in fade-in duration-300">
                             <h3 class="text-xl font-black text-slate-800 italic uppercase">In-network insurances</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                @foreach($insuranceGroups as $provider => $plans)
+                                @forelse($insuranceGroups as $provider => $plans)
                                     <div class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
                                         <h4 class="font-black text-slate-800 mb-3 border-b border-slate-50 pb-2">{{ $provider }}</h4>
                                         <div class="space-y-1">
@@ -145,7 +153,9 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                @endforeach
+                                @empty
+                                    <p class="text-sm font-bold text-slate-400 italic">This provider hasn't listed any insurance plans yet.</p>
+                                @endforelse
                             </div>
                         </div>
 
@@ -212,12 +222,31 @@
                                 </div>
 
                                 <!-- Insurance Check Card -->
-                                <div class="bg-green-50 border border-green-100 rounded-2xl p-4 flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-green-500/10 text-green-600 rounded-full flex items-center justify-center shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                    </div>
-                                    <div class="text-xs font-black text-green-700/80 uppercase tracking-tight">This provider is in-network</div>
-                                </div>
+                                {{-- FIX: this used to be a hardcoded, always-green
+                                     "This provider is in-network" block with no
+                                     relation to what the patient actually
+                                     searched for. Now it only appears when the
+                                     patient came here via an insurance search,
+                                     and it reflects the REAL match result
+                                     ($isInNetwork, computed in the controller
+                                     against this doctor's actual insurancePlans). --}}
+                                @if($searchedInsurance)
+                                    @if($isInNetwork)
+                                        <div class="bg-green-50 border border-green-100 rounded-2xl p-4 flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-green-500/10 text-green-600 rounded-full flex items-center justify-center shrink-0">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                            </div>
+                                            <div class="text-xs font-black text-green-700/80 uppercase tracking-tight">This provider is in-network for {{ $searchedInsurance }}</div>
+                                        </div>
+                                    @else
+                                        <div class="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-red-500/10 text-red-600 rounded-full flex items-center justify-center shrink-0">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            </div>
+                                            <div class="text-xs font-black text-red-700/80 uppercase tracking-tight">This provider may not be in-network for {{ $searchedInsurance }}</div>
+                                        </div>
+                                    @endif
+                                @endif
 
                                 <!-- Patient Type Toggle -->
                                 <div class="flex p-1 bg-slate-50 rounded-2xl">

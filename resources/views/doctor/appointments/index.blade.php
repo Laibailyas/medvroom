@@ -3,13 +3,13 @@
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
-                <h1 class="text-4xl font-black tracking-tighter italic">Appointment Manager</h1>
+                <h1 class="text-4xl font-black tracking-tighter ">Appointment Manager</h1>
                 <p class="text-slate-500 font-bold mt-1">Manage your consultations, requests, and patient history.</p>
             </div>
             <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
-                <a href="{{ route('doctor.appointments.index', ['tab' => 'requests']) }}" class="px-6 py-2.5 rounded-xl text-xs font-black italic tracking-tight transition-all {{ $tab === 'requests' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Requests</a>
-                <a href="{{ route('doctor.appointments.index', ['tab' => 'upcoming']) }}" class="px-6 py-2.5 rounded-xl text-xs font-black italic tracking-tight transition-all {{ $tab === 'upcoming' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Upcoming</a>
-                <a href="{{ route('doctor.appointments.index', ['tab' => 'past']) }}" class="px-6 py-2.5 rounded-xl text-xs font-black italic tracking-tight transition-all {{ $tab === 'past' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">History</a>
+                <a href="{{ route('doctor.appointments.index', ['tab' => 'requests']) }}" class="px-6 py-2.5 rounded-xl text-xs font-black tracking-tight transition-all {{ $tab === 'requests' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Requests</a>
+                <a href="{{ route('doctor.appointments.index', ['tab' => 'upcoming']) }}" class="px-6 py-2.5 rounded-xl text-xs font-black tracking-tight transition-all {{ $tab === 'upcoming' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Upcoming</a>
+                <a href="{{ route('doctor.appointments.index', ['tab' => 'past']) }}" class="px-6 py-2.5 rounded-xl text-xs font-black tracking-tight transition-all {{ $tab === 'past' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">History</a>
             </div>
         </div>
 
@@ -19,10 +19,10 @@
                 <table class="w-full text-left">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 italic">Patient</th>
-                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 italic">DateTime</th>
-                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 italic">Status</th>
-                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 italic text-right">Actions</th>
+                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 ">Patient</th>
+                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 ">DateTime</th>
+                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 ">Status</th>
+                            <th class="px-8 py-6 text-[10px] uppercase font-black tracking-widest text-slate-400 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
@@ -34,13 +34,13 @@
                                             <img src="{{ $appointment->patientProfile->user->getProfilePhotoUrl() }}" class="w-full h-full object-cover">
                                         </div>
                                         <div>
-                                            <p class="font-black text-slate-900 italic tracking-tight">{{ $appointment->patientProfile->user->name }}</p>
+                                            <p class="font-black text-slate-900 tracking-tight">{{ $appointment->patientProfile->user->name }}</p>
                                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">PATID: #{{ str_pad($appointment->patient_profile_id, 4, '0', STR_PAD_LEFT) }}</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-8 py-6">
-                                    <p class="text-sm font-black text-slate-700 italic tracking-tight">{{ $appointment->appointment_datetime->format('M d, Y') }}</p>
+                                    <p class="text-sm font-black text-slate-700 tracking-tight">{{ $appointment->appointment_datetime->format('M d, Y') }}</p>
                                     <p class="text-xs font-bold text-slate-400">{{ $appointment->appointment_datetime->format('g:i A') }}</p>
                                 </td>
                                 <td class="px-8 py-6">
@@ -54,7 +54,7 @@
                                             default => 'bg-slate-50 text-slate-600'
                                         };
                                     @endphp
-                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest italic {{ $statusClass }}">
+                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ $statusClass }}">
                                         {{ str_replace('_', ' ', $appointment->status) }}
                                     </span>
                                 </td>
@@ -88,7 +88,7 @@
                                     <div class="w-20 h-20 bg-slate-50 rounded-[2.5rem] flex items-center justify-center text-slate-300 mx-auto mb-6">
                                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     </div>
-                                    <p class="text-slate-400 font-bold italic tracking-tight">No appointments found in this category.</p>
+                                    <p class="text-slate-400 font-bold tracking-tight">No appointments found in this category.</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -97,7 +97,7 @@
             </div>
 
             @if($appointments->hasPages())
-                <div class="px-8 py-6 bg-slate-50 border-t border-slate-100 italic font-bold">
+                <div class="px-8 py-6 bg-slate-50 border-t border-slate-100 font-bold">
                     {{ $appointments->links() }}
                 </div>
             @endif

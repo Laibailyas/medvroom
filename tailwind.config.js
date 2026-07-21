@@ -13,21 +13,27 @@ export default {
         extend: {
             colors: {
                 primary: {
-                    DEFAULT: '#ea580c', // orange-600
-                    hover: '#f97316',   // orange-500
+                    DEFAULT: '#003CFB', // Brand Blue
+                    hover: '#1D4FFF',   // Lighter Blue
+                    dark: '#002ECC',    // Dark Blue
+                    light: '#EAF0FF',   // Very Light Blue
                 },
+
                 secondary: {
-                    DEFAULT: '#059669', // emerald-600
-                    hover: '#10b981',   // emerald-500
+                    DEFAULT: '#0F172A', // Slate-900 (almost black)
+                    hover: '#1E293B',   // Slate-800
                 },
+
                 neutral: {
-                    dark: '#0f172a',    // slate-900
-                    light: '#f8fafc',   // slate-50
+                    dark: '#0F172A',
+                    light: '#F8FAFC',
+                    border: '#E2E8F0',
                 }
             },
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-            },
+
+           fontFamily: {
+    sans: ['Inter', ...defaultTheme.fontFamily.sans],
+},
         },
     },
 

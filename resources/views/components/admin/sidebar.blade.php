@@ -10,8 +10,7 @@
     <div class="flex items-center justify-between px-6 h-16 border-b border-slate-100">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2">
             @if($logoUrl)
-                <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-8 object-contain">
-                <span class="text-lg font-bold text-slate-800 tracking-tight">{{ $siteName }}</span>
+                <img src="{{ asset('build/assets/logo.jpeg') }}" alt="{{ $siteName }}" class="h-8 object-contain">
             @else
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                     <span class="text-white font-bold text-lg">M</span>
@@ -31,12 +30,7 @@
                 <x-admin.sidebar-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" icon="dashboard">
                     Dashboard
                 </x-admin.sidebar-link>
-                <x-admin.sidebar-link :href="route('admin.site-settings.index')" :active="request()->routeIs('admin.site-settings.*')" icon="settings">
-                    Site Settings
-                </x-admin.sidebar-link>
-                <x-admin.sidebar-link :href="route('admin.content-settings.index')" :active="request()->routeIs('admin.content-settings.*')" icon="article">
-                    Content Settings
-                </x-admin.sidebar-link>
+
             </div>
         </div>
 

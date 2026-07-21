@@ -2,7 +2,7 @@
     <div class="flex items-center space-x-8">
         <a href="/" class="flex items-center space-x-2 group">
             <x-application-logo class="w-8 h-8 group-hover:rotate-12 transition-transform duration-300" />
-            <span class="text-xl font-bold text-[#00234B] tracking-tight">Zocdoc</span>
+            <span class="text-xl font-bold text-[#00234B] tracking-tight">Medvroom</span>
             @if(isset($forProviders) && $forProviders)
                 <span class="text-sm font-medium text-slate-400 ml-2 pt-1">for Providers</span>
             @endif

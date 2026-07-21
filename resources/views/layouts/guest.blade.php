@@ -40,7 +40,7 @@
             <div>
                 <a href="/">
                     @if($logoUrl)
-                        <img src="{{ $logoUrl }}" alt="{{ $defaultTitle }}" class="h-20 object-contain mx-auto">
+                        <img src="{{ asset('build/assets/logo.jpeg') }}" alt="{{ $defaultTitle }}" class="h-20 object-contain mx-auto">
                     @else
                         <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
                     @endif

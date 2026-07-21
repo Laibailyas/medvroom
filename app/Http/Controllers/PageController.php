@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\SystemSetting;
 use Illuminate\View\View;
-
 class PageController extends Controller
 {
     /**
@@ -14,7 +11,14 @@ class PageController extends Controller
     {
         return view('about');
     }
-
+    
+    public function cancellation()
+{
+    $setting = [
+        'title' => 'Cancellation & No-Show Policy'
+    ];
+    return view('cancellation', compact('setting'));
+}
     /**
      * Display the Contact Us page.
      */
@@ -22,7 +26,24 @@ class PageController extends Controller
     {
         return view('contact');
     }
+    
+    public function baa(): View
+{
+    return view('baa'); // or 'pages.baa' depending on your views structure
+}
 
+    /**
+     * Display the Consumer Health Data Privacy Policy page.
+     */
+    public function consumerHealthPrivacy(): View
+    {
+        return view('consumer-health');
+    }
+
+public function pricing(): View
+{
+    return view('pricing');
+}
     /**
      * Display the Privacy Policy page.
      */
@@ -32,10 +53,8 @@ class PageController extends Controller
             'title' => 'Privacy Policy',
             'content' => '<p>Please check back later.</p>'
         ];
-
         return view('privacy', compact('setting'));
     }
-
     /**
      * Display the Terms & Conditions page.
      */
@@ -45,10 +64,8 @@ class PageController extends Controller
             'title' => 'Terms & Conditions',
             'content' => '<p>Please check back later.</p>'
         ];
-
         return view('terms', compact('setting'));
     }
-
     /**
      * Display the Review & Content Policy page.
      */
@@ -58,10 +75,8 @@ class PageController extends Controller
             'title' => 'Review & Content Policy',
             'content' => '<p>Please check back later.</p>'
         ];
-
         return view('review-policy', compact('setting'));
     }
-
     /**
      * Display the Telehealth Informed Consent page.
      */
@@ -71,10 +86,8 @@ class PageController extends Controller
             'title' => 'Telehealth Informed Consent',
             'content' => '<p>Please check back later.</p>'
         ];
-
         return view('telehealth-consent', compact('setting'));
     }
-
     /**
      * Display the Provider Agreement page.
      */
@@ -84,10 +97,8 @@ class PageController extends Controller
             'title' => 'Provider Agreement',
             'content' => '<p>Please check back later.</p>'
         ];
-
         return view('provider-agreement', compact('setting'));
     }
-
     /**
      * Display the Acceptable Use Policy page.
      */
@@ -97,10 +108,8 @@ class PageController extends Controller
             'title' => 'Acceptable Use Policy',
             'content' => '<p>Please check back later.</p>'
         ];
-
         return view('acceptable-use-policy', compact('setting'));
     }
-
     /**
      * Display the Cookie Policy page.
      */
@@ -110,7 +119,6 @@ class PageController extends Controller
             'title' => 'Cookie Policy',
             'content' => '<p>Please check back later.</p>'
         ];
-
         return view('cookie-policy', compact('setting'));
     }
 }

@@ -3,11 +3,11 @@
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
-                <h1 class="text-4xl font-black tracking-tighter italic text-slate-900">Clinical Profile</h1>
+                <h1 class="text-4xl font-black tracking-tighter text-slate-900">Clinical Profile</h1>
                 <p class="text-slate-500 font-bold mt-1 uppercase tracking-widest text-[10px]">Manage your professional digital presence and practice details.</p>
             </div>
             <div class="flex items-center gap-3">
-                <button type="submit" form="profile-form" class="px-8 py-4 bg-primary text-slate-900 rounded-[1.5rem] font-black text-sm hover:scale-105 transition-all shadow-xl shadow-primary/20 italic">
+                <button type="submit" form="profile-form" class="px-8 py-4 bg-primary text-slate-900 rounded-[1.5rem] font-black text-sm hover:scale-105 transition-all shadow-xl shadow-primary/20 ">
                     Save Changes
                 </button>
             </div>
@@ -39,23 +39,23 @@
 
                         <div class="space-y-4 text-left">
                             <div>
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic px-1">First Name</label>
-                                <input type="text" name="first_name" value="{{ old('first_name', Auth::user()->first_name) }}" class="w-full bg-slate-800/50 border-0 rounded-2xl p-4 text-sm font-black italic tracking-tight text-white focus:ring-2 focus:ring-primary h-14 mt-1">
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">First Name</label>
+                                <input type="text" name="first_name" value="{{ old('first_name', Auth::user()->first_name) }}" class="w-full bg-slate-800/50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-white focus:ring-2 focus:ring-primary h-14 mt-1">
                             </div>
                             <div>
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic px-1">Last Name</label>
-                                <input type="text" name="last_name" value="{{ old('last_name', Auth::user()->last_name) }}" class="w-full bg-slate-800/50 border-0 rounded-2xl p-4 text-sm font-black italic tracking-tight text-white focus:ring-2 focus:ring-primary h-14 mt-1">
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Last Name</label>
+                                <input type="text" name="last_name" value="{{ old('last_name', Auth::user()->last_name) }}" class="w-full bg-slate-800/50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-white focus:ring-2 focus:ring-primary h-14 mt-1">
                             </div>
                         </div>
                     </div>
 
                     <!-- Clinical Stats Quick Info -->
                     <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm">
-                        <h3 class="text-xl font-black tracking-tighter italic mb-6">Expertise Overview</h3>
+                        <h3 class="text-xl font-black tracking-tighter mb-6">Expertise Overview</h3>
                         <div class="space-y-5">
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic px-1">Clinical Experience (Years)</label>
-                                <input type="number" name="experience_years" value="{{ old('experience_years', $doctor->experience_years) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black italic tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14 mt-1">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Clinical Experience (Years)</label>
+                                <input type="number" name="experience_years" value="{{ old('experience_years', $doctor->experience_years) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14 mt-1">
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                 <div class="lg:col-span-2 space-y-8">
                     <!-- About Me -->
                     <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 md:p-12 shadow-sm">
-                        <h2 class="text-2xl font-black tracking-tighter italic mb-8 flex items-center gap-3">
+                        <h2 class="text-2xl font-black tracking-tighter mb-8 flex items-center gap-3">
                             <span class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </span>
@@ -73,18 +73,18 @@
                         </h2>
                         <div class="space-y-8">
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic mb-2 block px-1">Professional Bio</label>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Professional Bio</label>
                                 <textarea name="bio" rows="6" class="w-full bg-slate-50 border-0 rounded-3xl p-6 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-primary leading-relaxed" placeholder="Share your clinical background, philosophy, and special interests...">{{ old('bio', $doctor->bio) }}</textarea>
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic mb-2 block px-1">Practice / Clinic Name</label>
-                                    <input type="text" name="practice_name" value="{{ old('practice_name', $doctor->practice_name) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black italic tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14" placeholder="e.g. MedVroom Health Center">
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Practice / Clinic Name</label>
+                                    <input type="text" name="practice_name" value="{{ old('practice_name', $doctor->practice_name) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14" placeholder="e.g. MedVroom Health Center">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic mb-2 block px-1">Primary Clinical Address</label>
-                                    <input type="text" name="clinic_address" value="{{ old('clinic_address', $doctor->clinic_address) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black italic tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14" placeholder="Full street address...">
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Primary Clinical Address</label>
+                                    <input type="text" name="clinic_address" value="{{ old('clinic_address', $doctor->clinic_address) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14" placeholder="Full street address...">
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Specialties -->
                         <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm h-full">
-                            <h3 class="text-xl font-black tracking-tighter italic mb-6">Medical Specialties</h3>
+                            <h3 class="text-xl font-black tracking-tighter mb-6">Medical Specialties</h3>
                             <div class="max-h-64 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
                                 @foreach($specialties as $specialty)
                                     <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
@@ -107,7 +107,7 @@
 
                         <!-- Languages -->
                         <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm h-full">
-                            <h3 class="text-xl font-black tracking-tighter italic mb-6">Languages Spoken</h3>
+                            <h3 class="text-xl font-black tracking-tighter mb-6">Languages Spoken</h3>
                             <div class="max-h-64 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
                                 @foreach($languages as $language)
                                     <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">

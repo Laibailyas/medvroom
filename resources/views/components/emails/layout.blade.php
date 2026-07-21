@@ -88,13 +88,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- Logo -->
-        <div class="header">
-            <div style="font-size: 32px; font-weight: 800; color: #0f172a; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <span style="background-color: #FFF04B; border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900;">Z</span>
-                Zocdoc
-            </div>
-        </div>
+        
 
         <!-- Main Card -->
         <div class="card">
@@ -115,15 +109,10 @@
 
         <!-- Email Footer -->
         <div class="footer">
-            <div class="footer-logo">
-                <div style="font-size: 20px; font-weight: 800; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 4px;">
-                    <span style="background-color: #e2e8f0; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900;">Z</span>
-                    Zocdoc
-                </div>
-            </div>
-            <div>568 Broadway, 9th Floor, New York, NY 10012, USA</div>
+            
+            
             <div style="margin-top: 8px;">
-                Zocdoc does not provide medical advice, diagnosis, or treatment. Please discuss all medical questions and concerns with your healthcare provider.
+                Medvroom does not provide medical advice, diagnosis, or treatment. Please discuss all medical questions and concerns with your healthcare provider.
             </div>
             <div class="footer-links">
                 <a href="#">Privacy</a>

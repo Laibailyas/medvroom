@@ -10,8 +10,8 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                         </div>
                         <div>
-                            <h4 class="text-lg font-black text-slate-900 leading-none">Security & Privacy</h4>
-                            <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-widest">Your documents are encrypted and secure.</p>
+                            <h4 class="text-lg font-black text-slate-900 leading-none">Upload Documents</h4>
+                            <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-widest">🔒 Securely Encrypted — your documents are protected</p>
                         </div>
                     </div>
 
@@ -32,7 +32,7 @@
 
                         <!-- Government ID -->
                         <div x-data="{ fileName: '' }">
-                            <label class="block text-sm font-black uppercase tracking-widest text-slate-500 mb-3">Government Issued ID</label>
+                            <label class="block text-sm font-black uppercase tracking-widest text-slate-500 mb-3">Government ID <span class="text-rose-600">*</span> <span class="font-medium text-slate-400 lowercase tracking-normal">(upload required)</span></label>
                             <label class="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:bg-white hover:border-indigo-600 transition-all group">
                                 <input type="file" name="document_id" required class="sr-only" @change="fileName = $event.target.files[0].name">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -46,9 +46,9 @@
 
                         <!-- Malpractice Insurance -->
                         <div x-data="{ fileName: '' }">
-                            <label class="block text-sm font-black uppercase tracking-widest text-slate-500 mb-3">Malpractice Insurance (Optional)</label>
+                            <label class="block text-sm font-black uppercase tracking-widest text-slate-500 mb-3">Malpractice Insurance <span class="text-rose-600">*</span> <span class="font-medium text-slate-400 lowercase tracking-normal">(upload required)</span></label>
                             <label class="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:bg-white hover:border-indigo-600 transition-all group">
-                                <input type="file" name="document_malpractice" class="sr-only" @change="fileName = $event.target.files[0].name">
+                                <input type="file" name="document_malpractice" required class="sr-only" @change="fileName = $event.target.files[0].name">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg class="w-10 h-10 mb-3 text-slate-400 group-hover:text-indigo-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                                     <p class="mb-2 text-sm text-slate-500 font-bold group-hover:text-indigo-600" x-text="fileName || 'Click to upload or drag and drop'"></p>

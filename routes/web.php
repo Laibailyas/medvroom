@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\ProviderDocumentController;
 use App\Http\Controllers\Admin\BlogCategoryController as AdminBlogCategoryController;
 use App\Http\Controllers\Admin\BlogPostController as AdminBlogPostController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -21,8 +23,10 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\Doctor\InsuranceController;
+use App\Http\Controllers\Doctor\LegalController;
 use App\Http\Controllers\Doctor\PatientController;
 use App\Http\Controllers\Doctor\PayoutController;
+use App\Http\Controllers\Doctor\PricingTermsController;
 use App\Http\Controllers\Doctor\ScheduleController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PageController;
@@ -33,6 +37,50 @@ use App\Models\InsuranceProvider;
 use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+
+
+
+use App\Http\Controllers\Auth\ProviderOnboardingController;
+
+Route::prefix('register/provider')->name('provider.register.')->group(function () {
+    Route::get('/', [ProviderOnboardingController::class, 'entry'])->name('entry');
+
+    // Step 1
+    Route::get('account', [ProviderOnboardingController::class, 'account'])->name('account');
+    Route::post('account', [ProviderOnboardingController::class, 'storeAccount'])->name('account.store');
+
+    // Step 2
+    Route::get('practice', [ProviderOnboardingController::class, 'practice'])->name('practice');
+    Route::post('practice', [ProviderOnboardingController::class, 'storePractice'])->name('practice.store');
+
+    // Step 3
+    Route::get('license', [ProviderOnboardingController::class, 'license'])->name('license');
+    Route::post('license', [ProviderOnboardingController::class, 'storeLicense'])->name('license.store');
+    Route::post('license/search', [ProviderOnboardingController::class, 'licenseSearch'])->name('license.search');
+    Route::post('license/npi-lookup', [ProviderOnboardingController::class, 'npiLookup'])->name('license.npi-lookup');
+
+    // Step 4
+    Route::get('details', [ProviderOnboardingController::class, 'details'])->name('details');
+    Route::post('details', [ProviderOnboardingController::class, 'storeDetails'])->name('details.store');
+
+    // Step 5
+    Route::get('payment', [ProviderOnboardingController::class, 'payment'])->name('payment');
+    Route::get('payment/stripe-connect', [ProviderOnboardingController::class, 'stripeConnect'])->name('payment.stripe-connect');
+Route::post('payment/skip', [ProviderOnboardingController::class, 'skipPayment'])->name('payment.skip');
+
+    // Step 6
+    Route::get('legal', [ProviderOnboardingController::class, 'legal'])->name('legal');
+    Route::post('legal', [ProviderOnboardingController::class, 'storeLegal'])->name('legal.store');
+
+    // Step 7
+    Route::get('status', [ProviderOnboardingController::class, 'status'])->name('status');
+
+    // Step 8
+    Route::get('profile-builder', [ProviderOnboardingController::class, 'profileBuilder'])->name('profile-builder');
+    Route::post('profile-builder', [ProviderOnboardingController::class, 'storeProfileBuilder'])->name('profile-builder.store');
+});
+
+
 
 Route::get('/', function () {
     $specialties = Specialty::all();
@@ -52,14 +100,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
-Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+Route::get('/cancellation', [PageController::class, 'cancellation'])->name('cancellation'); // <-- ADD THIS LINE
 Route::get('/review-policy', [PageController::class, 'reviewPolicy'])->name('review-policy');
 Route::get('/telehealth-consent', [PageController::class, 'telehealthConsent'])->name('telehealth-consent');
 Route::get('/provider-agreement', [PageController::class, 'providerAgreement'])->name('provider-agreement');
 Route::get('/acceptable-use-policy', [PageController::class, 'acceptableUsePolicy'])->name('acceptable-use-policy');
 Route::get('/cookie-policy', [PageController::class, 'cookiePolicy'])->name('cookie-policy');
+Route::get('/baa', [PageController::class, 'baa'])->name('baa');
+Route::get('/consumer-health-privacy', [PageController::class, 'consumerHealthPrivacy'])->name('consumer-health-privacy');
+Route::get('/pricing', [PageController::class, 'pricing'])->name('pricing');
 
 // Help Center (Frontend)
 Route::prefix('help')->name('help.')->group(function () {
@@ -96,7 +149,7 @@ Route::middleware(['auth', 'verified', 'doctor'])->prefix('doctor')->as('doctor.
     Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule.index');
     Route::post('/schedule', [ScheduleController::class, 'store'])->name('schedule.store');
 
-    Route::post('/appointments/{appointment}/status', [App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('appointments.status');
+    Route::post('/appointments/{appointment}/status', [App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('appointments.update-status');
     Route::post('/appointments/{appointment}/reschedule', [App\Http\Controllers\Doctor\AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
 
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
@@ -115,6 +168,14 @@ Route::middleware(['auth', 'verified', 'doctor'])->prefix('doctor')->as('doctor.
     Route::patch('/insurance', [InsuranceController::class, 'update'])->name('insurance.update');
 
     Route::get('/reviews', [App\Http\Controllers\Doctor\ReviewController::class, 'index'])->name('reviews.index');
+
+    Route::get('/legal', [LegalController::class, 'index'])->name('legal.index');
+    Route::get('/legal/{document}', [LegalController::class, 'show'])->name('legal.show');
+    Route::get('/legal/{document}/download', [LegalController::class, 'download'])->name('legal.download');
+
+    Route::get('/pricing-terms', [PricingTermsController::class, 'index'])->name('pricing-terms.index');
+    Route::get('/pricing-terms/view', [PricingTermsController::class, 'show'])->name('pricing-terms.show');
+    Route::get('/pricing-terms/download', [PricingTermsController::class, 'download'])->name('pricing-terms.download');
 });
 
 // Common Authenticated Routes (API Chat endpoints)
@@ -145,6 +206,8 @@ Route::middleware('auth')->group(function () {
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(function () {
+    Route::get('providers/{doctor}/documents/{type}', [ProviderDocumentController::class, 'show'])
+        ->name('providers.documents.show');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('insurance-providers', InsuranceProviderController::class);
     Route::resource('users', UserController::class);

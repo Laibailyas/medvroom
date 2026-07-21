@@ -16,7 +16,7 @@
                 </div>
                 <h2 class="text-4xl font-black text-neutral-dark tracking-tight leading-tight mb-6">Let's get started</h2>
                 <p class="text-lg text-slate-600 font-medium leading-relaxed max-w-sm">
-                    Zocdoc is the best way to reach the right patients for your practice. It's easy to join and there are no upfront fees or subscription costs.
+                    Medvroom is the best way to reach the right patients for your practice. It's easy to join and there are no upfront fees or subscription costs.
                 </p>
             </div>
         </div>
@@ -158,7 +158,7 @@
                 <div class="mt-10 flex items-start space-x-3">
                     <input type="checkbox" name="terms" id="terms" class="mt-1 w-4 h-4 text-slate-300 border-slate-300 rounded focus:ring-1 focus:ring-primary" required {{ old('terms') ? 'checked' : '' }}>
                     <label for="terms" class="text-[11px] text-slate-500 leading-relaxed font-medium">
-                        By checking this box I agree to receive text messages from Zocdoc about offers*
+                        By checking this box I agree to receive text messages from Medvroom about offers*
                     </label>
                     <x-input-error :messages="$errors->get('terms')" class="mt-2" />
                 </div>

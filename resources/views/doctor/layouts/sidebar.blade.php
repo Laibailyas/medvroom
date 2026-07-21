@@ -2,10 +2,7 @@
     <!-- Logo -->
     <div class="p-8 pb-12 flex items-center justify-between">
         <a href="{{ route('doctor.dashboard') }}" class="flex items-center gap-2 group">
-            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
-                <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <span class="text-xl font-black italic tracking-tighter">MedVroom</span>
+            <img src="{{ asset('assets/white-logo.png') }}" alt="MedVroom" class="h-9 w-auto group-hover:scale-105 transition-transform duration-300">
         </a>
     </div>
 
@@ -18,11 +15,13 @@
         <x-doctor.nav-link :href="route('doctor.chat.index')" :active="request()->routeIs('doctor.chat.*')" icon="chat">Chat</x-doctor.nav-link>
         <x-doctor.nav-link :href="route('doctor.insurance.index')" :active="request()->routeIs('doctor.insurance.*')" icon="shield">Insurance</x-doctor.nav-link>
         <div class="pt-6 pb-2">
-            <span class="px-4 text-[10px] uppercase font-black tracking-widest text-slate-500 italic">Settings</span>
+            <span class="px-4 text-[10px] uppercase font-black tracking-widest text-slate-500 ">Settings</span>
         </div>
         <x-doctor.nav-link :href="route('doctor.profile.edit')" :active="request()->routeIs('doctor.profile.*')" icon="user">Profile</x-doctor.nav-link>
         <x-doctor.nav-link :href="route('doctor.reviews.index')" :active="request()->routeIs('doctor.reviews.*')" icon="star">Reviews</x-doctor.nav-link>
         <x-doctor.nav-link :href="route('doctor.payouts.index')" :active="request()->routeIs('doctor.payouts.*')" icon="wallet">Payouts</x-doctor.nav-link>
+        <x-doctor.nav-link :href="route('doctor.legal.index')" :active="request()->routeIs('doctor.legal.*')" icon="document">Legal &amp; Agreements</x-doctor.nav-link>
+        <x-doctor.nav-link :href="route('doctor.pricing-terms.index')" :active="request()->routeIs('doctor.pricing-terms.*')" icon="document">Pricing &amp; Fee Terms</x-doctor.nav-link>
     </nav>
 
     <!-- User Profile -->
@@ -38,7 +37,7 @@
                 @endif
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-black truncate">Dr. {{ Auth::user()->last_name }}</p>
+                <p class="text-sm font-black truncate">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</p>
                 <p class="text-[10px] text-slate-500 font-bold truncate">Provider Portal</p>
             </div>
             <form method="POST" action="{{ route('logout') }}" class="shrink-0">

@@ -58,16 +58,16 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-[10px] shadow-inner">
-                                        {{ substr($app->patientProfile->user->name, 0, 1) }}
+                                        {{ substr($app->patientProfile?->user?->name ?? '?', 0, 1) }}
                                     </div>
                                     <div class="ml-3">
-                                        <p class="text-sm font-semibold text-slate-900 leading-none">{{ $app->patientProfile->user->name }}</p>
+                                        <p class="text-sm font-semibold text-slate-900 leading-none">{{ $app->patientProfile?->user?->name ?? 'Unknown Patient' }}</p>
                                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Patient</p>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <p class="text-sm font-semibold text-slate-900 leading-none">Provider {{ $app->doctorProfile->user->name }}</p>
+                                <p class="text-sm font-semibold text-slate-900 leading-none">{{ $app->doctorProfile?->user?->name ?? 'Unknown Provider' }}</p>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Provider</p>
                             </td>
                             <td class="px-6 py-4 text-center">

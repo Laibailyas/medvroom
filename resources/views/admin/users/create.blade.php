@@ -3,83 +3,88 @@
         Add New User
     </x-slot>
 
-    <div class="max-w-3xl mx-auto pb-12">
-        <div class="mb-6 flex items-center justify-between">
+    <div class="max-w-2xl mx-auto pb-12">
+        <div class="mb-6">
             <a href="{{ route('admin.users.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
-                Back to Directory
+                Back to Users
             </a>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-                <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest leading-none">Account Configuration</h2>
+                <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest">New User Details</h2>
             </div>
 
-            <form action="{{ route('admin.users.store') }}" method="POST" class="p-8">
+            <form action="{{ route('admin.users.store') }}" method="POST" class="p-6 space-y-6">
                 @csrf
-                
-                <div class="space-y-6">
-                    <!-- Names -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- First Name -->
-                        <div>
-                            <x-form.label for="first_name">First Name</x-form.label>
-                            <x-form.input id="first_name" name="first_name" type="text" value="{{ old('first_name') }}" placeholder="John" required :error="$errors->has('first_name')" />
-                            <x-form.error :messages="$errors->get('first_name')" />
-                        </div>
 
-                        <!-- Middle Name -->
-                        <div>
-                            <x-form.label for="middle_name">Middle Name</x-form.label>
-                            <x-form.input id="middle_name" name="middle_name" type="text" value="{{ old('middle_name') }}" placeholder="Quincy" :error="$errors->has('middle_name')" />
-                            <x-form.error :messages="$errors->get('middle_name')" />
-                        </div>
-
-                        <!-- Last Name -->
-                        <div>
-                            <x-form.label for="last_name">Last Name</x-form.label>
-                            <x-form.input id="last_name" name="last_name" type="text" value="{{ old('last_name') }}" placeholder="Doe" required :error="$errors->has('last_name')" />
-                            <x-form.error :messages="$errors->get('last_name')" />
-                        </div>
-                    </div>
-
-                    <!-- Email -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <x-form.label for="email">Email Address</x-form.label>
-                        <x-form.input id="email" name="email" type="email" value="{{ old('email') }}" placeholder="john@example.com" required :error="$errors->has('email')" />
-                        <x-form.error :messages="$errors->get('email')" />
+                        <label for="first_name" class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">First Name</label>
+                        <input type="text" name="first_name" id="first_name" value="{{ old('first_name') }}" required
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-bold transition-all placeholder:text-slate-300"
+                            placeholder="Jane">
+                        <x-input-error :messages="$errors->get('first_name')" class="mt-1" />
                     </div>
-
-                    <!-- Role Selection -->
                     <div>
-                        <x-form.label for="role">Account Type / Role</x-form.label>
-                        <x-form.select id="role" name="role" required :error="$errors->has('role')">
-                            <option value="patient" {{ old('role') === 'patient' ? 'selected' : '' }}>Patient (Patient Profile created automatically)</option>
-                            <option value="doctor" {{ old('role') === 'doctor' ? 'selected' : '' }}>Healthcare Provider (Doctor Profile created automatically)</option>
-                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>System Administrator</option>
-                        </x-form.select>
-                        <x-form.error :messages="$errors->get('role')" />
+                        <label for="middle_name" class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Middle <span class="font-normal text-slate-400 normal-case">(opt.)</span></label>
+                        <input type="text" name="middle_name" id="middle_name" value="{{ old('middle_name') }}"
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-bold transition-all placeholder:text-slate-300"
+                            placeholder="M.">
                     </div>
-
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- Password -->
-                        <div>
-                            <x-form.label for="password">Temporary Password</x-form.label>
-                            <x-form.input id="password" name="password" type="password" required :error="$errors->has('password')" />
-                        </div>
-                        <!-- Password Confirmation -->
-                        <div>
-                            <x-form.label for="password_confirmation">Confirm Password</x-form.label>
-                            <x-form.input id="password_confirmation" name="password_confirmation" type="password" required />
-                        </div>
+                    <div>
+                        <label for="last_name" class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Last Name</label>
+                        <input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" required
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-bold transition-all placeholder:text-slate-300"
+                            placeholder="Doe">
+                        <x-input-error :messages="$errors->get('last_name')" class="mt-1" />
                     </div>
                 </div>
 
-                <!-- Footer Actions -->
-                <div class="mt-10 pt-8 border-t border-slate-100 flex items-center justify-end space-x-4">
-                    <a href="{{ route('admin.users.index') }}" class="px-6 py-2 text-sm font-bold text-slate-600 hover:text-slate-800 transition">Cancel</a>
-                    <x-button>Register User Account</x-button>
+                <div>
+                    <label for="email" class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Email Address</label>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}" required
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-bold transition-all placeholder:text-slate-300"
+                        placeholder="jane@example.com">
+                    <x-input-error :messages="$errors->get('email')" class="mt-1" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="password" class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Password</label>
+                        <input type="password" name="password" id="password" required
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-bold transition-all">
+                        <x-input-error :messages="$errors->get('password')" class="mt-1" />
+                    </div>
+                    <div>
+                        <label for="password_confirmation" class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Confirm Password</label>
+                        <input type="password" name="password_confirmation" id="password_confirmation" required
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-bold transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="role" class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Role</label>
+                    <div class="relative">
+                        <select name="role" id="role" required
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-bold transition-all appearance-none">
+                            <option value="patient" {{ old('role') === 'patient' ? 'selected' : '' }}>Patient</option>
+                            <option value="doctor"  {{ old('role') === 'doctor'  ? 'selected' : '' }}>Provider / Doctor</option>
+                            <option value="admin"   {{ old('role') === 'admin'   ? 'selected' : '' }}>Administrator</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                    </div>
+                    <x-input-error :messages="$errors->get('role')" class="mt-1" />
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <a href="{{ route('admin.users.index') }}" class="text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors">Cancel</a>
+                    <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition-colors shadow-sm">
+                        Create User
+                    </button>
                 </div>
             </form>
         </div>

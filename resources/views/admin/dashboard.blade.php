@@ -19,16 +19,23 @@
             </div>
         </div>
 
-        <!-- Total Providers -->
+        <!-- Active Providers -->
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
-            <div class="flex items-center">
-                <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h1a.3.3 0 1 0 .2-.3Z"/><path d="M13 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><circle cx="8" cy="9" r="4"/><path d="M22 13.1V11a2 2 0 0 0-2-2"/></svg>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h1a.3.3 0 1 0 .2-.3Z"/><circle cx="8" cy="9" r="4"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Providers</p>
+                        <h3 class="text-2xl font-bold text-slate-900">{{ number_format($stats['total_doctors']) }}</h3>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Active Providers</p>
-                    <h3 class="text-2xl font-bold text-slate-900">{{ number_format($stats['total_doctors']) }}</h3>
-                </div>
+                @if($stats['pending_providers'] > 0)
+                    <a href="{{ route('admin.providers.index', ['verified' => '0']) }}" class="shrink-0 px-2 py-1 bg-amber-100 text-amber-700 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-amber-200 transition-colors">
+                        {{ $stats['pending_providers'] }} pending
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -63,9 +70,12 @@
     <!-- Charts & Activity Row -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- Appointments Chart -->
+        <!-- Appointments Chart (real data) -->
         <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-            <h3 class="text-lg font-bold text-slate-800 mb-6">Appointment Trends</h3>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-bold text-slate-800">Appointment Trends</h3>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Last 12 months</span>
+            </div>
             <div id="appointments-chart" class="h-80 w-full"></div>
         </div>
 
@@ -73,20 +83,24 @@
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-lg font-bold text-slate-800">Recent Activity</h3>
-                <a href="#" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700">View all</a>
+                <a href="{{ route('admin.appointments.index') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700">View all</a>
             </div>
             
             <div class="space-y-4">
                 @forelse($stats['recent_appointments'] as $appointment)
+                    @php
+                        $patientName = $appointment->patientProfile?->user?->name ?? 'Unknown Patient';
+                        $doctorName  = $appointment->doctorProfile?->user?->name  ?? 'Unknown Provider';
+                    @endphp
                     <div class="flex items-start pb-4 border-b border-slate-50 last:border-0 last:pb-0">
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 mr-3 text-xs shrink-0 uppercase">
-                            {{ substr($appointment->patientProfile->user->name, 0, 1) }}
+                            {{ substr($patientName, 0, 1) }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm font-semibold text-slate-900 truncate">{{ $appointment->patientProfile->user->name }}</p>
-                            <p class="text-xs text-slate-500 truncate">with Provider {{ $appointment->doctorProfile->user->name }}</p>
+                            <p class="text-sm font-semibold text-slate-900 truncate">{{ $patientName }}</p>
+                            <p class="text-xs text-slate-500 truncate">with {{ $doctorName }}</p>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right shrink-0 ml-2">
                             <p class="text-xs font-medium text-slate-700">{{ $appointment->appointment_datetime->format('M d') }}</p>
                             <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase {{ $appointment->status == 'completed' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600' }}">
                                 {{ $appointment->status }}
@@ -108,7 +122,7 @@
             var options = {
                 series: [{
                     name: 'Appointments',
-                    data: [31, 40, 28, 51, 42, 109, 100, 120, 80, 95, 110, 140]
+                    data: {!! json_encode($stats['chart_data']) !!}
                 }],
                 chart: {
                     height: 320,
@@ -128,7 +142,7 @@
                     }
                 },
                 xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    categories: {!! json_encode($stats['chart_labels']) !!},
                     axisBorder: { show: false },
                     axisTicks: { show: false },
                 },

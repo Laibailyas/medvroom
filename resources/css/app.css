@@ -3,83 +3,92 @@
 @tailwind utilities;
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* MedVroom Brand Colors */
-    --color-primary: #ea580c; /* orange-600 */
-    --color-primary-hover: #f97316; /* orange-500 */
-    
-    --color-secondary: #059669; /* emerald-600 */
-    --color-secondary-hover: #10b981; /* emerald-500 */
-    
-    --color-neutral-dark: #0f172a; /* slate-900 */
-    --color-neutral-light: #f8fafc; /* slate-50 */
+   --color-primary: #012AE0;
+--color-primary-hover: #001FC2;
 
-    --color-surface-white: #ffffff;
-    
-    --radius-doc: 0.75rem;
-    --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+--color-secondary: #012AE0;
+--color-secondary-hover: #001FC2;
+
+--color-neutral-dark: #000000;
+--color-neutral-light: #F8FAFC;
+
+--color-surface-white: #FFFFFF;
+
+--radius-doc: 0.75rem;
+--shadow-soft: 0 4px 20px -2px rgba(1, 42, 224, 0.08);
 }
 
 .ql-editor {
     min-height: 300px;
 }
 
+section.py-14.bg-white.border-b.border-slate-50 {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
 @layer components {
+
     .rich-text-content {
-        @apply text-slate-700 leading-relaxed text-base;
+        @apply text-slate-700 leading-relaxed text-base font-normal;
     }
-    
+
     .rich-text-content h1 {
-        @apply text-3xl font-black text-slate-900 mt-10 mb-4 tracking-tight;
+        @apply text-3xl font-normal text-slate-700 mt-10 mb-4 tracking-tight;
     }
-    
+
     .rich-text-content h2 {
-        @apply text-2xl font-black text-slate-900 mt-10 mb-4 tracking-tight;
+        @apply text-2xl font-normal text-slate-700 mt-10 mb-4 tracking-tight;
     }
-    
+
     .rich-text-content h3 {
-        @apply text-xl font-bold text-slate-900 mt-8 mb-3;
+        @apply text-xl font-normal text-slate-700 mt-8 mb-3;
     }
-    
+
     .rich-text-content h4 {
-        @apply text-lg font-bold text-slate-900 mt-6 mb-2;
+        @apply text-lg font-normal text-slate-700 mt-6 mb-2;
     }
-    
+
     .rich-text-content p {
-        @apply mb-6;
+        @apply mb-6 font-normal;
     }
-    
+
     .rich-text-content ul {
-        @apply list-disc list-inside mb-6 space-y-2 pl-2;
+        @apply list-disc list-inside mb-6 space-y-2 pl-2 font-normal;
     }
-    
+
     .rich-text-content ol {
-        @apply list-decimal list-inside mb-6 space-y-2 pl-2;
+        @apply list-decimal list-inside mb-6 space-y-2 pl-2 font-normal;
     }
-    
+
     .rich-text-content li {
-        @apply pl-1;
+        @apply pl-1 font-normal;
     }
-    
+
+    .rich-text-content strong,
+    .rich-text-content b {
+        @apply font-normal text-slate-900;
+    }
+
     .rich-text-content a {
-        @apply text-indigo-600 hover:text-indigo-800 underline transition-colors;
+        color: var(--color-primary);
+        text-decoration: underline;
+        transition: color .2s ease;
     }
-    
+
+    .rich-text-content a:hover {
+        color: var(--color-primary-hover);
+    }
+
     .rich-text-content blockquote {
-        @apply border-l-4 border-indigo-500 pl-4 italic text-slate-600 my-6 bg-slate-50 py-3 rounded-r-lg;
-    }
-    
-    .rich-text-content strong, .rich-text-content b {
-        @apply font-bold text-slate-900;
-    }
-    
-    .rich-text-content em, .rich-text-content i {
-        @apply italic;
+        @apply pl-4 italic text-slate-600 my-6 bg-slate-50 py-3 rounded-r-lg font-normal;
+        border-left: 4px solid var(--color-primary);
     }
 }
-
 
 [x-cloak] { display: none !important; }
 

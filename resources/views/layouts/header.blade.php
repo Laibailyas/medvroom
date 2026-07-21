@@ -5,21 +5,21 @@
 @endphp
 <header class="bg-white border-b border-slate-100 py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50" x-data>
     <!-- Logo -->
-    <div class="flex items-center">
-        <a href="{{ url('/') }}" class="flex items-center space-x-2 group">
-            @if($logoUrl)
-                <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-8 object-contain group-hover:scale-105 transition-transform duration-200">
-            @else
-                <x-application-logo class="w-8 h-8 group-hover:scale-110 transition-transform duration-200" />
-                <span class="text-xl font-black text-neutral-dark tracking-tight">{{ $siteName }}</span>
+   <div class="flex items-center">
+    <a href="{{ url('/') }}" class="flex items-center space-x-2 group">
+        <img
+            src="{{ asset('build/assets/logo.jpeg') }}"
+            alt="{{ $siteName }}"
+            class="h-10 object-contain group-hover:scale-105 transition-transform duration-200"
+        >
+
+        @isset($forProviders)
+            @if($forProviders)
+                <span class="text-sm font-medium text-slate-400 ml-1 pt-0.5">for Providers</span>
             @endif
-            @isset($forProviders)
-                @if($forProviders)
-                    <span class="text-sm font-medium text-slate-400 ml-1 pt-0.5">for Providers</span>
-                @endif
-            @endisset
-        </a>
-    </div>
+        @endisset
+    </a>
+</div>
 
     <!-- Right Nav -->
     <nav class="hidden md:flex items-center space-x-2">

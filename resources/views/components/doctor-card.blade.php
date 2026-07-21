@@ -1,5 +1,14 @@
 @props(['doctor', 'startDate', 'endDate'])
 
+@php
+    // FIX: these used to be rand(47,50)/10 and rand(85,342) — a fresh random
+    // number on every single page load, regardless of the doctor's real
+    // reviews. Now pulled from real data (precomputed in SearchController,
+    // with a safe fallback if that's ever missing).
+    $avgRating = $doctor->avg_rating ?? round($doctor->reviews->avg('rating') ?: 0, 1);
+    $reviewsCount = $doctor->reviews_count ?? $doctor->reviews->count();
+@endphp
+
 <div class="doctor-card bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 hover:shadow-2xl hover:shadow-yellow-900/5 transition-all duration-500 group mb-8 relative overflow-hidden">
     <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-50/50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-yellow-100/50 transition-colors"></div>
     
@@ -35,15 +44,20 @@
                         <span class="inline-block w-1 h-1 bg-slate-300 rounded-full"></span>
                         {{ $doctor->specialties->first()?->name ?? 'Specialist' }}
                     </p>
-                    
+
+                    <!-- FIX: real rating + review count instead of rand() -->
                     <div class="flex items-center gap-2 mt-4">
                         <div class="flex text-yellow-400 gap-0.5">
-                            @for($i=0; $i<5; $i++)
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            @for($i=1; $i<=5; $i++)
+                                <svg class="w-4 h-4 {{ $i <= round($avgRating) ? 'fill-current' : 'text-slate-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                             @endfor
                         </div>
-                        <span class="text-sm font-black text-slate-800 ml-1">{{ number_format(rand(47, 50)/10, 1) }}</span>
-                        <span class="text-xs text-slate-400 font-bold ml-1">({{ rand(85, 342) }} reviews)</span>
+                        @if($reviewsCount > 0)
+                            <span class="text-sm font-black text-slate-800 ml-1">{{ number_format($avgRating, 1) }}</span>
+                            <span class="text-xs text-slate-400 font-bold ml-1">({{ $reviewsCount }} {{ Str::plural('review', $reviewsCount) }})</span>
+                        @else
+                            <span class="text-xs text-slate-400 font-bold italic ml-1">New provider</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -53,9 +67,19 @@
                     <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                     Video Visits
                 </div>
+                <!-- FIX: was `{{ $doctor->practice_zip_code ?? 'New York, NY' }}` —
+                     every doctor with no zip code fell back to a hardcoded NYC
+                     string. Now shows the doctor's real city/state, falling
+                     back to zip, falling back to an honest "not listed". -->
                 <div class="flex items-center gap-3 text-slate-700 text-[11px] font-bold bg-slate-50/80 px-4 py-3 rounded-2xl border border-slate-100 hover:bg-white hover:shadow-md transition-all cursor-default">
                     <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    {{ $doctor->practice_zip_code ?? 'New York, NY' }}
+                    @if($doctor->practice_city && $doctor->practice_state)
+                        {{ $doctor->practice_city }}, {{ $doctor->practice_state }}
+                    @elseif($doctor->practice_zip_code)
+                        {{ $doctor->practice_zip_code }}
+                    @else
+                        Location not listed
+                    @endif
                 </div>
             </div>
             
@@ -72,10 +96,14 @@
             
             @php 
                 $upcomingAppointment = $doctor->appointments->first();
+                // FIX: carry the searched insurance (if any) through to the
+                // doctor profile page so the in-network badge there reflects
+                // what the patient actually searched for.
+                $profileUrl = route('doctors.show', array_merge(['doctor' => $doctor], request()->only('insurance')));
             @endphp
 
             <div class="mt-6 flex gap-4">
-                <a href="{{ route('doctors.show', $doctor) }}" class="flex-1 bg-white hover:bg-slate-900 hover:text-white text-slate-900 p-4 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all duration-300 border border-slate-200 shadow-sm text-center">View Profile</a>
+                <a href="{{ $profileUrl }}" class="flex-1 bg-white hover:bg-slate-900 hover:text-white text-slate-900 p-4 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all duration-300 border border-slate-200 shadow-sm text-center">View Profile</a>
                 
                 @if($upcomingAppointment)
                     @php 
@@ -101,7 +129,7 @@
                         @endif
                     </div>
                 @else
-                    <a href="{{ route('doctors.show', $doctor) }}" class="flex-[1.5] bg-primary hover:bg-[#ffe600] text-slate-900 p-4 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all duration-300 shadow-xl shadow-yellow-900/10 text-center">Book Instantly</a>
+                    <a href="{{ $profileUrl }}" class="flex-[1.5] bg-primary hover:bg-[#ffe600] text-slate-900 p-4 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all duration-300 shadow-xl shadow-yellow-900/10 text-center">Book Instantly</a>
                 @endif
             </div>
         </div>

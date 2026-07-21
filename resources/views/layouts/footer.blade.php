@@ -10,7 +10,7 @@
             <div class="col-span-2 lg:col-span-1">
                 <a href="{{ url('/') }}" class="flex items-center space-x-2 mb-6">
                     @if($logoUrl)
-                        <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-8 object-contain filter brightness-0 invert">
+                        <img src="{{ asset('build/assets/whitelogo.png') }}" alt="{{ $siteName }}" class="h-8 object-contain filter brightness-0 invert">
                     @else
                         <span class="text-lg font-black text-white">{{ $siteName }}</span>
                     @endif
@@ -24,15 +24,18 @@
                 </ul>
             </div>
 
-            <!-- Discover -->
+            <!-- Legal Documents Column -->
             <div>
-                <h3 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-5">Discover</h3>
+                <h3 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-5">Legal</h3>
                 <ul class="space-y-3">
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Health Blog</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider Resources</a></li>
-                    <li><a href="{{ route('review-policy') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Review & Content Policy</a></li>
+                    <li><a href="{{ route('terms') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Terms of Service</a></li>
+                    <li><a href="{{ route('privacy') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                    <li><a href="{{ route('cancellation') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Cancellation</a></li>
                     <li><a href="{{ route('telehealth-consent') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Telehealth Consent</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Verified reviews</a></li>
+                    <li><a href="{{ route('review-policy') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Review & Content Policy</a></li>
+                    <li><a href="{{ route('provider-agreement') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Provider Agreement</a></li>
+                    <li><a href="{{ route('pricing') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Pricing and Fees</a></li>
+                    <li><a href="{{ route('cookie-policy') }}" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Cookie Policy</a></li>
                 </ul>
             </div>
 
@@ -40,11 +43,12 @@
             <div>
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-5">Top Specialties</h3>
                 <ul class="space-y-3">
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Primary Care</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Dermatology</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Psychiatry</a></li>
-                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">OB-GYN</a></li>
                     <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Dentist</a></li>
+                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Primary Care</a></li>
+                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Cosmetic Specialists</a></li>
+                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Denturists</a></li>
+                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Therapists</a></li>
+                    <li><a href="#" class="text-xs font-medium text-slate-400 hover:text-white transition-colors">Eye Care</a></li>
                 </ul>
             </div>
 
@@ -94,4 +98,3 @@
         </div>
     </div>
 </footer>
-

@@ -31,10 +31,7 @@
         <!-- Mobile Topbar -->
         <div class="lg:hidden fixed top-0 left-0 right-0 h-20 bg-white border-b border-slate-100 px-6 flex items-center justify-between z-40">
             <a href="#" class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <svg class="w-5 h-5 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <span class="text-lg font-black italic">MedVroom</span>
+                <img src="{{ asset('assets/white-logo.png') }}" alt="MedVroom" class="h-7 w-auto">
             </a>
             <button class="p-2 text-slate-400">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>

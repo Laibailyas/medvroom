@@ -3,7 +3,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
             <!-- Brand & Links -->
             <div class="col-span-2 lg:col-span-1">
-                <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6">Zocdoc</h3>
+                <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6">Medvroom</h3>
                 <ul class="space-y-4">
                     <li><a href="#" class="text-xs font-medium text-slate-300 hover:text-white transition-colors">Home</a></li>
                     <li><a href="#" class="text-xs font-medium text-slate-300 hover:text-white transition-colors">About us</a></li>
@@ -46,7 +46,7 @@
             <div class="col-span-2 lg:col-span-1">
                 <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6 font-medium">Are you a doctor?</h3>
                 <ul class="space-y-4">
-                    <li><a href="{{ route('register.doctor') }}" class="text-xs font-medium text-slate-300 hover:text-white transition-colors">List your practice on Zocdoc</a></li>
+                    <li><a href="{{ route('register.doctor') }}" class="text-xs font-medium text-slate-300 hover:text-white transition-colors">List your practice on Medvroom</a></li>
                     <li><a href="#" class="text-xs font-medium text-slate-300 hover:text-white transition-colors">Become an EHR partner</a></li>
                 </ul>
                 <div class="mt-8 space-y-3">
@@ -58,7 +58,7 @@
 
         <div class="border-t border-slate-700 pt-8 flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             <div class="flex items-center space-x-6">
-                <span class="text-[11px] font-medium text-slate-500">&copy; {{ date('Y') }} Zocdoc, Inc.</span>
+                <span class="text-[11px] font-medium text-slate-500">&copy; {{ date('Y') }} Medvroom, Inc.</span>
                 <a href="#" class="text-[11px] font-medium text-slate-500 hover:text-white transition">Terms</a>
                 <a href="#" class="text-[11px] font-medium text-slate-500 hover:text-white transition">Privacy</a>
                 <a href="#" class="text-[11px] font-medium text-slate-500 hover:text-white transition">Your privacy choices</a>

@@ -29,28 +29,33 @@
             <div class="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"></div>
 
             <div class="relative z-10">
-                <a href="/" class="inline-flex items-center space-x-3 mb-12">
-                    <x-application-logo class="w-10 h-10 shadow-lg shadow-indigo-500/20" />
-                    <span class="text-2xl font-black tracking-tight text-white uppercase italic">{{ config('app.name') }}</span>
-                </a>
+               <img
+            src="{{ asset('build/assets/whitelogo.png') }}"
+            alt="Medvroom"
+            class="h-10 object-contain group-hover:scale-105 transition-transform duration-200" style="width: 260px; object-fit: cover;"
+        >
 
                 @if($currentStep > 0)
                 <div class="space-y-6">
                     <h2 class="text-xl font-bold text-white mb-8">Provider Onboarding</h2>
                     <nav class="space-y-4">
                         @php
+                            // Matches the controller's actual flow: Account -> Practice -> License
+                            // -> Practice Details -> Payment Setup -> Legal Agreements -> Profile Builder.
+                            // "Security" and "Review" were removed: those steps have no view in the
+                            // current flow (verify()/review() controller methods just redirect away),
+                            // so leaving them in the sidebar stranded users after Legal Agreements.
                             $steps = [
                                 1 => 'Account',
                                 2 => 'Identity',
-                                3 => 'NPI Profile',
-                                4 => 'License',
-                                5 => 'Services',
-                                6 => 'Schedule',
-                                7 => 'Documents',
-                                8 => 'Agreements',
-                                9 => 'Security',
-                                10 => 'Review'
+                                3 => 'License',
+                                4 => 'Practice Details',
+                                5 => 'Payment Setup',
+                                6 => 'Legal Agreements',
+                                7 => 'Agreements',
+                                8 => 'Profile',
                             ];
+                            $totalSteps = count($steps);
                         @endphp
 
                         @foreach($steps as $stepNum => $stepLabel)
@@ -79,21 +84,13 @@
                 </div>
                 @else
                 <div class="mt-20">
-                    <h1 class="text-5xl font-black leading-tight text-white mb-6">Grow your practice with {{ config('app.name') }}</h1>
+                    <h1 class="text-5xl font-black leading-tight text-white mb-6" style="font-weight: 700 !important;">Grow your practice with {{ config('app.name') }}</h1>
                     <p class="text-slate-400 text-lg leading-relaxed">Join thousands of providers who trust {{ config('app.name') }} to connect with patients and manage their clinical operations.</p>
                 </div>
                 @endif
             </div>
 
-            <div class="relative z-10 pt-12">
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Trusted By</p>
-                <div class="flex items-center space-x-6 opacity-40 grayscale hover:grayscale-0 transition-all">
-                    <!-- Placeholder Logos -->
-                    <div class="font-black text-xl italic tracking-tighter">HEALTH+</div>
-                    <div class="font-black text-xl italic tracking-tighter">CARECO</div>
-                    <div class="font-black text-xl italic tracking-tighter">DOCLY</div>
-                </div>
-            </div>
+
         </div>
 
         <!-- Content (Right) -->
@@ -109,7 +106,7 @@
                     @if($currentStep > 0)
                     <div class="text-right">
                         <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Progress</p>
-                        <p class="text-xl font-black text-indigo-600 leading-none mt-1">{{ round(($currentStep / 10) * 100) }}%</p>
+                        <p class="text-xl font-black text-indigo-600 leading-none mt-1">{{ round(($currentStep / 8) * 100) }}%</p>
                     </div>
                     @endif
                 </div>
@@ -121,4 +118,3 @@
     @stack('scripts')
 </body>
 </html>
-

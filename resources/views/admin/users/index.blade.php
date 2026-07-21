@@ -1,56 +1,57 @@
 <x-admin-layout>
     <x-slot name="header">
-        User Management
+        Users &amp; Patients
     </x-slot>
 
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+            class="mb-6 flex items-center space-x-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <p class="text-sm font-bold text-emerald-800">{{ session('success') }}</p>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="mb-6 flex items-center space-x-3 p-4 bg-rose-50 border border-rose-200 rounded-xl">
+            <p class="text-sm font-bold text-rose-800">{{ session('error') }}</p>
+        </div>
+    @endif
+
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-        <!-- Search and Filter -->
-        <div class="flex flex-1 max-w-2xl space-x-4">
-            <div class="relative flex-1">
-                <form action="{{ route('admin.users.index') }}" method="GET">
-                    <input 
-                        type="text" 
-                        name="search" 
-                        value="{{ request('search') }}"
-                        placeholder="Search by name (First, Last) or email..."
-                        class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all shadow-sm"
-                    >
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                    </div>
-                </form>
-            </div>
-            
-            <div class="w-48">
-                <form action="{{ route('admin.users.index') }}" method="GET" id="filterForm">
-                    <select 
-                        name="role" 
-                        onchange="document.getElementById('filterForm').submit()"
-                        class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all shadow-sm"
-                    >
-                        <option value="">All Roles</option>
-                        <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrators</option>
-                        <option value="doctor" {{ request('role') == 'doctor' ? 'selected' : '' }}>Doctors</option>
-                        <option value="patient" {{ request('role') == 'patient' ? 'selected' : '' }}>Patients</option>
-                    </select>
-                </form>
-            </div>
+        <!-- Role Filter Tabs -->
+        <div class="flex items-center space-x-1 p-1 bg-slate-100 rounded-xl">
+            <a href="{{ route('admin.users.index') }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all {{ !request('role') ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">All</a>
+            <a href="{{ route('admin.users.index', ['role' => 'patient']) }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all {{ request('role') === 'patient' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Patients</a>
+            <a href="{{ route('admin.users.index', ['role' => 'doctor']) }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all {{ request('role') === 'doctor' ? 'bg-white text-emerald-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Providers</a>
+            <a href="{{ route('admin.users.index', ['role' => 'admin']) }}" class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all {{ request('role') === 'admin' ? 'bg-white text-rose-700 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Admins</a>
         </div>
 
-        <x-button href="{{ route('admin.users.create') }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-            Add New User</x-button>
+        <div class="flex items-center space-x-3">
+            <!-- Search -->
+            <form action="{{ route('admin.users.index') }}" method="GET" class="relative">
+                @if(request('role'))<input type="hidden" name="role" value="{{ request('role') }}">@endif
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users..."
+                    class="pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm shadow-sm w-56">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </div>
+            </form>
+            <!-- Create -->
+            <a href="{{ route('admin.users.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-xs font-black uppercase tracking-widest rounded-lg hover:bg-indigo-700 transition-colors shadow-sm space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <span>Add User</span>
+            </a>
+        </div>
     </div>
 
-    <!-- Users Table -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead class="bg-slate-50 border-b border-slate-200">
                     <tr>
                         <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Role</th>
-                        <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Joined Date</th>
+                        <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Role</th>
+                        <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Joined</th>
                         <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
                     </tr>
                 </thead>
@@ -58,49 +59,52 @@
                     @forelse($users as $user)
                         <tr class="hover:bg-slate-50/50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm shadow-inner">
-                                        {{ substr($user->name, 0, 1) }}
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-sm shrink-0 uppercase">
+                                        {{ substr($user->name ?? $user->email, 0, 1) }}
                                     </div>
-                                    <div class="ml-4">
-                                        <p class="text-sm font-semibold text-slate-900 leading-none mb-1">{{ $user->name }}</p>
-                                        <p class="text-xs text-slate-500 tracking-tight">{{ $user->email }}</p>
-                                    </div>
+                                    <p class="text-sm font-bold text-slate-900">{{ $user->name ?: '—' }}</p>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : ($user->role === 'doctor' ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-800') }}">
-                                    {{ ucfirst($user->role) }}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 font-medium">
+                                {{ $user->email }}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @php
+                                    $roleColor = match($user->role) {
+                                        'admin'   => 'bg-rose-100 text-rose-700',
+                                        'doctor'  => 'bg-emerald-100 text-emerald-700',
+                                        'patient' => 'bg-blue-100 text-blue-700',
+                                        default   => 'bg-slate-100 text-slate-600',
+                                    };
+                                @endphp
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ $roleColor }}">
+                                    {{ ucfirst($user->role ?? 'user') }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-800">
-                                    ACTIVE
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-medium">
+                            <td class="px-6 py-4 text-center text-xs font-bold text-slate-500">
                                 {{ $user->created_at->format('M d, Y') }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center justify-end space-x-2">
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <div class="flex items-center justify-end space-x-1">
                                     <a href="{{ route('admin.users.edit', $user) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                                     </a>
                                     @if($user->id !== auth()->id())
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Delete this user? This action cannot be undone.')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <x-button variant="danger" size="icon" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></x-button>
-                                        </form>
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
+                                          onsubmit="return confirm('Delete {{ addslashes($user->name ?? $user->email) }}? This cannot be undone.')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Delete">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="m19 6-.867 12.142A2 2 0 0 1 16.138 20H7.862a2 2 0 0 1-1.995-1.858L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                        </button>
+                                    </form>
                                     @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-slate-500 italic">
-                                No users found matching your search.
-                            </td>
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-400 italic text-sm">No users found matching your filters.</td>
                         </tr>
                     @endforelse
                 </tbody>
