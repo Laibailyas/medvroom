@@ -11,9 +11,6 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         // Admin User
@@ -28,6 +25,7 @@ class DatabaseSeeder extends Seeder
         // Platform Data
         $this->call([
             SpecialtySeeder::class,
+            LicenseTypeSeeder::class,
             InsuranceProviderSeeder::class,
             InsurancePlanSeeder::class,
             DoctorSeeder::class,

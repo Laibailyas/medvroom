@@ -57,6 +57,17 @@
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Clinical Experience (Years)</label>
                                 <input type="number" name="experience_years" value="{{ old('experience_years', $doctor->experience_years) }}" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14 mt-1">
                             </div>
+                            <div>
+    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">License Type</label>
+    <select name="license_type_id" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14 mt-1">
+        <option value="">Select license type</option>
+        @foreach($licenseTypes as $license)
+            <option value="{{ $license->id }}" {{ old('license_type_id', $doctor->license_type_id) == $license->id ? 'selected' : '' }}>
+                {{ $license->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
                         </div>
                     </div>
                 </div>
@@ -106,17 +117,36 @@
                         </div>
 
                         <!-- Languages -->
-                        <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm h-full">
-                            <h3 class="text-xl font-black tracking-tighter mb-6">Languages Spoken</h3>
-                            <div class="max-h-64 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
-                                @foreach($languages as $language)
-                                    <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
-                                        <input type="checkbox" name="languages[]" value="{{ $language->id }}" {{ in_array($language->id, $doctor->languages->pluck('id')->toArray()) ? 'checked' : '' }} class="rounded border-slate-300 text-primary focus:ring-primary">
-                                        <span class="text-xs font-bold text-slate-700">{{ $language->name }}</span>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
+                       <!-- Languages -->
+<div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm h-full">
+    <h3 class="text-xl font-black tracking-tighter mb-2">Languages Spoken</h3>
+    <p class="text-xs text-slate-400 font-bold mb-6">Select all languages you speak with patients.</p>
+
+    <div class="max-h-64 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+        @foreach($languages as $language)
+            @if($language->code !== 'other')
+                <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+                    <input type="checkbox" name="languages[]" value="{{ $language->id }}" {{ in_array($language->id, $doctor->languages->pluck('id')->toArray()) ? 'checked' : '' }} class="rounded border-slate-300 text-primary focus:ring-primary">
+                    <span class="text-xs font-bold text-slate-700">{{ $language->name }}</span>
+                </label>
+            @endif
+        @endforeach
+
+        @php
+            $otherLanguage = $languages->firstWhere('code', 'other');
+        @endphp
+        @if($otherLanguage)
+            <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+                <input type="checkbox" name="languages[]" value="{{ $otherLanguage->id }}" {{ in_array($otherLanguage->id, $doctor->languages->pluck('id')->toArray()) ? 'checked' : '' }} class="rounded border-slate-300 text-primary focus:ring-primary">
+                <span class="text-xs font-bold text-slate-700">Other (please specify)</span>
+            </label>
+        @endif
+    </div>
+
+    <div class="mt-3">
+        <input type="text" name="other_language" value="{{ old('other_language', $doctor->other_language) }}" placeholder="Specify other language..." class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary h-14">
+    </div>
+</div>
                     </div>
                 </div>
             </div>

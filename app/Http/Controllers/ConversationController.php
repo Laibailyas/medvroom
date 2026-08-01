@@ -6,6 +6,7 @@ use App\Events\MessageDeleted;
 use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\MessageAudit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,14 +28,12 @@ class ConversationController extends Controller
             ->orderByDesc('last_message_at')
             ->get()
             ->map(function ($conv) use ($user) {
-                // Determine who the partner is
                 $partner = ($conv->patient_id === $user->id) ? $conv->doctor : $conv->patient;
                 $conv->partner = $partner;
 
                 return $conv;
             });
 
-        // Set partner and check activity for the active conversation
         if ($conversation) {
             $conversation->load(['patient', 'doctor']);
             $conversation->partner = ($conversation->patient_id === $user->id) ? $conversation->doctor : $conversation->patient;
@@ -77,10 +76,21 @@ class ConversationController extends Controller
      */
     public function fetchMessages(Request $request, Conversation $conversation): JsonResponse
     {
-        // Authorize
-        if ($request->user()->id !== $conversation->patient_id && $request->user()->id !== $conversation->doctor_id) {
+        $user = $request->user();
+
+        // Authorize: patient/provider can only access their own conversation.
+        if ($user->id !== $conversation->patient_id && $user->id !== $conversation->doctor_id) {
             abort(403, 'Unauthorized.');
         }
+
+        $isPatient = $user->id === $conversation->patient_id;
+
+        MessageAudit::record(
+            $user->id,
+            $isPatient ? 'PATIENT_VIEWED_MESSAGE' : 'PROVIDER_VIEWED_MESSAGE',
+            "conversation:{$conversation->id}",
+            $request->ip()
+        );
 
         $messages = $conversation->messages()
             ->with('sender')
@@ -92,12 +102,18 @@ class ConversationController extends Controller
                     'conversation_id' => $message->conversation_id,
                     'sender_id' => $message->sender_id,
                     'sender_name' => $message->sender->name ?? 'System',
-                    'message_body' => $message->message_body,
+                    'message_body' => $message->message_body, // transparently decrypted via Message accessor
                     'metadata' => $message->metadata,
                     'is_deleted' => $message->is_deleted,
                     'created_at' => $message->created_at->toIso8601String(),
                 ];
             });
+
+        // Mark unread messages from the other party as read.
+        $conversation->messages()
+            ->where('sender_id', '!=', $user->id)
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
 
         return response()->json($messages);
     }
@@ -107,8 +123,9 @@ class ConversationController extends Controller
      */
     public function sendMessage(Request $request, Conversation $conversation): JsonResponse
     {
-        // Authorize
-        if ($request->user()->id !== $conversation->patient_id && $request->user()->id !== $conversation->doctor_id) {
+        $user = $request->user();
+
+        if ($user->id !== $conversation->patient_id && $user->id !== $conversation->doctor_id) {
             abort(403, 'Unauthorized.');
         }
 
@@ -120,13 +137,23 @@ class ConversationController extends Controller
             'message' => 'required|string|max:2000',
         ]);
 
+        // message_body is encrypted transparently by the Message model's mutator.
         $message = $conversation->messages()->create([
-            'sender_id' => $request->user()->id,
+            'sender_id' => $user->id,
             'message_body' => $request->message,
             'metadata' => ['is_system' => false],
         ]);
 
         $conversation->update(['last_message_at' => now()]);
+
+        $isPatient = $user->id === $conversation->patient_id;
+
+        MessageAudit::record(
+            $user->id,
+            $isPatient ? 'PATIENT_SENT_MESSAGE' : 'PROVIDER_SENT_MESSAGE',
+            "message:{$message->id}",
+            $request->ip()
+        );
 
         broadcast(new MessageSent($message))->toOthers();
 
@@ -149,12 +176,12 @@ class ConversationController extends Controller
      */
     public function deleteMessage(Request $request, Conversation $conversation, Message $message): JsonResponse
     {
-        // Authorize: Only the sender can delete their message
-        if ($request->user()->id !== $message->sender_id) {
+        $user = $request->user();
+
+        if ($user->id !== $message->sender_id) {
             abort(403, 'Unauthorized.');
         }
 
-        // Verify message belongs to conversation
         if ($message->conversation_id !== $conversation->id) {
             abort(404, 'Message not found in this conversation.');
         }
@@ -163,12 +190,21 @@ class ConversationController extends Controller
             return response()->json(['message' => 'Cannot delete messages in read-only mode.'], 403);
         }
 
-        // Mark as deleted and clear body for privacy
+        // Mark as deleted and clear body for privacy (mutator skips encryption for this placeholder).
         $message->update([
             'is_deleted' => true,
             'message_body' => 'This message was deleted.',
             'metadata' => array_merge($message->metadata ?? [], ['is_deleted' => true]),
         ]);
+
+        $isPatient = $user->id === $conversation->patient_id;
+
+        MessageAudit::record(
+            $user->id,
+            $isPatient ? 'PATIENT_DELETED_MESSAGE' : 'PROVIDER_DELETED_MESSAGE',
+            "message:{$message->id}",
+            $request->ip()
+        );
 
         broadcast(new MessageDeleted($message))->toOthers();
 

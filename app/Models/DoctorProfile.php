@@ -116,6 +116,11 @@ class DoctorProfile extends Model
         return $this->belongsToMany(InsurancePlan::class, 'doctor_insurance_plans');
     }
 
+    public function licenseType()
+{
+    return $this->belongsTo(LicenseType::class);
+}
+
     public function educations(): HasMany
     {
         return $this->hasMany(DoctorEducation::class);

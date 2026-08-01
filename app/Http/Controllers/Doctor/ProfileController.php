@@ -20,10 +20,11 @@ class ProfileController extends Controller
     {
         $doctor = $request->user()->doctorProfile;
 
-        $specialties = Specialty::orderBy('name')->get();
-        $languages   = Language::orderBy('name')->get();
+        $specialties  = Specialty::orderBy('name')->get();
+        $languages    = Language::orderBy('name')->get();
+        $licenseTypes = \App\Models\LicenseType::orderBy('name')->get();
 
-        return view('doctor.profile.edit', compact('doctor', 'specialties', 'languages'));
+        return view('doctor.profile.edit', compact('doctor', 'specialties', 'languages', 'licenseTypes'));
     }
 
     /**
@@ -42,10 +43,12 @@ class ProfileController extends Controller
             'bio'              => 'nullable|string|max:2000',
             'practice_name'    => 'nullable|string|max:255',
             'clinic_address'   => 'nullable|string|max:255',
+            'license_type_id'  => 'nullable|exists:license_types,id',
             'specialties'      => 'nullable|array',
             'specialties.*'    => 'exists:specialties,id',
             'languages'        => 'nullable|array',
             'languages.*'      => 'exists:languages,id',
+            'other_language'   => 'nullable|string|max:100',
             'profile_photo'    => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
@@ -54,6 +57,8 @@ class ProfileController extends Controller
             'bio'              => $validated['bio'] ?? null,
             'practice_name'    => $validated['practice_name'] ?? null,
             'clinic_address'   => $validated['clinic_address'] ?? null,
+            'license_type_id'  => $validated['license_type_id'] ?? null,
+            'other_language'   => $validated['other_language'] ?? null,
         ];
 
         // IMPORTANT: profile_photo_path is a column on `doctor_profiles`
