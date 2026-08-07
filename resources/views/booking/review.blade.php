@@ -8,196 +8,231 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </a>
-                <h1 class="text-4xl font-black text-slate-900 tracking-tighter leading-none">Review and book</h1>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tighter leading-none">Review Your Appointment</h1>
             </div>
 
+            <p class="text-sm font-bold text-slate-500 mb-8 -mt-6">
+                Please review your appointment details and the terms below before submitting your booking request.
+            </p>
+
+            @if ($errors->any() || session('error'))
+                <div class="bg-red-50 border border-red-200 text-red-700 text-sm font-bold p-5 rounded-2xl mb-8">
+                    {{ session('error') ?? $errors->first() }}
+                </div>
+            @endif
+
             <!-- Provider Summary Card -->
-            <div
-                class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-8 flex items-start gap-6 relative overflow-hidden group">
+            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-8 flex items-start gap-6 relative overflow-hidden group">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-50/50 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-                <div
-                    class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm relative z-10 shrink-0">
+                <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm relative z-10 shrink-0">
                     <img src="{{ $doctor->user->getProfilePhotoUrl() }}" class="w-full h-full object-cover">
                 </div>
                 <div class="flex-1 relative z-10">
                     <h3 class="text-2xl font-black text-slate-900 tracking-tight">Dr. {{ $doctor->user->name }}</h3>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
                         {{ $doctor->specialties->first()?->name ?? 'Specialist' }}</p>
-                    <div
-                        class="flex flex-wrap items-center gap-6 mt-5 text-[11px] font-black uppercase tracking-widest text-slate-500">
+                    <div class="flex flex-wrap items-center gap-6 mt-5 text-[11px] font-black uppercase tracking-widest text-slate-500">
                         <div class="flex items-center gap-2.5">
-                            <div
-                                class="w-8 h-8 bg-slate-50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-slate-900 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
                             {{ \Carbon\Carbon::parse($date)->format('D, M j') }} at {{ $time }}
                         </div>
                         <div class="flex items-center gap-2.5">
-                            <div
-                                class="w-8 h-8 bg-slate-50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-slate-900 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            Video Visit
+                            {{ match($visit_type) { 'virtual' => 'Virtual Visit', 'home_visit' => 'Home Visit', default => 'In-Person Visit' } }}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <form action="{{ route('booking.checkout') }}" method="POST" class="space-y-8">
+            <!-- Pricing and Insurance Notice -->
+            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-8">
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Pricing and Insurance Notice</h4>
+                <p class="text-2xl font-black text-slate-900 tracking-tighter mb-3">
+                    Estimated Patient Responsibility: ${{ number_format($amount, 2) }}
+                </p>
+                <p class="text-xs font-bold text-slate-500 leading-relaxed">
+                    Provider pricing, insurance coverage, deductibles, copayments, coinsurance, reimbursement, and final
+                    patient responsibility are determined by the healthcare provider and/or applicable insurance carrier.
+                    MedVroom does not determine or guarantee insurance coverage, reimbursement, pricing, or final payment amounts.
+                </p>
+            </div>
+
+            <form action="{{ route('booking.submit') }}" method="POST" class="space-y-8" id="booking-form">
                 @csrf
                 <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
                 <input type="hidden" name="date" value="{{ $date }}">
                 <input type="hidden" name="time" value="{{ $time }}">
                 <input type="hidden" name="specialty_id" value="{{ $specialty_id }}">
+                <input type="hidden" name="visit_type" value="{{ $visit_type }}">
+                <input type="hidden" name="patient_type" value="{{ $patient_type }}">
+                <input type="hidden" name="ack_telehealth_consent" id="ack_telehealth_consent_hidden" value="{{ $requires_telehealth_consent ? '0' : '1' }}">
 
-                <!-- Patient Section -->
+                <!-- Required Booking Acknowledgments -->
                 <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
-                    <h4
-                        class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 border-b border-slate-50 pb-4">
-                        Patient information</h4>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center font-black text-slate-900 border border-slate-100">
-                                {{ substr(auth()->user()->first_name, 0, 1) }}
-                            </div>
-                            <div>
-                                <p class="text-xl font-black text-slate-900">{{ auth()->user()->name }} <span
-                                        class="text-slate-300">(me)</span></p>
-                            </div>
-                        </div>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 border-b border-slate-50 pb-4">
+                        Before You Submit Your Booking Request</h4>
+
+                    <div class="space-y-4">
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_information_accurate" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I certify that the information I have provided is accurate and complete to the best of my knowledge.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_not_guaranteed" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I understand that submitting a booking request does not guarantee an appointment. My appointment is not confirmed until the provider accepts or otherwise confirms the request through MedVroom.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_provider_responsible" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I understand that the healthcare provider—not MedVroom—is responsible for medical care, treatment, diagnosis, prescriptions, medical advice, billing, insurance claims, and clinical decisions.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_platform_role" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I understand that MedVroom is an independent technology platform that facilitates provider discovery, appointment scheduling, and related platform services. MedVroom is not a healthcare provider, medical practice, insurer, employer, or agent of the selected healthcare provider.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_provider_terms_may_change" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I understand that provider availability, pricing, accepted insurance plans, appointment times, and appointment requirements are determined by the provider and may change.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_authorize_transmission" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I authorize MedVroom to transmit my booking request and the information reasonably necessary to process and fulfill that request to the selected provider and applicable service providers acting on MedVroom's behalf.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_no_sensitive_info" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I understand that I should not include sensitive medical information in ordinary communications unless I am using a MedVroom feature specifically designated for secure health information communication.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_not_emergency" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I acknowledge that MedVroom is not an emergency service. I will not use MedVroom for emergency or urgent medical care.</span>
+                        </label>
                     </div>
                 </div>
 
-                <!-- Contact Section -->
+                <!-- Document Acknowledgments -->
                 <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
-                    <h4
-                        class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 border-b border-slate-50 pb-4">
-                        Contact information</h4>
-                    <div class="space-y-8">
-                        <div>
-                            <label
-                                class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Phone
-                                number</label>
-                            <input type="tel" name="phone" value="{{ auth()->user()->mobile }}"
-                                placeholder="+1 (555) 000-0000"
-                                class="w-full bg-slate-50/50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-0 focus:border-primary transition-all">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="col-span-2">
-                                <label
-                                    class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Street
-                                    address</label>
-                                <input type="text" name="address" placeholder="123 Medical Way"
-                                    class="w-full bg-slate-50/50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-0 focus:border-primary transition-all">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">City</label>
-                                <input type="text" name="city" placeholder="New York"
-                                    class="w-full bg-slate-50/50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-0 focus:border-primary transition-all">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Zip
-                                    code</label>
-                                <input type="text" name="zip" placeholder="10001"
-                                    class="w-full bg-slate-50/50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-0 focus:border-primary transition-all">
-                            </div>
-                        </div>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 border-b border-slate-50 pb-4">
+                        Document Acknowledgments</h4>
+
+                    <div class="space-y-4">
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_patient_terms" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I acknowledge that I have reviewed or been provided access to the <a href="{{ route('terms') }}" target="_blank" class="text-primary hover:underline">Patient Terms of Service</a>.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_privacy_policy" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I acknowledge that I have reviewed the <a href="{{ route('privacy') }}" target="_blank" class="text-primary hover:underline">Privacy Policy</a>.</span>
+                        </label>
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_privacy_practices" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I acknowledge that I have been provided access to the applicable <a href="{{ route('consumer-health-privacy') }}" target="_blank" class="text-primary hover:underline">Notice of Privacy Practices</a>, where applicable.</span>
+                        </label>
+
+                        @if ($requires_telehealth_consent)
+                            <label class="flex items-start gap-4 bg-primary/10 p-5 rounded-2xl border border-primary/30 cursor-pointer" id="telehealth-consent-row">
+                                <input type="checkbox" id="ack_telehealth_consent" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                                <span class="text-[11px] font-bold text-slate-700 leading-relaxed">I acknowledge and agree to the applicable <a href="{{ route('telehealth-consent') }}" target="_blank" class="text-primary hover:underline">Telehealth Consent</a> for a virtual appointment.</span>
+                            </label>
+                        @endif
+
+                        <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" name="ack_cancellation_policy" required class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                            <span class="text-[11px] font-bold text-slate-600 leading-relaxed">I acknowledge and agree to the selected provider's applicable <a href="{{ route('cancellation') }}" target="_blank" class="text-primary hover:underline">cancellation and no-show policy</a>, if one is provided.</span>
+                        </label>
                     </div>
                 </div>
 
-                <!-- Payment Section -->
+                <!-- Optional communications consent -->
                 <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
-                    <div class="flex items-center justify-between mb-10 border-b border-slate-50 pb-6">
-                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Summary</h4>
-                        <div class="text-right">
-                            <p class="text-3xl font-black text-slate-900 tracking-tighter leading-none">
-                                ${{ number_format($amount, 2) }}</p>
-                            <p
-                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2 px-3 py-1 bg-slate-50 rounded-full inline-block border border-slate-100">
-                                Consultation Fee</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4 mb-10">
-                        <div class="flex items-start gap-4 bg-slate-50/80 p-6 rounded-[1.5rem] border border-slate-100">
-                            <div class="relative flex items-center justify-center mt-0.5">
-                                <input type="checkbox" id="telehealth_consent" required
-                                    class="w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
-                            </div>
-                            <label for="telehealth_consent" class="text-[11px] font-bold text-slate-500 leading-relaxed italic">
-                                I have read and agree to the <a href="{{ route('telehealth-consent') }}" target="_blank"
-                                    class="text-primary hover:underline font-black not-italic">Telehealth Informed Consent</a>. I understand that I am consenting to receive care via telehealth.
-                            </label>
-                        </div>
-
-                        <div class="flex items-start gap-4 bg-slate-50/80 p-6 rounded-[1.5rem] border border-slate-100">
-                            <div class="relative flex items-center justify-center mt-0.5">
-                                <input type="checkbox" id="terms" required
-                                    class="w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
-                            </div>
-                            <label for="terms" class="text-[11px] font-bold text-slate-500 leading-relaxed italic">
-                                I certify that the information provided is correct and I agree to the <a href="{{ route('terms') }}" target="_blank"
-                                    class="text-primary hover:underline font-black not-italic">Terms of Use</a> and <a href="{{ route('privacy') }}" target="_blank"
-                                    class="text-primary hover:underline font-black not-italic">Privacy Policy</a>. I
-                                understand that the platform handles payments securely via Stripe.
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full bg-slate-900 text-white py-6 rounded-[1.5rem] font-black uppercase tracking-[0.25em] shadow-2xl shadow-slate-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 relative overflow-hidden group">
-                        <div
-                            class="absolute inset-0 bg-primary transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        </div>
-                        <span class="relative z-10 group-hover:text-slate-900">Proceed to Payment</span>
-                        <svg class="w-4 h-4 text-primary group-hover:text-slate-900 relative z-10 transition-colors"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </button>
-
-                    <div class="flex items-center justify-center gap-4 mt-8 opacity-40">
-                        <img src="https://stripe.com/img/v3/home/logos/stripe.svg" class="h-6" alt="Stripe">
-                        <div class="w-px h-4 bg-slate-300"></div>
-                        <span
-                            class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Secure Hosted Checkout
+                    <label class="flex items-start gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-100 cursor-pointer">
+                        <input type="checkbox" name="ack_sms_optin" value="1" class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                        <span class="text-[11px] font-bold text-slate-600 leading-relaxed">
+                            I agree to receive appointment-related text messages from MedVroom and/or the selected provider
+                            at the mobile number I provided, including appointment confirmations, reminders, scheduling
+                            updates, cancellations, and other service-related messages. Message frequency varies. Message
+                            and data rates may apply. Consent is not a condition of receiving healthcare services.
+                            Reply STOP to opt out and HELP for help.
                         </span>
-                    </div>
+                    </label>
+                    <p class="text-[10px] font-bold text-slate-400 mt-4 px-2">
+                        Email and in-app appointment communications may be sent as necessary to process and administer your requested appointment.
+                    </p>
                 </div>
+
+                <!-- Emergency Notice -->
+                <div class="bg-red-50 border border-red-200 rounded-[2rem] p-6">
+                    <p class="text-xs font-bold text-red-700 leading-relaxed">
+                        MedVroom is not an emergency service. If you are experiencing a medical emergency, call 911 or your
+                        local emergency services immediately, or go to the nearest emergency department. Do not use
+                        MedVroom to seek emergency or urgent medical care.
+                    </p>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-slate-900 text-white py-6 rounded-[1.5rem] font-black uppercase tracking-[0.25em] shadow-2xl shadow-slate-900/20 hover:scale-[1.02] active:scale-95 transition-all">
+                    Submit Booking Request
+                </button>
             </form>
         </div>
     </div>
 
-    @push('scripts')
-        <style>
-            .scrollbar-premium::-webkit-scrollbar {
-                width: 6px;
-            }
+    @if ($requires_telehealth_consent)
+        <!-- Telehealth Informed Consent Popup -->
+        <div id="telehealth-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-[2rem] max-w-lg w-full p-8 shadow-2xl">
+                <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-4">Telehealth Informed Consent</h3>
+                <p class="text-sm font-bold text-slate-600 leading-relaxed mb-6">
+                    You are booking a virtual appointment. Before continuing, please review and accept the Telehealth
+                    Informed Consent, which explains how virtual care works, its limitations, and your rights as a patient.
+                </p>
+                <a href="{{ route('telehealth-consent') }}" target="_blank" class="text-primary hover:underline text-xs font-black uppercase tracking-widest">
+                    Read the full Telehealth Consent →
+                </a>
+                <label class="flex items-start gap-3 bg-slate-50 p-5 rounded-2xl border border-slate-100 mt-6 cursor-pointer">
+                    <input type="checkbox" id="telehealth-modal-checkbox" class="mt-0.5 w-5 h-5 rounded-md border-slate-200 text-primary focus:ring-primary">
+                    <span class="text-xs font-bold text-slate-600">I have read and agree to the Telehealth Informed Consent.</span>
+                </label>
+                <button id="telehealth-modal-continue" disabled
+                    class="w-full mt-6 bg-slate-200 text-slate-400 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all">
+                    Continue to Booking Review
+                </button>
+            </div>
+        </div>
 
-            .scrollbar-premium::-webkit-scrollbar-track {
-                background: transparent;
-            }
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const modal = document.getElementById('telehealth-modal');
+                const modalCheckbox = document.getElementById('telehealth-modal-checkbox');
+                const continueBtn = document.getElementById('telehealth-modal-continue');
+                const inlineCheckbox = document.getElementById('ack_telehealth_consent');
+                const hiddenField = document.getElementById('ack_telehealth_consent_hidden');
 
-            .scrollbar-premium::-webkit-scrollbar-thumb {
-                background: #e2e8f0;
-                border-radius: 10px;
-            }
-        </style>
-    @endpush
+                modalCheckbox.addEventListener('change', function () {
+                    if (this.checked) {
+                        continueBtn.disabled = false;
+                        continueBtn.classList.remove('bg-slate-200', 'text-slate-400');
+                        continueBtn.classList.add('bg-primary', 'text-slate-900', 'hover:scale-[1.02]');
+                    } else {
+                        continueBtn.disabled = true;
+                        continueBtn.classList.add('bg-slate-200', 'text-slate-400');
+                        continueBtn.classList.remove('bg-primary', 'text-slate-900', 'hover:scale-[1.02]');
+                    }
+                });
+
+                continueBtn.addEventListener('click', function () {
+                    if (inlineCheckbox) {
+                        inlineCheckbox.checked = true;
+                    }
+                    hiddenField.value = '1';
+                    modal.remove();
+                });
+            });
+        </script>
+    @endif
 </x-app-layout>

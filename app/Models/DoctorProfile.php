@@ -68,6 +68,29 @@ class DoctorProfile extends Model
         'verification_decided_at',
         'needs_info',
         'info_requested_at',
+        // Plans / Booking Fee System (Phase 1)
+        'plan_id',
+        'is_promoted',
+        'trial_ends_at',
+        'profile_visible',
+        // Stripe references + internal access-control status
+        'stripe_customer_id',
+        'stripe_subscription_id',
+        'stripe_subscription_price_id',
+        'subscription_status',
+        'profile_visibility_status',
+        'booking_access_status',
+        // Agreement/plan acceptance snapshot
+        'provider_agreement_version',
+        'payment_terms_version',
+        'pricing_policy_version',
+        'insurance_attestation_version',
+        'plan_accepted_at',
+        'plan_accepted_ip_address',
+        'plan_accepted_user_agent',
+        'selected_plan_name',
+        'selected_monthly_price',
+        'selected_per_booking_fee',
     ];
 
     protected $casts = [
@@ -94,6 +117,13 @@ class DoctorProfile extends Model
         'info_requested_at' => 'datetime',
         'date_of_birth' => 'date',
         'license_expiration_date' => 'date',
+        // Plans / Booking Fee System (Phase 1)
+        'is_promoted' => 'boolean',
+        'trial_ends_at' => 'datetime',
+        'profile_visible' => 'boolean',
+        'plan_accepted_at' => 'datetime',
+        'selected_monthly_price' => 'decimal:2',
+        'selected_per_booking_fee' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
@@ -117,9 +147,19 @@ class DoctorProfile extends Model
     }
 
     public function licenseType()
-{
-    return $this->belongsTo(LicenseType::class);
-}
+    {
+        return $this->belongsTo(LicenseType::class);
+    }
+
+    /**
+     * The provider's current subscription plan (Basic/Premium), which determines
+     * their per-booking platform fee. See App\Services\PricingService for how
+     * this should always be resolved — never hardcode fee amounts elsewhere.
+     */
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class);
+    }
 
     public function educations(): HasMany
     {

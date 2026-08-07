@@ -50,6 +50,7 @@ class ProfileController extends Controller
             'languages.*'      => 'exists:languages,id',
             'other_language'   => 'nullable|string|max:100',
             'profile_photo'    => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'consultation_fee' => 'nullable|numeric|min:0|max:99999',
         ]);
 
         $doctorUpdates = [
@@ -59,6 +60,7 @@ class ProfileController extends Controller
             'clinic_address'   => $validated['clinic_address'] ?? null,
             'license_type_id'  => $validated['license_type_id'] ?? null,
             'other_language'   => $validated['other_language'] ?? null,
+            'consultation_fee' => $validated['consultation_fee'] ?? $doctor->consultation_fee,
         ];
 
         // IMPORTANT: profile_photo_path is a column on `doctor_profiles`

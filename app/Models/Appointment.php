@@ -21,10 +21,38 @@ class Appointment extends Model
         'insurance_plan_id',
         'appointment_datetime',
         'notes',
+        // Phase 2 additions — visit details
+        'specialty_id',
+        'visit_type',
+        'patient_type',
+        // Phase 2 additions — patient consent tracking
+        'patient_consent_accepted_at',
+        'patient_consent_ip_address',
+        'patient_consent_user_agent',
+        'telehealth_consent_accepted',
+        // Phase 3 additions — booking fee acceptance (provider side)
+        'applicable_plan_at_acceptance',
+        'fee_type',
+        'fee_amount',
+        'currency',
+        'fee_displayed_at',
+        'accepted_at',
+        'stripe_payment_intent_id',
+        'stripe_charge_id',
+        'payment_status',
+        'charged_at',
+        'confirmed_at',
     ];
 
     protected $casts = [
         'appointment_datetime' => 'datetime',
+        'patient_consent_accepted_at' => 'datetime',
+        'telehealth_consent_accepted' => 'boolean',
+        'fee_amount' => 'decimal:2',
+        'fee_displayed_at' => 'datetime',
+        'accepted_at' => 'datetime',
+        'charged_at' => 'datetime',
+        'confirmed_at' => 'datetime',
     ];
 
     /**
@@ -48,6 +76,16 @@ class Appointment extends Model
     public function insurancePlan(): BelongsTo
     {
         return $this->belongsTo(InsurancePlan::class);
+    }
+
+    public function specialty(): BelongsTo
+    {
+        return $this->belongsTo(Specialty::class);
+    }
+
+    public function planAtAcceptance(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class, 'applicable_plan_at_acceptance');
     }
 
     /**

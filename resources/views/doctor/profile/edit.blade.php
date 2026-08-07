@@ -67,6 +67,10 @@
             </option>
         @endforeach
     </select>
+    <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Consultation Fee (USD)</label>
+                                <input type="number" step="0.01" min="0" name="consultation_fee" value="{{ old('consultation_fee', $doctor->consultation_fee) }}" placeholder="e.g. 120.00" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm font-black tracking-tight text-slate-900 focus:ring-2 focus:ring-primary h-14 mt-1">
+                            </div>
 </div>
                         </div>
                     </div>
